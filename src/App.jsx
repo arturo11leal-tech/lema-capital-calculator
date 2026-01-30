@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, ReferenceLine } from 'recharts';
 
 // Datos reales de rendimientos mensuales extraídos del Excel
 const fundsData = {
@@ -8,6 +8,7 @@ const fundsData = {
     "color": "#1F4E79",
     "benchmarkColor": "#94A3B8",
     "description": "Estrategia global diversificada - 63 meses de track record",
+    "annualizedReturn": 0.1315,
     "returns": [
       { "date": "2020-10", "month": "Oct 2020", "fund": -0.0173, "benchmark": -0.012569 },
       { "date": "2020-11", "month": "Nov 2020", "fund": 0.1154, "benchmark": 0.129529 },
@@ -79,6 +80,7 @@ const fundsData = {
     "color": "#2E75B6",
     "benchmarkColor": "#94A3B8",
     "description": "Estrategia de valor México y Latam - 54 meses de track record",
+    "annualizedReturn": 0.1340,
     "returns": [
       { "date": "2021-07", "month": "Jul 2021", "fund": -0.0142, "benchmark": 0.011505 },
       { "date": "2021-08", "month": "Aug 2021", "fund": 0.0327, "benchmark": 0.047897 },
@@ -141,6 +143,7 @@ const fundsData = {
     "color": "#00B050",
     "benchmarkColor": "#94A3B8",
     "description": "Alto rendimiento en mercados desarrollados - 29 meses de track record",
+    "annualizedReturn": 0.2754,
     "returns": [
       { "date": "2023-08", "month": "Aug 2023", "fund": -0.0332, "benchmark": -0.0159 },
       { "date": "2023-09", "month": "Sep 2023", "fund": -0.0497, "benchmark": -0.0477 },
@@ -178,6 +181,7 @@ const fundsData = {
     "color": "#7030A0",
     "benchmarkColor": "#94A3B8",
     "description": "Estrategia conservadora de baja volatilidad - 15 meses de track record",
+    "annualizedReturn": 0.0747,
     "returns": [
       { "date": "2024-10", "month": "Oct 2024", "fund": 0.0051, "benchmark": 0.0071 },
       { "date": "2024-11", "month": "Nov 2024", "fund": 0.0073, "benchmark": 0.0067 },
@@ -198,7 +202,9 @@ const fundsData = {
   }
 };
 
+// Función para formatear números con comas
 const formatCurrency = (value) => {
+  if (value === null || value === undefined || isNaN(value)) return '$0';
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency: 'MXN',
@@ -207,7 +213,13 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
+const formatNumber = (value) => {
+  if (value === null || value === undefined || isNaN(value)) return '0';
+  return new Intl.NumberFormat('es-MX').format(Math.round(value));
+};
+
 const formatPercent = (value) => {
+  if (value === null || value === undefined || isNaN(value)) return '0.00%';
   return `${value >= 0 ? '+' : ''}${(value * 100).toFixed(2)}%`;
 };
 
@@ -215,11 +227,19 @@ export default function App() {
   const [selectedFund, setSelectedFund] = useState('LEMA Global Fund');
   const [initialInvestment, setInitialInvestment] = useState(100000);
   const [monthlyContribution, setMonthlyContribution] = useState(5000);
-  const [showCalculator, setShowCalculator] = useState(true);
+  const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' or 'retirement'
+  
+  // Estados para Análisis de Retiro
+  const [currentAge, setCurrentAge] = useState(35);
+  const [retirementAge, setRetirementAge] = useState(65);
+  const [currentSavings, setCurrentSavings] = useState(500000);
+  const [monthlySavings, setMonthlySavings] = useState(10000);
+  const [monthlyRetirementExpense, setMonthlyRetirementExpense] = useState(30000);
+  const [lifeExpectancy, setLifeExpectancy] = useState(90);
 
   const fund = fundsData[selectedFund];
 
-  // Calcular la simulación de inversión
+  // Calcular la simulación de inversión histórica
   const simulationData = useMemo(() => {
     const returns = fund.returns;
     let fundValue = initialInvestment;
@@ -237,11 +257,9 @@ export default function App() {
     }];
 
     returns.forEach((r, index) => {
-      // Aplicar rendimiento del mes
       fundValue = fundValue * (1 + r.fund);
       benchmarkValue = benchmarkValue * (1 + r.benchmark);
       
-      // Agregar aportación mensual
       fundValue += monthlyContribution;
       benchmarkValue += monthlyContribution;
       totalContributed += monthlyContribution;
@@ -261,12 +279,118 @@ export default function App() {
     return data;
   }, [selectedFund, initialInvestment, monthlyContribution, fund.returns]);
 
+  // Calcular proyección de retiro
+  const retirementProjection = useMemo(() => {
+    const annualReturn = fund.annualizedReturn;
+    const monthlyReturn = Math.pow(1 + annualReturn, 1/12) - 1;
+    const yearsToRetirement = retirementAge - currentAge;
+    const monthsToRetirement = yearsToRetirement * 12;
+    const yearsInRetirement = lifeExpectancy - retirementAge;
+    const monthsInRetirement = yearsInRetirement * 12;
+    
+    // Fase de acumulación
+    const accumulationData = [];
+    let balance = currentSavings;
+    
+    for (let month = 0; month <= monthsToRetirement; month++) {
+      const year = currentAge + Math.floor(month / 12);
+      const monthOfYear = month % 12;
+      
+      accumulationData.push({
+        month: month,
+        year: year,
+        label: `${year} - ${['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][monthOfYear]}`,
+        balance: Math.round(balance),
+        phase: 'accumulation'
+      });
+      
+      if (month < monthsToRetirement) {
+        balance = balance * (1 + monthlyReturn) + monthlySavings;
+      }
+    }
+    
+    const balanceAtRetirement = balance;
+    
+    // Fase de retiro
+    const withdrawalData = [];
+    let retirementBalance = balanceAtRetirement;
+    let monthsUntilDepleted = 0;
+    
+    for (let month = 0; month <= monthsInRetirement && retirementBalance > 0; month++) {
+      const year = retirementAge + Math.floor(month / 12);
+      const monthOfYear = month % 12;
+      
+      withdrawalData.push({
+        month: monthsToRetirement + month,
+        year: year,
+        label: `${year}`,
+        balance: Math.round(Math.max(0, retirementBalance)),
+        phase: 'withdrawal'
+      });
+      
+      if (month < monthsInRetirement) {
+        retirementBalance = retirementBalance * (1 + monthlyReturn) - monthlyRetirementExpense;
+        if (retirementBalance > 0) {
+          monthsUntilDepleted = month + 1;
+        }
+      }
+    }
+    
+    const finalBalance = Math.max(0, retirementBalance);
+    const canSustain = finalBalance > 0;
+    
+    // Calcular retiro mensual máximo sostenible
+    // Usando la fórmula de anualidad
+    const maxMonthlyWithdrawal = balanceAtRetirement * (monthlyReturn * Math.pow(1 + monthlyReturn, monthsInRetirement)) / (Math.pow(1 + monthlyReturn, monthsInRetirement) - 1);
+    
+    return {
+      accumulationData,
+      withdrawalData,
+      balanceAtRetirement,
+      finalBalance,
+      canSustain,
+      monthsUntilDepleted: canSustain ? monthsInRetirement : monthsUntilDepleted,
+      yearsUntilDepleted: canSustain ? yearsInRetirement : Math.floor(monthsUntilDepleted / 12),
+      maxMonthlyWithdrawal: Math.round(maxMonthlyWithdrawal),
+      totalContributed: currentSavings + (monthlySavings * monthsToRetirement),
+      totalWithdrawn: canSustain ? monthlyRetirementExpense * monthsInRetirement : monthlyRetirementExpense * monthsUntilDepleted,
+      annualReturn
+    };
+  }, [selectedFund, currentAge, retirementAge, currentSavings, monthlySavings, monthlyRetirementExpense, lifeExpectancy, fund.annualizedReturn]);
+
   const lastData = simulationData[simulationData.length - 1];
   const difference = lastData.fundValue - lastData.benchmarkValue;
   const totalGainFund = lastData.fundValue - lastData.totalContributed;
   const totalGainBenchmark = lastData.benchmarkValue - lastData.totalContributed;
   const percentGainFund = (lastData.fundValue / lastData.totalContributed - 1);
   const percentGainBenchmark = (lastData.benchmarkValue / lastData.totalContributed - 1);
+
+  // Combinar datos para gráfico de retiro
+  const fullRetirementData = useMemo(() => {
+    const combined = [];
+    
+    // Agregar puntos de acumulación (uno por año para simplificar)
+    retirementProjection.accumulationData.forEach((d, i) => {
+      if (i % 12 === 0 || i === retirementProjection.accumulationData.length - 1) {
+        combined.push({
+          ...d,
+          displayLabel: `${d.year}`
+        });
+      }
+    });
+    
+    // Agregar puntos de retiro (uno por año)
+    retirementProjection.withdrawalData.forEach((d, i) => {
+      if (i % 12 === 0 || i === retirementProjection.withdrawalData.length - 1) {
+        combined.push({
+          ...d,
+          displayLabel: `${d.year}`
+        });
+      }
+    });
+    
+    return combined;
+  }, [retirementProjection]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -275,11 +399,34 @@ export default function App() {
         <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
           LEMA CAPITAL
         </h1>
-        <p className="text-slate-400 mt-2">Calculadora de Inversión</p>
-        <p className="text-sm text-slate-500">Simula tu inversión con rendimientos históricos reales</p>
+        <p className="text-slate-400 mt-2">Planificador Financiero</p>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
+        {/* Tab Navigation */}
+        <div className="flex justify-center gap-4 mb-6">
+          <button
+            onClick={() => setActiveTab('simulator')}
+            className={`px-6 py-3 rounded-lg font-medium transition-all ${
+              activeTab === 'simulator'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            📊 Simulador Histórico
+          </button>
+          <button
+            onClick={() => setActiveTab('retirement')}
+            className={`px-6 py-3 rounded-lg font-medium transition-all ${
+              activeTab === 'retirement'
+                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            🏖️ Análisis de Retiro
+          </button>
+        </div>
+
         {/* Fund Selector */}
         <div className="flex justify-center gap-2 mb-6 flex-wrap">
           {Object.keys(fundsData).map((fundName) => (
@@ -301,259 +448,497 @@ export default function App() {
         {/* Fund Description */}
         <div className="text-center mb-6">
           <p className="text-slate-400">{fund.description}</p>
-          <p className="text-sm text-slate-500 mt-1">Benchmark: {fund.benchmark}</p>
+          <p className="text-sm text-slate-500 mt-1">
+            Rendimiento anualizado histórico: <span className="text-emerald-400 font-semibold">{(fund.annualizedReturn * 100).toFixed(2)}%</span>
+          </p>
         </div>
 
-        {/* Calculator Inputs */}
-        <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-          <h2 className="text-xl font-semibold mb-4 text-center">Configura tu Simulación</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-slate-400 mb-2">Inversión Inicial</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                <input
-                  type="number"
-                  value={initialInvestment}
-                  onChange={(e) => setInitialInvestment(Number(e.target.value) || 0)}
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-blue-500"
-                  step="10000"
-                  min="0"
-                />
-              </div>
-              <div className="flex gap-2 mt-2">
-                {[50000, 100000, 500000, 1000000].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setInitialInvestment(amount)}
-                    className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded transition-colors"
-                  >
-                    {amount >= 1000000 ? `${amount/1000000}M` : `${amount/1000}K`}
-                  </button>
-                ))}
+        {/* ==================== SIMULADOR HISTÓRICO ==================== */}
+        {activeTab === 'simulator' && (
+          <>
+            {/* Calculator Inputs */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-xl font-semibold mb-4 text-center">Configura tu Simulación</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-slate-400 mb-2">Inversión Inicial</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input
+                      type="number"
+                      value={initialInvestment}
+                      onChange={(e) => setInitialInvestment(Number(e.target.value) || 0)}
+                      className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-blue-500"
+                      step="10000"
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {[50000, 100000, 500000, 1000000].map((amount) => (
+                      <button
+                        key={amount}
+                        onClick={() => setInitialInvestment(amount)}
+                        className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded transition-colors"
+                      >
+                        {amount >= 1000000 ? `${amount/1000000}M` : `${formatNumber(amount/1000)}K`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 mb-2">Aportación Mensual</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input
+                      type="number"
+                      value={monthlyContribution}
+                      onChange={(e) => setMonthlyContribution(Number(e.target.value) || 0)}
+                      className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-blue-500"
+                      step="1000"
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {[0, 5000, 10000, 25000, 50000].map((amount) => (
+                      <button
+                        key={amount}
+                        onClick={() => setMonthlyContribution(amount)}
+                        className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded transition-colors"
+                      >
+                        {amount === 0 ? 'Sin aport.' : `${formatNumber(amount/1000)}K`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-slate-400 mb-2">Aportación Mensual</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
-                <input
-                  type="number"
-                  value={monthlyContribution}
-                  onChange={(e) => setMonthlyContribution(Number(e.target.value) || 0)}
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-blue-500"
-                  step="1000"
-                  min="0"
-                />
+            {/* Results Summary */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <p className="text-slate-400 text-sm">Total Aportado</p>
+                <p className="text-xl md:text-2xl font-bold text-slate-300">{formatCurrency(lastData.totalContributed)}</p>
+                <p className="text-xs text-slate-500">{fund.returns.length} meses</p>
               </div>
-              <div className="flex gap-2 mt-2">
-                {[0, 5000, 10000, 25000, 50000].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => setMonthlyContribution(amount)}
-                    className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded transition-colors"
-                  >
-                    {amount === 0 ? 'Sin aport.' : `${amount/1000}K`}
-                  </button>
-                ))}
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700" style={{ borderColor: fund.color }}>
+                <p className="text-slate-400 text-sm">Con {selectedFund.split(' ')[0]}</p>
+                <p className="text-xl md:text-2xl font-bold" style={{ color: fund.color }}>{formatCurrency(lastData.fundValue)}</p>
+                <p className={`text-xs ${totalGainFund >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {formatCurrency(totalGainFund)} ({formatPercent(percentGainFund)})
+                </p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <p className="text-slate-400 text-sm">Con {fund.benchmark}</p>
+                <p className="text-xl md:text-2xl font-bold text-slate-400">{formatCurrency(lastData.benchmarkValue)}</p>
+                <p className={`text-xs ${totalGainBenchmark >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {formatCurrency(totalGainBenchmark)} ({formatPercent(percentGainBenchmark)})
+                </p>
+              </div>
+              
+              <div className={`rounded-xl p-4 border ${difference >= 0 ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}>
+                <p className="text-slate-400 text-sm">Diferencia</p>
+                <p className={`text-xl md:text-2xl font-bold ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {difference >= 0 ? '+' : ''}{formatCurrency(difference)}
+                </p>
+                <p className={`text-xs ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {difference >= 0 ? 'A favor con LEMA' : 'En contra'}
+                </p>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Results Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <p className="text-slate-400 text-sm">Total Aportado</p>
-            <p className="text-xl md:text-2xl font-bold text-slate-300">{formatCurrency(lastData.totalContributed)}</p>
-            <p className="text-xs text-slate-500">{fund.returns.length} meses</p>
-          </div>
-          
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700" style={{ borderColor: fund.color }}>
-            <p className="text-slate-400 text-sm">Con {selectedFund.split(' ')[0]}</p>
-            <p className="text-xl md:text-2xl font-bold" style={{ color: fund.color }}>{formatCurrency(lastData.fundValue)}</p>
-            <p className={`text-xs ${totalGainFund >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {formatCurrency(totalGainFund)} ({formatPercent(percentGainFund)})
-            </p>
-          </div>
-          
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <p className="text-slate-400 text-sm">Con {fund.benchmark}</p>
-            <p className="text-xl md:text-2xl font-bold text-slate-400">{formatCurrency(lastData.benchmarkValue)}</p>
-            <p className={`text-xs ${totalGainBenchmark >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {formatCurrency(totalGainBenchmark)} ({formatPercent(percentGainBenchmark)})
-            </p>
-          </div>
-          
-          <div className={`rounded-xl p-4 border ${difference >= 0 ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}>
-            <p className="text-slate-400 text-sm">Diferencia</p>
-            <p className={`text-xl md:text-2xl font-bold ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {difference >= 0 ? '+' : ''}{formatCurrency(difference)}
-            </p>
-            <p className={`text-xs ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {difference >= 0 ? 'A favor con LEMA' : 'En contra'}
-            </p>
-          </div>
-        </div>
+            {/* Main Chart */}
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-xl font-semibold mb-4">Evolución de tu Inversión</h2>
+              <ResponsiveContainer width="100%" height={400}>
+                <AreaChart data={simulationData}>
+                  <defs>
+                    <linearGradient id="fundGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={fund.color} stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor={fund.color} stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="benchmarkGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#94A3B8" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#9CA3AF" 
+                    fontSize={11}
+                    interval="preserveStartEnd"
+                    tickFormatter={(value, index) => {
+                      if (index === 0) return 'Inicio';
+                      if (index % 6 === 0 || index === simulationData.length - 1) return value;
+                      return '';
+                    }}
+                  />
+                  <YAxis 
+                    stroke="#9CA3AF" 
+                    fontSize={11}
+                    tickFormatter={(value) => `$${formatNumber(value/1000)}K`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }}
+                    formatter={(value, name) => [formatCurrency(value), name]}
+                    labelStyle={{ color: '#E2E8F0' }}
+                  />
+                  <Legend />
+                  <Area type="monotone" dataKey="totalContributed" name="Total Aportado" stroke="#475569" fill="transparent" strokeWidth={1} strokeDasharray="5 5" />
+                  <Area type="monotone" dataKey="benchmarkValue" name={fund.benchmark} stroke="#94A3B8" fill="url(#benchmarkGradient)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="fundValue" name={selectedFund} stroke={fund.color} fill="url(#fundGradient)" strokeWidth={3} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
 
-        {/* Main Chart */}
-        <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Evolución de tu Inversión</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <AreaChart data={simulationData}>
-              <defs>
-                <linearGradient id="fundGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={fund.color} stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor={fund.color} stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="benchmarkGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#94A3B8" stopOpacity={0}/>
-                </linearGradient>
-                <linearGradient id="contributedGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#475569" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#475569" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis 
-                dataKey="month" 
-                stroke="#9CA3AF" 
-                fontSize={11}
-                interval="preserveStartEnd"
-                tickFormatter={(value, index) => {
-                  if (index === 0) return 'Inicio';
-                  if (index % 6 === 0 || index === simulationData.length - 1) return value;
-                  return '';
-                }}
-              />
-              <YAxis 
-                stroke="#9CA3AF" 
-                fontSize={11}
-                tickFormatter={(value) => `$${(value/1000).toFixed(0)}K`}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1E293B', 
-                  border: '1px solid #475569', 
-                  borderRadius: '8px' 
-                }}
-                formatter={(value, name) => [formatCurrency(value), name]}
-                labelStyle={{ color: '#E2E8F0' }}
-              />
-              <Legend />
-              <Area 
-                type="monotone" 
-                dataKey="totalContributed" 
-                name="Total Aportado"
-                stroke="#475569" 
-                fill="url(#contributedGradient)"
-                strokeWidth={1}
-                strokeDasharray="5 5"
-              />
-              <Area 
-                type="monotone" 
-                dataKey="benchmarkValue" 
-                name={fund.benchmark}
-                stroke="#94A3B8" 
-                fill="url(#benchmarkGradient)"
-                strokeWidth={2}
-              />
-              <Area 
-                type="monotone" 
-                dataKey="fundValue" 
-                name={selectedFund}
-                stroke={fund.color} 
-                fill="url(#fundGradient)"
-                strokeWidth={3}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+            {/* Monthly Returns Table */}
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+              <h2 className="text-xl font-semibold mb-4">Rendimientos Mensuales</h2>
+              <div className="overflow-x-auto max-h-80">
+                <table className="w-full text-sm">
+                  <thead className="sticky top-0 bg-slate-800">
+                    <tr className="border-b border-slate-600">
+                      <th className="text-left py-2 px-3 text-slate-400">Mes</th>
+                      <th className="text-right py-2 px-3" style={{ color: fund.color }}>{selectedFund}</th>
+                      <th className="text-right py-2 px-3 text-slate-400">{fund.benchmark}</th>
+                      <th className="text-right py-2 px-3 text-slate-400">Diferencia</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {fund.returns.slice().reverse().map((r, idx) => (
+                      <tr key={idx} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+                        <td className="py-2 px-3">{r.month}</td>
+                        <td className={`text-right py-2 px-3 ${r.fund >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {formatPercent(r.fund)}
+                        </td>
+                        <td className={`text-right py-2 px-3 ${r.benchmark >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {formatPercent(r.benchmark)}
+                        </td>
+                        <td className={`text-right py-2 px-3 font-medium ${(r.fund - r.benchmark) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {formatPercent(r.fund - r.benchmark)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
 
-        {/* Difference Chart */}
-        <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Diferencia Acumulada: {selectedFund} vs {fund.benchmark}</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={simulationData.slice(1)}>
-              <defs>
-                <linearGradient id="diffGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis 
-                dataKey="month" 
-                stroke="#9CA3AF" 
-                fontSize={11}
-                interval="preserveStartEnd"
-              />
-              <YAxis 
-                stroke="#9CA3AF" 
-                fontSize={11}
-                tickFormatter={(value) => `$${(value/1000).toFixed(0)}K`}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1E293B', 
-                  border: '1px solid #475569', 
-                  borderRadius: '8px' 
-                }}
-                formatter={(value) => [formatCurrency(value), 'Diferencia']}
-                labelStyle={{ color: '#E2E8F0' }}
-              />
-              <Area 
-                type="monotone" 
-                dataKey="difference" 
-                name="Diferencia"
-                stroke="#10B981" 
-                fill="url(#diffGradient)"
-                strokeWidth={2}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        {/* ==================== ANÁLISIS DE RETIRO ==================== */}
+        {activeTab === 'retirement' && (
+          <>
+            {/* Retirement Inputs */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-xl font-semibold mb-4 text-center">🏖️ Configura tu Plan de Retiro</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Edad actual */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Tu edad actual</label>
+                  <input
+                    type="number"
+                    value={currentAge}
+                    onChange={(e) => setCurrentAge(Number(e.target.value) || 25)}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-white text-lg focus:outline-none focus:border-emerald-500"
+                    min="18"
+                    max="80"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    {[30, 35, 40, 45, 50].map((age) => (
+                      <button key={age} onClick={() => setCurrentAge(age)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{age}</button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Monthly Returns Comparison */}
-        <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
-          <h2 className="text-xl font-semibold mb-4">Rendimientos Mensuales</h2>
-          <div className="overflow-x-auto max-h-80">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-slate-800">
-                <tr className="border-b border-slate-600">
-                  <th className="text-left py-2 px-3 text-slate-400">Mes</th>
-                  <th className="text-right py-2 px-3" style={{ color: fund.color }}>{selectedFund}</th>
-                  <th className="text-right py-2 px-3 text-slate-400">{fund.benchmark}</th>
-                  <th className="text-right py-2 px-3 text-slate-400">Diferencia</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fund.returns.slice().reverse().map((r, idx) => (
-                  <tr key={idx} className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                    <td className="py-2 px-3">{r.month}</td>
-                    <td className={`text-right py-2 px-3 ${r.fund >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {formatPercent(r.fund)}
-                    </td>
-                    <td className={`text-right py-2 px-3 ${r.benchmark >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {formatPercent(r.benchmark)}
-                    </td>
-                    <td className={`text-right py-2 px-3 font-medium ${(r.fund - r.benchmark) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {formatPercent(r.fund - r.benchmark)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                {/* Edad de retiro */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Edad de retiro deseada</label>
+                  <input
+                    type="number"
+                    value={retirementAge}
+                    onChange={(e) => setRetirementAge(Number(e.target.value) || 65)}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-white text-lg focus:outline-none focus:border-emerald-500"
+                    min={currentAge + 1}
+                    max="80"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    {[55, 60, 65, 70].map((age) => (
+                      <button key={age} onClick={() => setRetirementAge(age)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{age}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Expectativa de vida */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Expectativa de vida</label>
+                  <input
+                    type="number"
+                    value={lifeExpectancy}
+                    onChange={(e) => setLifeExpectancy(Number(e.target.value) || 85)}
+                    className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-white text-lg focus:outline-none focus:border-emerald-500"
+                    min={retirementAge + 1}
+                    max="100"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    {[80, 85, 90, 95].map((age) => (
+                      <button key={age} onClick={() => setLifeExpectancy(age)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{age}</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ahorro actual */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Ahorro actual</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input
+                      type="number"
+                      value={currentSavings}
+                      onChange={(e) => setCurrentSavings(Number(e.target.value) || 0)}
+                      className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-emerald-500"
+                      step="50000"
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {[100000, 500000, 1000000, 2000000].map((amount) => (
+                      <button key={amount} onClick={() => setCurrentSavings(amount)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">
+                        {amount >= 1000000 ? `${amount/1000000}M` : `${formatNumber(amount/1000)}K`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Ahorro mensual */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Ahorro mensual hasta retiro</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input
+                      type="number"
+                      value={monthlySavings}
+                      onChange={(e) => setMonthlySavings(Number(e.target.value) || 0)}
+                      className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-emerald-500"
+                      step="1000"
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {[5000, 10000, 20000, 50000].map((amount) => (
+                      <button key={amount} onClick={() => setMonthlySavings(amount)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{formatNumber(amount/1000)}K</button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Gasto mensual en retiro */}
+                <div>
+                  <label className="block text-slate-400 mb-2">Gasto mensual en retiro</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input
+                      type="number"
+                      value={monthlyRetirementExpense}
+                      onChange={(e) => setMonthlyRetirementExpense(Number(e.target.value) || 0)}
+                      className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white text-lg focus:outline-none focus:border-emerald-500"
+                      step="5000"
+                      min="0"
+                    />
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    {[20000, 30000, 50000, 80000].map((amount) => (
+                      <button key={amount} onClick={() => setMonthlyRetirementExpense(amount)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{formatNumber(amount/1000)}K</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Retirement Results */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <p className="text-slate-400 text-sm">Años hasta retiro</p>
+                <p className="text-2xl md:text-3xl font-bold text-blue-400">{retirementAge - currentAge}</p>
+                <p className="text-xs text-slate-500">años de ahorro</p>
+              </div>
+              
+              <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-700">
+                <p className="text-slate-400 text-sm">Capital al retirarte</p>
+                <p className="text-2xl md:text-3xl font-bold text-emerald-400">{formatCurrency(retirementProjection.balanceAtRetirement)}</p>
+                <p className="text-xs text-emerald-400">a los {retirementAge} años</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <p className="text-slate-400 text-sm">Retiro máximo mensual</p>
+                <p className="text-2xl md:text-3xl font-bold text-amber-400">{formatCurrency(retirementProjection.maxMonthlyWithdrawal)}</p>
+                <p className="text-xs text-slate-500">para que dure hasta los {lifeExpectancy}</p>
+              </div>
+              
+              <div className={`rounded-xl p-4 border ${retirementProjection.canSustain ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}>
+                <p className="text-slate-400 text-sm">Estado del plan</p>
+                {retirementProjection.canSustain ? (
+                  <>
+                    <p className="text-2xl md:text-3xl font-bold text-emerald-400">✓ Viable</p>
+                    <p className="text-xs text-emerald-400">Capital restante: {formatCurrency(retirementProjection.finalBalance)}</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-2xl md:text-3xl font-bold text-red-400">⚠ Insuficiente</p>
+                    <p className="text-xs text-red-400">Se agota en {retirementProjection.yearsUntilDepleted} años</p>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Retirement Chart */}
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-xl font-semibold mb-4">Proyección de tu Patrimonio</h2>
+              <ResponsiveContainer width="100%" height={400}>
+                <AreaChart data={fullRetirementData}>
+                  <defs>
+                    <linearGradient id="retirementGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis 
+                    dataKey="displayLabel" 
+                    stroke="#9CA3AF" 
+                    fontSize={11}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis 
+                    stroke="#9CA3AF" 
+                    fontSize={11}
+                    tickFormatter={(value) => value >= 1000000 ? `$${(value/1000000).toFixed(1)}M` : `$${formatNumber(value/1000)}K`}
+                  />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }}
+                    formatter={(value, name) => [formatCurrency(value), 'Patrimonio']}
+                    labelFormatter={(label) => `Edad: ${label} años`}
+                    labelStyle={{ color: '#E2E8F0' }}
+                  />
+                  <ReferenceLine x={`${retirementAge}`} stroke="#F59E0B" strokeDasharray="5 5" label={{ value: '🏖️ Retiro', position: 'top', fill: '#F59E0B', fontSize: 12 }} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="balance" 
+                    name="Patrimonio"
+                    stroke="#10B981" 
+                    fill="url(#retirementGradient)"
+                    strokeWidth={3}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+              <div className="flex justify-center gap-8 mt-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-emerald-500 rounded"></div>
+                  <span className="text-slate-400">Fase de acumulación</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-1 bg-amber-500"></div>
+                  <span className="text-slate-400">Inicio del retiro</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Retirement Summary */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+              <h2 className="text-xl font-semibold mb-4">📋 Resumen de tu Plan de Retiro</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium text-emerald-400 mb-3">Fase de Acumulación</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Ahorro inicial:</span>
+                      <span>{formatCurrency(currentSavings)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Aportación mensual:</span>
+                      <span>{formatCurrency(monthlySavings)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Años de ahorro:</span>
+                      <span>{retirementAge - currentAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Total aportado:</span>
+                      <span>{formatCurrency(retirementProjection.totalContributed)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Rendimiento anual usado:</span>
+                      <span className="text-emerald-400">{(fund.annualizedReturn * 100).toFixed(2)}%</span>
+                    </div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2">
+                      <span className="text-slate-300 font-medium">Capital al retiro:</span>
+                      <span className="text-emerald-400 font-bold">{formatCurrency(retirementProjection.balanceAtRetirement)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium text-amber-400 mb-3">Fase de Retiro</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Edad de retiro:</span>
+                      <span>{retirementAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Retiro mensual deseado:</span>
+                      <span>{formatCurrency(monthlyRetirementExpense)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Años en retiro:</span>
+                      <span>{lifeExpectancy - retirementAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Retiro máximo sostenible:</span>
+                      <span className="text-amber-400">{formatCurrency(retirementProjection.maxMonthlyWithdrawal)}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2">
+                      <span className="text-slate-300 font-medium">Capital al final ({lifeExpectancy} años):</span>
+                      <span className={`font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {formatCurrency(retirementProjection.finalBalance)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {!retirementProjection.canSustain && (
+                <div className="mt-6 p-4 bg-red-900/30 border border-red-700 rounded-lg">
+                  <p className="text-red-400 font-medium">⚠️ Tu plan actual no es sostenible</p>
+                  <p className="text-slate-400 text-sm mt-2">
+                    Con un retiro de {formatCurrency(monthlyRetirementExpense)} mensuales, tu capital se agotaría a los {retirementAge + retirementProjection.yearsUntilDepleted} años.
+                  </p>
+                  <p className="text-slate-400 text-sm mt-1">
+                    <strong>Opciones:</strong> Aumenta tu ahorro mensual, reduce el gasto en retiro a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.
+                  </p>
+                </div>
+              )}
+
+              {retirementProjection.canSustain && retirementProjection.finalBalance > 0 && (
+                <div className="mt-6 p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
+                  <p className="text-emerald-400 font-medium">✓ Tu plan es viable</p>
+                  <p className="text-slate-400 text-sm mt-2">
+                    Podrás retirarte a los {retirementAge} años con un gasto mensual de {formatCurrency(monthlyRetirementExpense)} y aún te quedarán {formatCurrency(retirementProjection.finalBalance)} a los {lifeExpectancy} años.
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
 
         {/* Footer */}
         <div className="text-center mt-8 text-slate-500 text-xs md:text-sm">
           <p>⚠️ Los rendimientos pasados no garantizan rendimientos futuros.</p>
-          <p>Esta simulación utiliza datos históricos reales de los portafolios de LEMA Capital.</p>
+          <p>Esta simulación utiliza datos históricos reales y proyecciones basadas en el rendimiento anualizado.</p>
           <p>Toda inversión implica riesgos, incluyendo la posible pérdida del capital invertido.</p>
           <p className="mt-4">© 2025 LEMA Capital Asset Management</p>
         </div>
