@@ -793,14 +793,96 @@ export default function App() {
               </ResponsiveContainer>
             </div>
 
-            {!retirementProjection.canSustain && (
-              <div className="bg-red-900/30 border border-red-700 rounded-xl p-4">
-                <p className="text-red-400 font-medium">⚠️ Con {formatCurrency(monthlyRetirementExpense)}/mes, tu capital se agota en {retirementProjection.yearsUntilDepleted} años.</p>
-                <p className="text-slate-400 text-sm mt-2">
-                  Opciones: Reduce gasto a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mes, aumenta ahorro, o retrasa el retiro.
-                </p>
+            {/* Resumen detallado del Plan de Retiro */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-xl font-semibold mb-4">📋 Resumen de tu Plan de Retiro</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-medium text-emerald-400 mb-3">Fase de Acumulación</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Ahorro inicial:</span>
+                      <span>{formatCurrency(currentSavings)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Aportación mensual:</span>
+                      <span>{formatCurrency(monthlySavings)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Años de ahorro:</span>
+                      <span>{retirementAge - currentAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Total aportado:</span>
+                      <span>{formatCurrency(retirementProjection.totalContributed)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Rendimiento anual usado:</span>
+                      <span className="text-emerald-400">{formatPercentPlain(fund.annualized)}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2">
+                      <span className="text-slate-300 font-medium">Capital al retiro:</span>
+                      <span className="text-emerald-400 font-bold">{formatCurrency(retirementProjection.balanceAtRetirement)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium text-amber-400 mb-3">Fase de Retiro</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Edad de retiro:</span>
+                      <span>{retirementAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Retiro mensual deseado:</span>
+                      <span>{formatCurrency(monthlyRetirementExpense)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Años en retiro:</span>
+                      <span>{lifeExpectancy - retirementAge} años</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Retiro máximo sostenible:</span>
+                      <span className="text-amber-400">{formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mes</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Duración del capital:</span>
+                      <span className={retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}>
+                        {retirementProjection.canSustain ? `Hasta los ${lifeExpectancy} años ✓` : `${retirementProjection.yearsUntilDepleted} años`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2">
+                      <span className="text-slate-300 font-medium">Capital al final ({lifeExpectancy} años):</span>
+                      <span className={`font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {formatCurrency(retirementProjection.finalBalance)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
+
+              {/* Mensaje de estado */}
+              {retirementProjection.canSustain ? (
+                <div className="mt-6 p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
+                  <p className="text-emerald-400 font-medium">✓ Tu plan es viable</p>
+                  <p className="text-slate-400 text-sm mt-2">
+                    Podrás retirarte a los {retirementAge} años con un gasto mensual de {formatCurrency(monthlyRetirementExpense)} y aún te quedarán {formatCurrency(retirementProjection.finalBalance)} a los {lifeExpectancy} años.
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-6 p-4 bg-red-900/30 border border-red-700 rounded-lg">
+                  <p className="text-red-400 font-medium">⚠️ Tu plan actual no es sostenible</p>
+                  <p className="text-slate-400 text-sm mt-2">
+                    Con un retiro de {formatCurrency(monthlyRetirementExpense)} mensuales, tu capital se agotaría a los {retirementAge + Math.floor(retirementProjection.yearsUntilDepleted)} años.
+                  </p>
+                  <p className="text-slate-400 text-sm mt-1">
+                    <strong>Opciones:</strong> Aumenta tu ahorro mensual, reduce el gasto en retiro a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.
+                  </p>
+                </div>
+              )}
+            </div>
           </>
         )}
 
