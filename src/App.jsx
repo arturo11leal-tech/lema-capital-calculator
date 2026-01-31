@@ -1857,25 +1857,60 @@ export default function App() {
                     );
                   })}
                 </div>
+                {/* Total del Top 10 */}
+                <div className="mt-5 bg-slate-700/30 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">📊</span>
+                      <span className="text-sm font-medium text-slate-300">{language === 'es' ? 'Concentración Top 10' : 'Top 10 Concentration'}</span>
+                    </div>
+                    <span className="font-bold text-lg" style={{ color: fund.color }}>
+                      {composition.holdings.reduce((sum, h) => sum + h.weight, 0).toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Sector Allocation */}
-              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">{t.sectorDistribution}</h2>
-                <ResponsiveContainer width="100%" height={250}>
+              <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-lg md:text-xl font-semibold mb-4">{t.sectorDistribution}</h2>
+                <ResponsiveContainer width="100%" height={220}>
                   <PieChart>
-                    <Pie data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} dataKey="weight" nameKey="sectorTranslated" cx="50%" cy="50%" outerRadius={80} label={({ weight }) => `${weight.toFixed(1)}%`} labelLine={false}>
+                    <Pie 
+                      data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} 
+                      dataKey="weight" 
+                      nameKey="sectorTranslated" 
+                      cx="50%" 
+                      cy="50%" 
+                      outerRadius={85}
+                      innerRadius={35}
+                      paddingAngle={1}
+                      label={({ weight, cx, cy, midAngle, outerRadius }) => {
+                        // Solo mostrar etiqueta si el sector es > 8%
+                        if (weight < 8) return null;
+                        const RADIAN = Math.PI / 180;
+                        const radius = outerRadius * 0.7;
+                        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                        return (
+                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+                            {`${weight.toFixed(0)}%`}
+                          </text>
+                        );
+                      }}
+                      labelLine={false}
+                    >
                       {composition.sectors.map((entry, index) => (<Cell key={`cell-${index}`} fill={SECTOR_COLORS[index % SECTOR_COLORS.length]} />))}
                     </Pie>
-                    <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
+                    <Tooltip formatter={(value, name) => [`${value.toFixed(1)}%`, name]} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="grid grid-cols-2 gap-2 mt-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
                   {composition.sectors.map((s, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs">
-                      <div className="w-3 h-3 rounded" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
-                      <span className="text-slate-400 truncate">{t.sectors[s.sector] || s.sector}</span>
-                      <span className="ml-auto font-medium">{s.weight.toFixed(1)}%</span>
+                    <div key={idx} className="flex items-center gap-2 text-xs py-0.5">
+                      <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
+                      <span className="text-slate-400 truncate flex-1">{t.sectors[s.sector] || s.sector}</span>
+                      <span className="font-medium text-white">{s.weight.toFixed(1)}%</span>
                     </div>
                   ))}
                 </div>
