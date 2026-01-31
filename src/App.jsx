@@ -1873,8 +1873,8 @@ export default function App() {
 
               {/* Sector Allocation */}
               <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-lg md:text-xl font-semibold mb-4">{t.sectorDistribution}</h2>
-                <ResponsiveContainer width="100%" height={220}>
+                <h2 className="text-lg md:text-xl font-semibold mb-2">{t.sectorDistribution}</h2>
+                <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
                     <Pie 
                       data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} 
@@ -1882,18 +1882,18 @@ export default function App() {
                       nameKey="sectorTranslated" 
                       cx="50%" 
                       cy="50%" 
-                      outerRadius={85}
-                      innerRadius={35}
+                      outerRadius={120}
+                      innerRadius={50}
                       paddingAngle={1}
                       label={({ weight, cx, cy, midAngle, outerRadius }) => {
-                        // Solo mostrar etiqueta si el sector es > 8%
-                        if (weight < 8) return null;
+                        // Solo mostrar etiqueta si el sector es > 7%
+                        if (weight < 7) return null;
                         const RADIAN = Math.PI / 180;
-                        const radius = outerRadius * 0.7;
+                        const radius = outerRadius * 0.75;
                         const x = cx + radius * Math.cos(-midAngle * RADIAN);
                         const y = cy + radius * Math.sin(-midAngle * RADIAN);
                         return (
-                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={11} fontWeight="bold">
+                          <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={12} fontWeight="bold">
                             {`${weight.toFixed(0)}%`}
                           </text>
                         );
@@ -1905,7 +1905,7 @@ export default function App() {
                     <Tooltip formatter={(value, name) => [`${value.toFixed(1)}%`, name]} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                   {composition.sectors.map((s, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs py-0.5">
                       <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
