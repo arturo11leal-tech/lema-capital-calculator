@@ -126,7 +126,8 @@ const companyDescriptions = {
   
   // HM Fund
   "Promotora y Operadora de Infraestructura, S.A.B. de C.V.": "PINFRA - Empresa mexicana de infraestructura. Opera autopistas de cuota, plantas de concreto y otros activos.",
-  "Grupo Aeroportuario del Pacífico, SAB de CV": "Opera 12 aeropuertos en el Pacífico mexicano, incluyendo Guadalajara, Tijuana y Los Cabos.",
+  "Grupo Aeroportuario del Pacífico, SAB de CV": "GAP - Opera 12 aeropuertos internacionales en México (Guadalajara, Tijuana, Los Cabos) y 2 en Jamaica. También ofrece servicios comerciales, estacionamientos y salas VIP.",
+  "Grupo Aeroportuario del Pacífico, S.A.B. de C.V.": "GAP - Opera 12 aeropuertos internacionales en México (Guadalajara, Tijuana, Los Cabos) y 2 en Jamaica. También ofrece servicios comerciales, estacionamientos y salas VIP.",
   "Fibra Mty, S.A.P.I. de C.V.": "FIBRA enfocada en propiedades industriales y de oficinas en el norte de México.",
   "Qualitas Controladora, SAB de CV": "Aseguradora mexicana líder en seguros de automóviles. La más grande de México en su segmento.",
   "Corp. Inmobiliaria Vesta, S.A.B. de C.V.": "Desarrollador y operador de parques industriales en México. Enfocado en nearshoring y manufactura.",
