@@ -975,6 +975,20 @@ export default function App() {
   const fund = fundsStats[selectedFund];
   const composition = portfolioComposition[selectedFund];
 
+  // Función para traducir meses
+  const translateMonth = (monthStr) => {
+    if (language === 'en') return monthStr;
+    const monthMap = {
+      'Jan': 'Ene', 'Feb': 'Feb', 'Mar': 'Mar', 'Apr': 'Abr', 'May': 'May', 'Jun': 'Jun',
+      'Jul': 'Jul', 'Aug': 'Ago', 'Sep': 'Sep', 'Oct': 'Oct', 'Nov': 'Nov', 'Dec': 'Dic',
+      'Inicio': 'Inicio'
+    };
+    for (const [en, es] of Object.entries(monthMap)) {
+      if (monthStr.includes(en)) return monthStr.replace(en, es);
+    }
+    return monthStr;
+  };
+
   // Simulación histórica
   const simulationData = useMemo(() => {
     const returns = fund.returns;
@@ -982,17 +996,17 @@ export default function App() {
     let benchmarkValue = initialInvestment;
     let totalContributed = initialInvestment;
     
-    const data = [{ month: 'Inicio', fundValue: initialInvestment, benchmarkValue: initialInvestment, totalContributed: initialInvestment }];
+    const data = [{ month: language === 'es' ? 'Inicio' : 'Start', fundValue: initialInvestment, benchmarkValue: initialInvestment, totalContributed: initialInvestment }];
 
     returns.forEach((r) => {
       fundValue = fundValue * (1 + r.fund) + monthlyContribution;
       benchmarkValue = benchmarkValue * (1 + r.benchmark) + monthlyContribution;
       totalContributed += monthlyContribution;
-      data.push({ month: r.month, fundValue: Math.round(fundValue), benchmarkValue: Math.round(benchmarkValue), totalContributed, difference: Math.round(fundValue - benchmarkValue) });
+      data.push({ month: translateMonth(r.month), fundValue: Math.round(fundValue), benchmarkValue: Math.round(benchmarkValue), totalContributed, difference: Math.round(fundValue - benchmarkValue) });
     });
 
     return data;
-  }, [selectedFund, initialInvestment, monthlyContribution]);
+  }, [selectedFund, initialInvestment, monthlyContribution, language]);
 
   // Proyección de retiro
   const retirementProjection = useMemo(() => {
@@ -1835,7 +1849,18 @@ export default function App() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="month" stroke="#9CA3AF" fontSize={10} interval="preserveStartEnd" />
                   <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `$${formatNumber(v/1000)}K`} />
-                  <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} formatter={(v) => [formatCurrency(v), '']} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} 
+                    formatter={(value, name) => {
+                      const labels = {
+                        totalContributed: language === 'es' ? 'Aportado' : 'Contributed',
+                        benchmarkValue: fund.benchmark,
+                        fundValue: selectedFund
+                      };
+                      return [formatCurrency(value), labels[name] || name];
+                    }}
+                    labelFormatter={(label) => <span style={{fontWeight: 'bold', fontSize: '14px'}}>{label}</span>}
+                  />
                   <Legend />
                   <Area type="monotone" dataKey="totalContributed" name={language === 'es' ? 'Aportado' : 'Contributed'} stroke="#475569" fill="transparent" strokeDasharray="5 5" />
                   <Area type="monotone" dataKey="benchmarkValue" name={fund.benchmark} stroke="#94A3B8" fill="transparent" strokeWidth={2} />
