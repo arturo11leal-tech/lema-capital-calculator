@@ -1269,23 +1269,33 @@ export default function App() {
             </div>
 
             {/* Comparison Table */}
-            <div className="bg-slate-800/50 rounded-xl p-6 md:p-8 backdrop-blur-sm border border-slate-700 mb-8">
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-8 backdrop-blur-sm border border-slate-700 mb-8">
               <h2 className="text-xl md:text-2xl font-semibold mb-6 text-center">{t.homeComparisonTitle}</h2>
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full text-sm md:text-base">
                   <thead>
                     <tr className="border-b border-slate-600">
-                      <th className="text-left py-3 px-4 text-slate-400 font-medium"></th>
-                      <th className="text-center py-3 px-4 text-red-400 font-semibold">❌ {t.homeComparisonHeaders[1]}</th>
-                      <th className="text-center py-3 px-4 text-emerald-400 font-semibold">✓ {t.homeComparisonHeaders[2]}</th>
+                      <th className="text-left py-3 px-2 md:px-4 text-slate-400 font-medium w-1/4"></th>
+                      <th className="text-center py-3 px-2 md:px-4 text-red-400 font-semibold w-[37.5%]">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-lg">❌</span>
+                          <span>{t.homeComparisonHeaders[1]}</span>
+                        </div>
+                      </th>
+                      <th className="text-center py-3 px-2 md:px-4 text-emerald-400 font-semibold w-[37.5%]">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-lg">✓</span>
+                          <span>{t.homeComparisonHeaders[2]}</span>
+                        </div>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {t.homeComparisonRows.map((row, idx) => (
                       <tr key={idx} className="border-b border-slate-700/50">
-                        <td className="py-3 px-4 text-slate-300 font-medium">{row[0]}</td>
-                        <td className="py-3 px-4 text-center text-slate-400">{row[1]}</td>
-                        <td className="py-3 px-4 text-center text-slate-200">{row[2]}</td>
+                        <td className="py-3 px-2 md:px-4 text-slate-300 font-medium text-left">{row[0]}</td>
+                        <td className="py-3 px-2 md:px-4 text-center text-slate-400">{row[1]}</td>
+                        <td className="py-3 px-2 md:px-4 text-center text-slate-200">{row[2]}</td>
                       </tr>
                     ))}
                   </tbody>
