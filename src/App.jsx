@@ -678,6 +678,7 @@ export default function App() {
                 <div className="space-y-3">
                   {composition.holdings.map((holding, idx) => {
                     const description = companyDescriptions[holding.name] || companyDescriptions["default"];
+                    const isLastItems = idx >= composition.holdings.length - 3; // Últimas 3 posiciones
                     return (
                       <div key={idx} className="group relative">
                         <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
@@ -692,8 +693,8 @@ export default function App() {
                             </div>
                           </div>
                         </div>
-                        {/* Tooltip */}
-                        <div className="absolute left-0 right-0 top-full mt-1 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        {/* Tooltip - aparece arriba para las últimas posiciones, abajo para las primeras */}
+                        <div className={`absolute left-0 right-0 ${isLastItems ? 'bottom-full mb-1' : 'top-full mt-1'} p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50`}>
                           <div className="flex items-start gap-2">
                             <span className="text-lg">ℹ️</span>
                             <div>
@@ -701,7 +702,7 @@ export default function App() {
                               <p className="text-xs text-slate-400 leading-relaxed">{description}</p>
                             </div>
                           </div>
-                          <div className="absolute -top-2 left-6 w-3 h-3 bg-slate-900 border-l border-t border-slate-600 transform rotate-45"></div>
+                          <div className={`absolute ${isLastItems ? '-bottom-2 border-r border-b' : '-top-2 border-l border-t'} left-6 w-3 h-3 bg-slate-900 border-slate-600 transform rotate-45`}></div>
                         </div>
                       </div>
                     );
