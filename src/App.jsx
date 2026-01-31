@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, ReferenceLine, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
 // Datos de composición de portafolios (Top 10 Holdings y Sectores)
@@ -566,8 +566,16 @@ const translations = {
     homePrinciple2Text: "Cada inversión está respaldada por investigación profunda. Buscamos negocios con ventajas competitivas duraderas.",
     homePrinciple3Title: "Margen de Seguridad",
     homePrinciple3Text: "Compramos calidad a precios razonables. Protegemos el capital antes de buscar rendimientos.",
-    homeQuote: "\"El mercado de valores es un mecanismo para transferir dinero del impaciente al paciente.\"",
-    homeQuoteAuthor: "— Warren Buffett",
+    homeQuotes: [
+      { quote: "El mercado de valores es un mecanismo para transferir dinero del impaciente al paciente.", author: "Warren Buffett" },
+      { quote: "En el corto plazo, el mercado es una máquina de votar; en el largo plazo, es una máquina de pesar.", author: "Benjamin Graham" },
+      { quote: "El gran dinero no está en comprar o vender, sino en esperar.", author: "Charlie Munger" },
+      { quote: "El precio es lo que pagas, el valor es lo que obtienes.", author: "Warren Buffett" },
+      { quote: "La inversión exitosa no se trata de comprar cosas buenas, sino de comprar cosas bien.", author: "Howard Marks" },
+      { quote: "Los mercados alcistas nacen del pesimismo, crecen con el escepticismo, maduran con el optimismo y mueren con la euforia.", author: "John Templeton" },
+      { quote: "Los mejores rendimientos se obtienen con paciencia y concentración.", author: "Stanley Druckenmiller" },
+      { quote: "Sé temeroso cuando otros son codiciosos, y codicioso cuando otros son temerosos.", author: "Warren Buffett" }
+    ],
     homeCTA1: "Descubre tu Perfil de Inversionista",
     homeCTA2: "Explora Nuestros Portafolios",
     homeCTA3: "Simula tu Inversión",
@@ -799,8 +807,16 @@ const translations = {
     homePrinciple2Text: "Every investment is backed by deep research. We seek businesses with lasting competitive advantages.",
     homePrinciple3Title: "Margin of Safety",
     homePrinciple3Text: "We buy quality at reasonable prices. We protect capital before seeking returns.",
-    homeQuote: "\"The stock market is a device for transferring money from the impatient to the patient.\"",
-    homeQuoteAuthor: "— Warren Buffett",
+    homeQuotes: [
+      { quote: "The stock market is a device for transferring money from the impatient to the patient.", author: "Warren Buffett" },
+      { quote: "In the short run, the market is a voting machine; in the long run, it is a weighing machine.", author: "Benjamin Graham" },
+      { quote: "The big money is not in the buying or selling, but in the waiting.", author: "Charlie Munger" },
+      { quote: "Price is what you pay, value is what you get.", author: "Warren Buffett" },
+      { quote: "Successful investing is not about buying good things, but about buying things well.", author: "Howard Marks" },
+      { quote: "Bull markets are born on pessimism, grow on skepticism, mature on optimism, and die on euphoria.", author: "John Templeton" },
+      { quote: "The best returns come from patience and concentration.", author: "Stanley Druckenmiller" },
+      { quote: "Be fearful when others are greedy, and greedy when others are fearful.", author: "Warren Buffett" }
+    ],
     homeCTA1: "Discover Your Investor Profile",
     homeCTA2: "Explore Our Portfolios",
     homeCTA3: "Simulate Your Investment",
@@ -1004,6 +1020,15 @@ export default function App() {
   const [monthlyContribution, setMonthlyContribution] = useState(5000);
   const [activeTab, setActiveTab] = useState('home');
   const [language, setLanguage] = useState('es'); // Estado para idioma
+  const [quoteIndex, setQuoteIndex] = useState(0); // Estado para rotación de frases
+  
+  // Efecto para rotar frases cada 8 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((prev) => (prev + 1) % 8);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
   
   // Estados para Análisis de Retiro
   const [currentAge, setCurrentAge] = useState(35);
@@ -1288,10 +1313,22 @@ export default function App() {
               </div>
             </div>
 
-            {/* Quote */}
-            <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-8 mb-8 text-center border border-slate-600">
-              <p className="text-xl md:text-2xl italic text-slate-200 mb-4">{t.homeQuote}</p>
-              <p className="text-slate-400 font-medium">{t.homeQuoteAuthor}</p>
+            {/* Quote - Rotación automática */}
+            <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-8 mb-8 text-center border border-slate-600 min-h-[180px] flex flex-col justify-center">
+              <div className="transition-opacity duration-500">
+                <p className="text-lg md:text-xl italic text-slate-200 mb-4">"{t.homeQuotes[quoteIndex].quote}"</p>
+                <p className="text-slate-400 font-medium">— {t.homeQuotes[quoteIndex].author}</p>
+              </div>
+              {/* Indicadores */}
+              <div className="flex justify-center gap-2 mt-6">
+                {t.homeQuotes.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setQuoteIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all ${idx === quoteIndex ? 'bg-emerald-400 w-6' : 'bg-slate-600 hover:bg-slate-500'}`}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* CTAs */}
