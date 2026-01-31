@@ -2186,7 +2186,17 @@ export default function App() {
                     >
                       {composition.sectors.map((entry, index) => (<Cell key={`cell-${index}`} fill={SECTOR_COLORS[index % SECTOR_COLORS.length]} />))}
                     </Pie>
-                    <Tooltip formatter={(value, name) => [`${value.toFixed(1)}%`, name]} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
+                    <Tooltip 
+                      formatter={(value, name) => [`${value.toFixed(1)}%`, name]} 
+                      contentStyle={{ 
+                        backgroundColor: '#0f172a', 
+                        border: '1px solid #3b82f6', 
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                      }} 
+                      itemStyle={{ color: '#f1f5f9' }}
+                      labelStyle={{ color: '#94a3b8', fontWeight: 'bold' }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1">
@@ -2209,7 +2219,17 @@ export default function App() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `${v}%`} />
                   <YAxis type="category" dataKey="sectorTranslated" stroke="#9CA3AF" fontSize={9} width={90} tick={{ fontSize: 9 }} />
-                  <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
+                  <Tooltip 
+                    formatter={(value) => `${value.toFixed(2)}%`} 
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      border: '1px solid #3b82f6', 
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                    }} 
+                    itemStyle={{ color: '#f1f5f9' }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 'bold' }}
+                  />
                   <Bar dataKey="weight" fill={fund.color} radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -2367,7 +2387,18 @@ export default function App() {
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="year" stroke="#9CA3AF" fontSize={10} />
                   <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : `$${formatNumber(v/1000)}K`} />
-                  <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} formatter={(v) => [formatCurrency(v), language === 'es' ? 'Patrimonio' : 'Wealth']} labelFormatter={(l) => `${language === 'es' ? 'Edad' : 'Age'}: ${l}`} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      border: '1px solid #3b82f6', 
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+                    }} 
+                    itemStyle={{ color: '#f1f5f9' }}
+                    labelStyle={{ color: '#94a3b8', fontWeight: 'bold' }}
+                    formatter={(v) => [formatCurrency(v), language === 'es' ? 'Patrimonio' : 'Wealth']} 
+                    labelFormatter={(l) => `${language === 'es' ? 'Edad' : 'Age'}: ${l}`} 
+                  />
                   <ReferenceLine x={retirementAge} stroke="#F59E0B" strokeDasharray="5 5" />
                   <Area type="monotone" dataKey="balance" stroke="#10B981" fill="url(#retGrad)" strokeWidth={3} />
                 </AreaChart>
