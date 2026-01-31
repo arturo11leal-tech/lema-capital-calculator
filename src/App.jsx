@@ -1175,12 +1175,28 @@ export default function App() {
       {/* Header */}
       <div className="py-6 px-4 border-b border-slate-700/50">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            {/* Logo y Título */}
-            <div className="flex items-center gap-3 justify-center md:justify-start">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg overflow-hidden">
-                <svg viewBox="0 0 40 40" className="w-8 h-8 md:w-10 md:h-10">
-                  {/* Barras ascendentes - representa crecimiento patrimonial */}
+          
+          {/* Mobile: Idiomas arriba, título centrado */}
+          <div className="md:hidden">
+            <div className="flex justify-end mb-4">
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setLanguage('es')} 
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${language === 'es' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
+                >
+                  🇲🇽 ES
+                </button>
+                <button 
+                  onClick={() => setLanguage('en')} 
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1 ${language === 'en' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
+                >
+                  🇺🇸 EN
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg overflow-hidden">
+                <svg viewBox="0 0 40 40" className="w-10 h-10">
                   <rect x="6" y="24" width="6" height="12" rx="1" fill="white" opacity="0.5"/>
                   <rect x="14" y="18" width="6" height="18" rx="1" fill="white" opacity="0.7"/>
                   <rect x="22" y="11" width="6" height="25" rx="1" fill="white" opacity="0.85"/>
@@ -1188,27 +1204,44 @@ export default function App() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight">InverCo</h1>
-                <p className="text-slate-400 text-xs md:text-sm">{t.subtitle}</p>
+                <h1 className="text-2xl font-bold text-white tracking-tight">InverCo</h1>
+                <p className="text-slate-400 text-sm">{t.subtitle}</p>
               </div>
             </div>
-            
-            {/* Language Selector */}
-            <div className="flex justify-center gap-2">
+          </div>
+
+          {/* Desktop: Título izquierda, idiomas derecha */}
+          <div className="hidden md:flex md:items-center md:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg overflow-hidden">
+                <svg viewBox="0 0 40 40" className="w-9 h-9">
+                  <rect x="6" y="24" width="6" height="12" rx="1" fill="white" opacity="0.5"/>
+                  <rect x="14" y="18" width="6" height="18" rx="1" fill="white" opacity="0.7"/>
+                  <rect x="22" y="11" width="6" height="25" rx="1" fill="white" opacity="0.85"/>
+                  <rect x="30" y="4" width="6" height="32" rx="1" fill="white"/>
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white tracking-tight">InverCo</h1>
+                <p className="text-slate-400 text-sm">{t.subtitle}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
               <button 
                 onClick={() => setLanguage('es')} 
-                className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-1.5 ${language === 'es' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${language === 'es' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
               >
                 🇲🇽 ES
               </button>
               <button 
                 onClick={() => setLanguage('en')} 
-                className={`px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-1.5 ${language === 'en' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${language === 'en' ? 'bg-blue-600 text-white shadow-md' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600'}`}
               >
                 🇺🇸 EN
               </button>
             </div>
           </div>
+
         </div>
       </div>
 
