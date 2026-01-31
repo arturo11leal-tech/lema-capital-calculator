@@ -747,6 +747,7 @@ export default function App() {
                       <th className="text-left py-3 px-4 text-slate-400">Periodo</th>
                       <th className="text-right py-3 px-4" style={{ color: fund.color }}>{selectedFund}</th>
                       <th className="text-right py-3 px-4 text-slate-400">{fund.benchmark}</th>
+                      <th className="text-right py-3 px-4 text-slate-400">Diferencia</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -768,13 +769,17 @@ export default function App() {
                         ['YTD (Año a la Fecha)', fund.ytd || fund.last_12m, fund.bench_ytd || bench_last_12m],
                       ];
                       
-                      return rows.map(([label, fundVal, benchVal], idx) => (
-                        <tr key={idx} className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                          <td className="py-3 px-4 text-slate-300">{label}</td>
-                          <td className={`text-right py-3 px-4 font-medium ${fundVal >= 0 ? '' : 'text-red-400'}`} style={fundVal >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fundVal)}</td>
-                          <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(benchVal)}</td>
-                        </tr>
-                      ));
+                      return rows.map(([label, fundVal, benchVal], idx) => {
+                        const diff = fundVal - benchVal;
+                        return (
+                          <tr key={idx} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+                            <td className="py-3 px-4 text-slate-300">{label}</td>
+                            <td className={`text-right py-3 px-4 font-medium ${fundVal >= 0 ? '' : 'text-red-400'}`} style={fundVal >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fundVal)}</td>
+                            <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(benchVal)}</td>
+                            <td className={`text-right py-3 px-4 font-medium ${diff >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(diff)}</td>
+                          </tr>
+                        );
+                      });
                     })()}
                   </tbody>
                 </table>
