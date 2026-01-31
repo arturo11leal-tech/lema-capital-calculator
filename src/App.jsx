@@ -1405,22 +1405,28 @@ export default function App() {
                 {/* Asignación recomendada */}
                 <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
                   <h3 className="text-xl font-semibold mb-4">📊 Asignación de Activos Recomendada</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                     {(() => {
+                      // Asignaciones basadas en:
+                      // - Crypto: Ray Dalio (1-2%), Paul Tudor Jones (1-2%), Fidelity (1-5%), BlackRock (1-2%)
+                      // - Conservadores: 0-1% (riesgo muy alto para su perfil)
+                      // - Moderados: 2-3% (beneficio diversificación con riesgo controlado)
+                      // - Agresivos: 3-5% (máximo recomendado por institucionales serios)
                       const allocations = {
-                        'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, cash: 10 },
-                        'conservative': { stocks: 35, bonds: 35, realEstate: 15, gold: 10, cash: 5 },
-                        'moderate': { stocks: 50, bonds: 25, realEstate: 12, gold: 8, cash: 5 },
-                        'growth': { stocks: 70, bonds: 12, realEstate: 10, gold: 5, cash: 3 },
-                        'aggressive': { stocks: 85, bonds: 5, realEstate: 5, gold: 3, cash: 2 }
+                        'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, crypto: 0, cash: 10 },
+                        'conservative': { stocks: 35, bonds: 35, realEstate: 14, gold: 10, crypto: 1, cash: 5 },
+                        'moderate': { stocks: 48, bonds: 24, realEstate: 12, gold: 8, crypto: 3, cash: 5 },
+                        'growth': { stocks: 67, bonds: 11, realEstate: 10, gold: 5, crypto: 4, cash: 3 },
+                        'aggressive': { stocks: 80, bonds: 4, realEstate: 5, gold: 3, crypto: 5, cash: 3 }
                       };
                       const alloc = allocations[riskProfile];
                       return [
-                        { name: 'Renta Variable', value: alloc.stocks, color: '#3B82F6', icon: '📈' },
-                        { name: 'Renta Fija', value: alloc.bonds, color: '#10B981', icon: '🏦' },
-                        { name: 'Bienes Raíces', value: alloc.realEstate, color: '#8B5CF6', icon: '🏠' },
-                        { name: 'Metales', value: alloc.gold, color: '#F59E0B', icon: '🥇' },
-                        { name: 'Efectivo', value: alloc.cash, color: '#6B7280', icon: '💵' }
+                        { name: language === 'es' ? 'Renta Variable' : 'Stocks', value: alloc.stocks, color: '#3B82F6', icon: '📈' },
+                        { name: language === 'es' ? 'Renta Fija' : 'Bonds', value: alloc.bonds, color: '#10B981', icon: '🏦' },
+                        { name: language === 'es' ? 'Bienes Raíces' : 'Real Estate', value: alloc.realEstate, color: '#8B5CF6', icon: '🏠' },
+                        { name: language === 'es' ? 'Metales' : 'Metals', value: alloc.gold, color: '#F59E0B', icon: '🥇' },
+                        { name: 'Crypto (BTC/ETH)', value: alloc.crypto, color: '#F97316', icon: '₿' },
+                        { name: language === 'es' ? 'Efectivo' : 'Cash', value: alloc.cash, color: '#6B7280', icon: '💵' }
                       ].map((asset) => (
                         <div key={asset.name} className="text-center">
                           <div className="text-3xl mb-1">{asset.icon}</div>
@@ -1439,11 +1445,11 @@ export default function App() {
                           <Pie
                             data={(() => {
                               const allocations = {
-                                'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, cash: 10 },
-                                'conservative': { stocks: 35, bonds: 35, realEstate: 15, gold: 10, cash: 5 },
-                                'moderate': { stocks: 50, bonds: 25, realEstate: 12, gold: 8, cash: 5 },
-                                'growth': { stocks: 70, bonds: 12, realEstate: 10, gold: 5, cash: 3 },
-                                'aggressive': { stocks: 85, bonds: 5, realEstate: 5, gold: 3, cash: 2 }
+                                'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, crypto: 0, cash: 10 },
+                                'conservative': { stocks: 35, bonds: 35, realEstate: 14, gold: 10, crypto: 1, cash: 5 },
+                                'moderate': { stocks: 48, bonds: 24, realEstate: 12, gold: 8, crypto: 3, cash: 5 },
+                                'growth': { stocks: 67, bonds: 11, realEstate: 10, gold: 5, crypto: 4, cash: 3 },
+                                'aggressive': { stocks: 80, bonds: 4, realEstate: 5, gold: 3, crypto: 5, cash: 3 }
                               };
                               const alloc = allocations[riskProfile];
                               return [
@@ -1451,8 +1457,9 @@ export default function App() {
                                 { name: 'Renta Fija', value: alloc.bonds },
                                 { name: 'Bienes Raíces', value: alloc.realEstate },
                                 { name: 'Metales', value: alloc.gold },
+                                { name: 'Crypto', value: alloc.crypto },
                                 { name: 'Efectivo', value: alloc.cash }
-                              ];
+                              ].filter(item => item.value > 0);
                             })()}
                             dataKey="value"
                             cx="50%"
@@ -1464,6 +1471,7 @@ export default function App() {
                             <Cell fill="#10B981" />
                             <Cell fill="#8B5CF6" />
                             <Cell fill="#F59E0B" />
+                            {riskProfile !== 'very-conservative' && <Cell fill="#F97316" />}
                             <Cell fill="#6B7280" />
                           </Pie>
                         </PieChart>
