@@ -77,13 +77,16 @@ const portfolioComposition = {
   },
   "ALR Portfolio": {
     holdings: [
-      { rank: 1, name: "Estados Unidos (Acciones)", weight: 37.4 },
-      { rank: 2, name: "México (Acciones)", weight: 26.6 },
-      { rank: 3, name: "Efectivo & Equivalentes", weight: 12.9 },
-      { rank: 4, name: "Asia (Acciones)", weight: 8.3 },
-      { rank: 5, name: "Europa (Acciones)", weight: 6.8 },
-      { rank: 6, name: "Metales Preciosos", weight: 5.0 },
-      { rank: 7, name: "Activos Digitales (Crypto)", weight: 3.0 }
+      { rank: 1, name: "Grupo Traxion SAB de CV", weight: 15.5 },
+      { rank: 2, name: "Mexican Pesos (MXN)", weight: 11.1 },
+      { rank: 3, name: "Berkshire Hathaway Inc", weight: 8.4 },
+      { rank: 4, name: "UnitedHealth Group Inc", weight: 5.3 },
+      { rank: 5, name: "Occidental Petroleum Corp", weight: 4.3 },
+      { rank: 6, name: "Novo Nordisk AS", weight: 4.2 },
+      { rank: 7, name: "JD.com Inc", weight: 3.3 },
+      { rank: 8, name: "Fomento Economico Mexicano SAB de CV", weight: 3.1 },
+      { rank: 9, name: "Generac Holdings Inc", weight: 3.0 },
+      { rank: 10, name: "Oscar Health Inc", weight: 2.7 }
     ],
     sectors: [
       { sector: "Industrial", weight: 25.2 },
