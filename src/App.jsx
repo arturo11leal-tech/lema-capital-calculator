@@ -538,6 +538,22 @@ export default function App() {
   const [monthlyRetirementExpense, setMonthlyRetirementExpense] = useState(30000);
   const [lifeExpectancy, setLifeExpectancy] = useState(90);
 
+  // Estados para Cuestionario de Perfil de Riesgo
+  const [riskStep, setRiskStep] = useState(0); // 0 = inicio, 1-4 = objetivo, 5-10 = riesgo, 11 = resultado
+  const [riskAnswers, setRiskAnswers] = useState({
+    goal: null,
+    initialInvestmentRisk: '',
+    timeHorizon: '',
+    monthlyContributionRisk: '',
+    knowledgeLevel: null,
+    riskPerception: null,
+    experiencedLoss: null,
+    lossReaction: null,
+    volatilityTolerance: null,
+    decisionApproach: null
+  });
+  const [riskProfile, setRiskProfile] = useState(null);
+
   const fund = fundsStats[selectedFund];
   const composition = portfolioComposition[selectedFund];
 
@@ -648,9 +664,9 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Tab Navigation */}
         <div className="flex justify-center gap-2 mb-6 flex-wrap">
-          <button onClick={() => setActiveTab('simulator')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'simulator' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📊 Simulador</button>
-          <button onClick={() => setActiveTab('stats')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'stats' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📈 Estadísticas</button>
-          <button onClick={() => setActiveTab('composition')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'composition' ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🏢 Composición</button>
+          <button onClick={() => setActiveTab('risk-profile')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'risk-profile' ? 'bg-teal-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🎯 Perfil de Riesgo</button>
+          <button onClick={() => setActiveTab('portfolio')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'portfolio' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📊 Portafolio</button>
+          <button onClick={() => setActiveTab('simulator')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'simulator' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>💹 Simulador</button>
           <button onClick={() => setActiveTab('retirement')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'retirement' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🏖️ Retiro</button>
           <button onClick={() => setActiveTab('glossary')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'glossary' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📚 Glosario</button>
         </div>
@@ -668,91 +684,412 @@ export default function App() {
           <p className="text-slate-400 text-sm">{fund.description} • {fund.n_months} meses de track record</p>
         </div>
 
-        {/* ==================== COMPOSICIÓN ==================== */}
-        {activeTab === 'composition' && (
-          <>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              {/* Top 10 Holdings */}
+        {/* ==================== PERFIL DE RIESGO ==================== */}
+        {activeTab === 'risk-profile' && (
+          <div className="max-w-3xl mx-auto">
+            {/* Progress Bar */}
+            <div className="mb-8">
+              <div className="flex justify-between text-xs text-slate-400 mb-2">
+                <span className={riskStep >= 1 ? 'text-teal-400 font-medium' : ''}>1. Tu Objetivo</span>
+                <span className={riskStep >= 5 ? 'text-teal-400 font-medium' : ''}>2. Perfil de Riesgo</span>
+                <span className={riskStep >= 11 ? 'text-teal-400 font-medium' : ''}>3. Recomendación</span>
+              </div>
+              <div className="w-full bg-slate-700 rounded-full h-2">
+                <div className="h-2 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-500" style={{ width: `${Math.min((riskStep / 11) * 100, 100)}%` }}></div>
+              </div>
+            </div>
+
+            {/* Step 0: Inicio */}
+            {riskStep === 0 && (
+              <div className="bg-slate-800/50 rounded-xl p-8 backdrop-blur-sm border border-slate-700 text-center">
+                <div className="text-6xl mb-4">🎯</div>
+                <h2 className="text-2xl font-bold mb-4">Descubre tu Perfil de Inversionista</h2>
+                <p className="text-slate-400 mb-6">Responde algunas preguntas para que podamos recomendarte la estrategia de inversión más adecuada para ti.</p>
+                <p className="text-sm text-slate-500 mb-8">⏱️ Tiempo estimado: 3-5 minutos</p>
+                <button onClick={() => setRiskStep(1)} className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg font-medium hover:from-teal-600 hover:to-emerald-600 transition-all">
+                  Comenzar Evaluación
+                </button>
+              </div>
+            )}
+
+            {/* Step 1: Objetivo de inversión */}
+            {riskStep === 1 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">🏆 Top {composition.holdings.length} Posiciones</h2>
-                <p className="text-xs text-slate-500 mb-4">💡 Pasa el mouse sobre una posición para ver más información</p>
+                <h2 className="text-xl font-semibold mb-2">¿Cuál es tu objetivo principal de inversión?</h2>
+                <p className="text-slate-400 text-sm mb-6">Selecciona el objetivo que mejor describe tus metas financieras.</p>
                 <div className="space-y-3">
-                  {composition.holdings.map((holding, idx) => {
-                    const description = companyDescriptions[holding.name] || companyDescriptions["default"];
-                    const isLastItems = idx >= composition.holdings.length - 3; // Últimas 3 posiciones
-                    return (
-                      <div key={idx} className="group relative">
-                        <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
-                          <span className="text-slate-500 w-6 text-sm">{holding.rank}.</span>
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-sm truncate pr-2 group-hover:text-white transition-colors">{holding.name}</span>
-                              <span className="font-medium text-sm" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
-                            </div>
-                            <div className="w-full bg-slate-700 rounded-full h-2">
-                              <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
-                            </div>
-                          </div>
-                        </div>
-                        {/* Tooltip - aparece arriba para las últimas posiciones, abajo para las primeras */}
-                        <div className={`absolute left-0 right-0 ${isLastItems ? 'bottom-full mb-1' : 'top-full mt-1'} p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50`}>
-                          <div className="flex items-start gap-2">
-                            <span className="text-lg">ℹ️</span>
-                            <div>
-                              <p className="font-medium text-sm text-white mb-1">{holding.name}</p>
-                              <p className="text-xs text-slate-400 leading-relaxed">{description}</p>
-                            </div>
-                          </div>
-                          <div className={`absolute ${isLastItems ? '-bottom-2 border-r border-b' : '-top-2 border-l border-t'} left-6 w-3 h-3 bg-slate-900 border-slate-600 transform rotate-45`}></div>
+                  {[
+                    { id: 'retirement', icon: '🏖️', title: 'Ahorrar para el retiro', desc: 'Planeo dejar crecer este dinero hasta mi jubilación.' },
+                    { id: 'major-expense', icon: '🎓', title: 'Gasto importante próximo', desc: 'Planeo usar este dinero para un gasto mayor (educación, salud, etc.)' },
+                    { id: 'special', icon: '🏠', title: 'Algo especial en el futuro', desc: 'Tengo un gasto grande planeado como casa, auto o boda.' },
+                    { id: 'emergency', icon: '☔', title: 'Fondo de emergencia', desc: 'Este dinero es una red de seguridad para imprevistos.' },
+                    { id: 'wealth', icon: '📈', title: 'Crecer mi patrimonio', desc: 'No tengo un plan específico, solo quiero invertir y crecer mi dinero.' },
+                    { id: 'income', icon: '💰', title: 'Generar ingresos', desc: 'Planeo retirar dinero de esta cuenta regularmente.' }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, goal: option.id}); setRiskStep(2); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.goal === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">{option.icon}</span>
+                        <div>
+                          <p className="font-medium">{option.title}</p>
+                          <p className="text-sm text-slate-400">{option.desc}</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Sector Allocation */}
-              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">📊 Distribución por Sector</h2>
-                <ResponsiveContainer width="100%" height={250}>
-                  <PieChart>
-                    <Pie data={composition.sectors} dataKey="weight" nameKey="sector" cx="50%" cy="50%" outerRadius={80} label={({ sector, weight }) => `${weight.toFixed(1)}%`} labelLine={false}>
-                      {composition.sectors.map((entry, index) => (<Cell key={`cell-${index}`} fill={SECTOR_COLORS[index % SECTOR_COLORS.length]} />))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                  {composition.sectors.map((s, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs">
-                      <div className="w-3 h-3 rounded" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
-                      <span className="text-slate-400 truncate">{s.sector}</span>
-                      <span className="ml-auto font-medium">{s.weight.toFixed(1)}%</span>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Sector Bar Chart */}
-            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">📈 Sectores por Peso</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={composition.sectors} layout="vertical" margin={{ left: 100 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `${v}%`} />
-                  <YAxis type="category" dataKey="sector" stroke="#9CA3AF" fontSize={10} width={100} />
-                  <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
-                  <Bar dataKey="weight" fill={fund.color} radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </>
+            {/* Step 2: Inversión inicial */}
+            {riskStep === 2 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Cuánto te gustaría invertir inicialmente?</h2>
+                <p className="text-slate-400 text-sm mb-6">El monto de inversión nos ayuda a construir un portafolio adecuado a tus objetivos.</p>
+                <div className="mb-6">
+                  <label className="block text-slate-400 text-sm mb-2">Inversión inicial</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input type="number" value={riskAnswers.initialInvestmentRisk} onChange={(e) => setRiskAnswers({...riskAnswers, initialInvestmentRisk: e.target.value})} placeholder="100,000" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:border-teal-500 focus:outline-none" />
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => setRiskStep(1)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                  <button onClick={() => riskAnswers.initialInvestmentRisk && setRiskStep(3)} disabled={!riskAnswers.initialInvestmentRisk} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">Continuar</button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Horizonte de tiempo */}
+            {riskStep === 3 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿En cuántos años necesitarás retirar este dinero?</h2>
+                <p className="text-slate-400 text-sm mb-6">Tu horizonte de tiempo afecta cuánto riesgo puede manejar tu portafolio.</p>
+                <div className="mb-6">
+                  <label className="block text-slate-400 text-sm mb-2">Años hasta retirar fondos</label>
+                  <input type="number" value={riskAnswers.timeHorizon} onChange={(e) => setRiskAnswers({...riskAnswers, timeHorizon: e.target.value})} placeholder="10" min="1" max="50" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-white focus:border-teal-500 focus:outline-none" />
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => setRiskStep(2)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                  <button onClick={() => riskAnswers.timeHorizon && setRiskStep(4)} disabled={!riskAnswers.timeHorizon} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">Continuar</button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 4: Aportación mensual */}
+            {riskStep === 4 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Cuánto deseas aportar mensualmente?</h2>
+                <p className="text-slate-400 text-sm mb-6">Las aportaciones regulares ayudan a hacer crecer tu inversión. (Opcional)</p>
+                <div className="mb-6">
+                  <label className="block text-slate-400 text-sm mb-2">Aportación mensual</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
+                    <input type="number" value={riskAnswers.monthlyContributionRisk} onChange={(e) => setRiskAnswers({...riskAnswers, monthlyContributionRisk: e.target.value})} placeholder="5,000" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:border-teal-500 focus:outline-none" />
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => setRiskStep(3)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                  <button onClick={() => setRiskStep(5)} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700">Continuar</button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 5: Conocimiento de inversiones */}
+            {riskStep === 5 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Cuál es tu conocimiento sobre acciones, bonos y ETFs?</h2>
+                <p className="text-slate-400 text-sm mb-6">Esto nos ayuda a personalizar las recomendaciones.</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'none', label: 'Ninguno', desc: 'No tengo experiencia en inversiones' },
+                    { id: 'some', label: 'Algo', desc: 'Conozco los conceptos básicos' },
+                    { id: 'good', label: 'Bueno', desc: 'Tengo experiencia invirtiendo' },
+                    { id: 'extensive', label: 'Extenso', desc: 'Soy un inversionista experimentado' }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, knowledgeLevel: option.id}); setRiskStep(6); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.knowledgeLevel === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                      <p className="text-sm text-slate-400">{option.desc}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(4)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 6: Percepción del riesgo */}
+            {riskStep === 6 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">Cuando escuchas "riesgo" relacionado con tus finanzas, ¿qué es lo primero que piensas?</h2>
+                <p className="text-slate-400 text-sm mb-6">No hay respuesta correcta o incorrecta.</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'worry', label: 'Me preocupa quedarme sin nada', score: 1 },
+                    { id: 'understand', label: 'Entiendo que es parte inherente del proceso de inversión', score: 2 },
+                    { id: 'opportunity', label: 'Veo oportunidad de grandes rendimientos', score: 3 },
+                    { id: 'thrill', label: 'Pienso en la emoción de invertir', score: 4 }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, riskPerception: option.id}); setRiskStep(7); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.riskPerception === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(5)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 7: Experiencia con pérdidas */}
+            {riskStep === 7 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Has experimentado una caída del 20% o más en el valor de tus inversiones en un año?</h2>
+                <p className="text-slate-400 text-sm mb-6">Tu experiencia pasada nos ayuda a entender tu tolerancia al riesgo.</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'yes', label: 'Sí' },
+                    { id: 'no', label: 'No' }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, experiencedLoss: option.id}); setRiskStep(option.id === 'yes' ? 8 : 9); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.experiencedLoss === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(6)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 8: Reacción a pérdidas (solo si respondió Sí) */}
+            {riskStep === 8 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Qué hiciste cuando experimentaste esa caída del 20%?</h2>
+                <p className="text-slate-400 text-sm mb-6">Tu reacción pasada predice tu comportamiento futuro.</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'sold-all', label: 'Vendí todo', score: 1 },
+                    { id: 'sold-some', label: 'Vendí algo', score: 2 },
+                    { id: 'nothing', label: 'No hice nada', score: 3 },
+                    { id: 'rebalanced', label: 'Rebalanceé mis inversiones', score: 4 },
+                    { id: 'bought-more', label: 'Compré más', score: 5 }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, lossReaction: option.id}); setRiskStep(9); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.lossReaction === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 9: Tolerancia a la volatilidad */}
+            {riskStep === 9 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Con cuánta fluctuación te sentirías cómodo en 1 año?</h2>
+                <p className="text-slate-400 text-sm mb-6">Asumiendo una inversión de $100,000</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'very-low', label: '-10% a +15%', desc: 'Pérdida potencial: $10,000 | Ganancia potencial: $15,000', score: 1 },
+                    { id: 'low', label: '-15% a +25%', desc: 'Pérdida potencial: $15,000 | Ganancia potencial: $25,000', score: 2 },
+                    { id: 'moderate', label: '-25% a +35%', desc: 'Pérdida potencial: $25,000 | Ganancia potencial: $35,000', score: 3 },
+                    { id: 'high', label: '-30% a +45%', desc: 'Pérdida potencial: $30,000 | Ganancia potencial: $45,000', score: 4 },
+                    { id: 'very-high', label: '-35% a +50%', desc: 'Pérdida potencial: $35,000 | Ganancia potencial: $50,000', score: 5 },
+                    { id: 'aggressive', label: '-40% a +55%', desc: 'Pérdida potencial: $40,000 | Ganancia potencial: $55,000', score: 6 },
+                    { id: 'very-aggressive', label: '-45% a +60%', desc: 'Pérdida potencial: $45,000 | Ganancia potencial: $60,000', score: 7 }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, volatilityTolerance: option.id}); setRiskStep(10); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.volatilityTolerance === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                      <p className="text-sm text-slate-400">{option.desc}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(riskAnswers.experiencedLoss === 'yes' ? 8 : 7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 10: Enfoque en decisiones */}
+            {riskStep === 10 && (
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-2">¿Cómo describirías tu enfoque al tomar decisiones financieras importantes?</h2>
+                <p className="text-slate-400 text-sm mb-6">Última pregunta antes de ver tu resultado.</p>
+                <div className="space-y-3">
+                  {[
+                    { id: 'avoid', label: 'Trato de evitar tomar decisiones', score: 1 },
+                    { id: 'reluctant', label: 'Las tomo con reluctancia', score: 2 },
+                    { id: 'confident', label: 'Las tomo con confianza y no miro atrás', score: 3 }
+                  ].map((option) => (
+                    <button key={option.id} onClick={() => { 
+                      setRiskAnswers({...riskAnswers, decisionApproach: option.id}); 
+                      // Calcular perfil de riesgo
+                      const answers = {...riskAnswers, decisionApproach: option.id};
+                      let score = 0;
+                      const timeHorizon = parseInt(answers.timeHorizon) || 10;
+                      score += timeHorizon >= 20 ? 5 : timeHorizon >= 10 ? 4 : timeHorizon >= 5 ? 3 : 2;
+                      score += answers.knowledgeLevel === 'extensive' ? 4 : answers.knowledgeLevel === 'good' ? 3 : answers.knowledgeLevel === 'some' ? 2 : 1;
+                      score += answers.riskPerception === 'thrill' ? 4 : answers.riskPerception === 'opportunity' ? 3 : answers.riskPerception === 'understand' ? 2 : 1;
+                      if (answers.lossReaction) {
+                        score += answers.lossReaction === 'bought-more' ? 5 : answers.lossReaction === 'rebalanced' ? 4 : answers.lossReaction === 'nothing' ? 3 : answers.lossReaction === 'sold-some' ? 2 : 1;
+                      } else {
+                        score += 3;
+                      }
+                      score += answers.volatilityTolerance === 'very-aggressive' ? 7 : answers.volatilityTolerance === 'aggressive' ? 6 : answers.volatilityTolerance === 'very-high' ? 5 : answers.volatilityTolerance === 'high' ? 4 : answers.volatilityTolerance === 'moderate' ? 3 : answers.volatilityTolerance === 'low' ? 2 : 1;
+                      score += option.id === 'confident' ? 3 : option.id === 'reluctant' ? 2 : 1;
+                      
+                      let profile;
+                      if (score >= 24) profile = 'aggressive';
+                      else if (score >= 20) profile = 'growth';
+                      else if (score >= 15) profile = 'moderate';
+                      else if (score >= 10) profile = 'conservative';
+                      else profile = 'very-conservative';
+                      
+                      setRiskProfile(profile);
+                      setRiskStep(11);
+                    }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.decisionApproach === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
+                      <p className="font-medium">{option.label}</p>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setRiskStep(9)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+              </div>
+            )}
+
+            {/* Step 11: Resultado */}
+            {riskStep === 11 && riskProfile && (
+              <div className="space-y-6">
+                {/* Perfil */}
+                <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-xl p-8 backdrop-blur-sm border border-slate-700 text-center">
+                  <div className="text-5xl mb-4">
+                    {riskProfile === 'very-conservative' ? '🛡️' : riskProfile === 'conservative' ? '🏦' : riskProfile === 'moderate' ? '⚖️' : riskProfile === 'growth' ? '📈' : '🚀'}
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">Tu Perfil de Inversionista</h2>
+                  <p className="text-3xl font-bold mb-4" style={{ color: riskProfile === 'very-conservative' ? '#60A5FA' : riskProfile === 'conservative' ? '#34D399' : riskProfile === 'moderate' ? '#FBBF24' : riskProfile === 'growth' ? '#F97316' : '#EF4444' }}>
+                    {riskProfile === 'very-conservative' ? 'Muy Conservador' : riskProfile === 'conservative' ? 'Conservador' : riskProfile === 'moderate' ? 'Moderado' : riskProfile === 'growth' ? 'Crecimiento' : 'Agresivo'}
+                  </p>
+                  <p className="text-slate-400">
+                    {riskProfile === 'very-conservative' ? 'Priorizas la preservación del capital sobre todo. Prefieres rendimientos estables aunque sean menores.' :
+                     riskProfile === 'conservative' ? 'Buscas estabilidad con algo de crecimiento. Aceptas volatilidad limitada para obtener mejores rendimientos.' :
+                     riskProfile === 'moderate' ? 'Buscas un balance entre crecimiento y estabilidad. Aceptas fluctuaciones a cambio de mejores rendimientos a largo plazo.' :
+                     riskProfile === 'growth' ? 'Te enfocas en el crecimiento de tu patrimonio. Aceptas mayor volatilidad por mayores rendimientos potenciales.' :
+                     'Buscas máximos rendimientos y estás cómodo con alta volatilidad. Entiendes que puedes tener pérdidas significativas.'}
+                  </p>
+                </div>
+
+                {/* Asignación recomendada */}
+                <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                  <h3 className="text-xl font-semibold mb-4">📊 Asignación de Activos Recomendada</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    {(() => {
+                      const allocations = {
+                        'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, cash: 10 },
+                        'conservative': { stocks: 35, bonds: 35, realEstate: 15, gold: 10, cash: 5 },
+                        'moderate': { stocks: 50, bonds: 25, realEstate: 12, gold: 8, cash: 5 },
+                        'growth': { stocks: 70, bonds: 12, realEstate: 10, gold: 5, cash: 3 },
+                        'aggressive': { stocks: 85, bonds: 5, realEstate: 5, gold: 3, cash: 2 }
+                      };
+                      const alloc = allocations[riskProfile];
+                      return [
+                        { name: 'Renta Variable', value: alloc.stocks, color: '#3B82F6', icon: '📈' },
+                        { name: 'Renta Fija', value: alloc.bonds, color: '#10B981', icon: '🏦' },
+                        { name: 'Bienes Raíces', value: alloc.realEstate, color: '#8B5CF6', icon: '🏠' },
+                        { name: 'Metales', value: alloc.gold, color: '#F59E0B', icon: '🥇' },
+                        { name: 'Efectivo', value: alloc.cash, color: '#6B7280', icon: '💵' }
+                      ].map((asset) => (
+                        <div key={asset.name} className="text-center">
+                          <div className="text-3xl mb-1">{asset.icon}</div>
+                          <p className="text-2xl font-bold" style={{ color: asset.color }}>{asset.value}%</p>
+                          <p className="text-xs text-slate-400">{asset.name}</p>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                  
+                  {/* Gráfico de pie visual */}
+                  <div className="flex justify-center mb-6">
+                    <div className="relative w-48 h-48">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={(() => {
+                              const allocations = {
+                                'very-conservative': { stocks: 20, bonds: 50, realEstate: 10, gold: 10, cash: 10 },
+                                'conservative': { stocks: 35, bonds: 35, realEstate: 15, gold: 10, cash: 5 },
+                                'moderate': { stocks: 50, bonds: 25, realEstate: 12, gold: 8, cash: 5 },
+                                'growth': { stocks: 70, bonds: 12, realEstate: 10, gold: 5, cash: 3 },
+                                'aggressive': { stocks: 85, bonds: 5, realEstate: 5, gold: 3, cash: 2 }
+                              };
+                              const alloc = allocations[riskProfile];
+                              return [
+                                { name: 'Renta Variable', value: alloc.stocks },
+                                { name: 'Renta Fija', value: alloc.bonds },
+                                { name: 'Bienes Raíces', value: alloc.realEstate },
+                                { name: 'Metales', value: alloc.gold },
+                                { name: 'Efectivo', value: alloc.cash }
+                              ];
+                            })()}
+                            dataKey="value"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={80}
+                            innerRadius={40}
+                          >
+                            <Cell fill="#3B82F6" />
+                            <Cell fill="#10B981" />
+                            <Cell fill="#8B5CF6" />
+                            <Cell fill="#F59E0B" />
+                            <Cell fill="#6B7280" />
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Descripción de la estrategia */}
+                  <div className="bg-slate-700/50 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-slate-300">
+                      {riskProfile === 'very-conservative' ? 
+                        '💡 Esta estrategia prioriza la protección del capital con 50% en renta fija y solo 20% en acciones. Ideal para horizontes cortos o quienes no toleran pérdidas.' :
+                       riskProfile === 'conservative' ? 
+                        '💡 Un balance entre seguridad y crecimiento moderado. La renta fija y variable se equilibran para reducir volatilidad mientras se busca algo de rendimiento.' :
+                       riskProfile === 'moderate' ? 
+                        '💡 La clásica cartera balanceada 50/50. Ofrece exposición al crecimiento de los mercados con colchón de renta fija para reducir volatilidad.' :
+                       riskProfile === 'growth' ? 
+                        '💡 Portafolio orientado al crecimiento con 70% en renta variable. Acepta mayor volatilidad a cambio de mayor potencial de rendimiento a largo plazo.' :
+                        '💡 Máxima exposición a renta variable (85%). Para inversionistas con horizontes largos que pueden tolerar caídas significativas buscando máximos rendimientos.'}
+                    </p>
+                  </div>
+
+                  {/* Resumen de respuestas */}
+                  <div className="border-t border-slate-700 pt-4">
+                    <h4 className="font-medium mb-3">📋 Resumen de tu perfil</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="text-slate-400">Objetivo:</div>
+                      <div>{riskAnswers.goal === 'retirement' ? 'Retiro' : riskAnswers.goal === 'wealth' ? 'Crecer patrimonio' : riskAnswers.goal === 'emergency' ? 'Fondo de emergencia' : riskAnswers.goal === 'income' ? 'Generar ingresos' : 'Gasto especial'}</div>
+                      <div className="text-slate-400">Inversión inicial:</div>
+                      <div>${Number(riskAnswers.initialInvestmentRisk).toLocaleString()}</div>
+                      <div className="text-slate-400">Horizonte:</div>
+                      <div>{riskAnswers.timeHorizon} años</div>
+                      <div className="text-slate-400">Aportación mensual:</div>
+                      <div>${Number(riskAnswers.monthlyContributionRisk || 0).toLocaleString()}</div>
+                      <div className="text-slate-400">Tolerancia al riesgo:</div>
+                      <div className="capitalize">{riskProfile === 'very-conservative' ? 'Muy Baja' : riskProfile === 'conservative' ? 'Baja' : riskProfile === 'moderate' ? 'Moderada' : riskProfile === 'growth' ? 'Alta' : 'Muy Alta'}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="flex gap-4">
+                  <button onClick={() => { setRiskStep(0); setRiskAnswers({ goal: null, initialInvestmentRisk: '', timeHorizon: '', monthlyContributionRisk: '', knowledgeLevel: null, riskPerception: null, experiencedLoss: null, lossReaction: null, volatilityTolerance: null, decisionApproach: null }); setRiskProfile(null); }} className="flex-1 px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-700 font-medium">
+                    🔄 Volver a Empezar
+                  </button>
+                  <button onClick={() => { setInitialInvestment(Number(riskAnswers.initialInvestmentRisk) || 100000); setMonthlyContribution(Number(riskAnswers.monthlyContributionRisk) || 5000); setActiveTab('simulator'); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg font-medium hover:from-teal-600 hover:to-emerald-600">
+                    📊 Ir al Simulador
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
-        {/* ==================== ESTADÍSTICAS ==================== */}
-        {activeTab === 'stats' && (
+        {/* ==================== PORTAFOLIO (Estadísticas + Composición) ==================== */}
+        {activeTab === 'portfolio' && (
           <>
+            {/* Rendimientos */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
               <h2 className="text-xl font-semibold mb-2 text-center">📈 Rendimientos</h2>
               <p className="text-xs text-slate-500 text-center mb-4">💡 Pasa el mouse sobre cualquier métrica para ver su explicación</p>
@@ -770,6 +1107,7 @@ export default function App() {
               </div>
             </div>
 
+            {/* Métricas de Riesgo y Alpha */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
                 <h3 className="text-lg font-semibold mb-4">📊 Métricas de Riesgo</h3>
@@ -872,6 +1210,83 @@ export default function App() {
                     : 'El portafolio tiende a seguir al mercado de cerca.'}
                 </p>
               </div>
+            </div>
+
+            {/* Holdings y Sectores */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Top 10 Holdings */}
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-4">🏆 Top {composition.holdings.length} Posiciones</h2>
+                <p className="text-xs text-slate-500 mb-4">💡 Pasa el mouse sobre una posición para ver más información</p>
+                <div className="space-y-3">
+                  {composition.holdings.map((holding, idx) => {
+                    const description = companyDescriptions[holding.name] || companyDescriptions["default"];
+                    const isLastItems = idx >= composition.holdings.length - 3;
+                    return (
+                      <div key={idx} className="group relative">
+                        <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
+                          <span className="text-slate-500 w-6 text-sm">{holding.rank}.</span>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm truncate pr-2 group-hover:text-white transition-colors">{holding.name}</span>
+                              <span className="font-medium text-sm" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
+                            </div>
+                            <div className="w-full bg-slate-700 rounded-full h-2">
+                              <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`absolute left-0 right-0 ${isLastItems ? 'bottom-full mb-1' : 'top-full mt-1'} p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50`}>
+                          <div className="flex items-start gap-2">
+                            <span className="text-lg">ℹ️</span>
+                            <div>
+                              <p className="font-medium text-sm text-white mb-1">{holding.name}</p>
+                              <p className="text-xs text-slate-400 leading-relaxed">{description}</p>
+                            </div>
+                          </div>
+                          <div className={`absolute ${isLastItems ? '-bottom-2 border-r border-b' : '-top-2 border-l border-t'} left-6 w-3 h-3 bg-slate-900 border-slate-600 transform rotate-45`}></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Sector Allocation */}
+              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-xl font-semibold mb-4">📊 Distribución por Sector</h2>
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie data={composition.sectors} dataKey="weight" nameKey="sector" cx="50%" cy="50%" outerRadius={80} label={({ sector, weight }) => `${weight.toFixed(1)}%`} labelLine={false}>
+                      {composition.sectors.map((entry, index) => (<Cell key={`cell-${index}`} fill={SECTOR_COLORS[index % SECTOR_COLORS.length]} />))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                  {composition.sectors.map((s, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-xs">
+                      <div className="w-3 h-3 rounded" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
+                      <span className="text-slate-400 truncate">{s.sector}</span>
+                      <span className="ml-auto font-medium">{s.weight.toFixed(1)}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sector Bar Chart */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+              <h2 className="text-xl font-semibold mb-4">📈 Sectores por Peso</h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={composition.sectors} layout="vertical" margin={{ left: 100 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `${v}%`} />
+                  <YAxis type="category" dataKey="sector" stroke="#9CA3AF" fontSize={10} width={100} />
+                  <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
+                  <Bar dataKey="weight" fill={fund.color} radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </>
         )}
