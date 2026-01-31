@@ -1624,6 +1624,8 @@ export default function App() {
                   const baseInvestment = 100000;
                   let fundValue = baseInvestment;
                   let benchValue = baseInvestment;
+                  let minValue = baseInvestment;
+                  let maxValue = baseInvestment;
                   const chartData = [{ 
                     month: language === 'es' ? 'Inicio' : 'Start', 
                     fund: baseInvestment, 
@@ -1632,12 +1634,17 @@ export default function App() {
                   fund.returns.forEach((r) => {
                     fundValue = fundValue * (1 + r.fund);
                     benchValue = benchValue * (1 + r.benchmark);
+                    minValue = Math.min(minValue, fundValue, benchValue);
+                    maxValue = Math.max(maxValue, fundValue, benchValue);
                     chartData.push({ 
                       month: translateMonth(r.month), 
                       fund: Math.round(fundValue), 
                       benchmark: Math.round(benchValue) 
                     });
                   });
+                  // Guardar min/max para el dominio del eje Y
+                  chartData.minValue = Math.floor(minValue * 0.95 / 10000) * 10000; // 5% abajo, redondeado
+                  chartData.maxValue = Math.ceil(maxValue * 1.05 / 10000) * 10000; // 5% arriba, redondeado
                   return chartData;
                 })()}>
                   <defs>
@@ -1648,7 +1655,12 @@ export default function App() {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="month" stroke="#9CA3AF" fontSize={10} interval="preserveStartEnd" />
-                  <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : `$${(v/1000).toFixed(0)}K`} />
+                  <YAxis 
+                    stroke="#9CA3AF" 
+                    fontSize={10} 
+                    tickFormatter={(v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : `$${(v/1000).toFixed(0)}K`}
+                    domain={[dataMin => Math.floor(dataMin * 0.92 / 10000) * 10000, dataMax => Math.ceil(dataMax * 1.05 / 10000) * 10000]}
+                  />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} 
                     formatter={(value, name) => {
