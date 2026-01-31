@@ -1131,18 +1131,22 @@ export default function App() {
           <button onClick={() => setActiveTab('glossary')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'glossary' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.glossary}</button>
         </div>
 
-        {/* Fund Selector */}
-        <div className="flex justify-center gap-1 md:gap-2 mb-4 flex-wrap px-2">
-          {Object.keys(fundsStats).map((fundName) => (
-            <button key={fundName} onClick={() => setSelectedFund(fundName)} className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg font-medium transition-all text-[10px] md:text-sm whitespace-nowrap ${selectedFund === fundName ? 'text-white shadow-lg' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`} style={selectedFund === fundName ? { backgroundColor: fundsStats[fundName].color } : {}}>
-              {fundName}
-            </button>
-          ))}
-        </div>
+        {/* Fund Selector - Solo visible en Portfolio, Simulator y Retirement */}
+        {(activeTab === 'portfolio' || activeTab === 'simulator' || activeTab === 'retirement') && (
+          <>
+            <div className="flex justify-center gap-1 md:gap-2 mb-4 flex-wrap px-2">
+              {Object.keys(fundsStats).map((fundName) => (
+                <button key={fundName} onClick={() => setSelectedFund(fundName)} className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg font-medium transition-all text-[10px] md:text-sm whitespace-nowrap ${selectedFund === fundName ? 'text-white shadow-lg' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`} style={selectedFund === fundName ? { backgroundColor: fundsStats[fundName].color } : {}}>
+                  {fundName}
+                </button>
+              ))}
+            </div>
 
-        <div className="text-center mb-6">
-          <p className="text-slate-400 text-sm">{language === 'es' ? fund.description : fund.descriptionEn} • {fund.n_months} {t.monthsTrackRecord}</p>
-        </div>
+            <div className="text-center mb-6">
+              <p className="text-slate-400 text-sm">{language === 'es' ? fund.description : fund.descriptionEn} • {fund.n_months} {t.monthsTrackRecord}</p>
+            </div>
+          </>
+        )}
 
         {/* ==================== PERFIL DE RIESGO ==================== */}
         {activeTab === 'risk-profile' && (
@@ -1684,24 +1688,42 @@ export default function App() {
                   <Area type="monotone" dataKey="fund" name="fund" stroke={fund.color} fill="url(#fundGradPortfolio)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
-              <div className="flex justify-center gap-6 mt-4 text-sm">
+              <div className="flex justify-center gap-8 md:gap-12 mt-4">
                 <div className="text-center">
-                  <p className="text-slate-400">{selectedFund}</p>
-                  <p className="text-xl font-bold" style={{ color: fund.color }}>
+                  <p className="text-slate-400 text-sm mb-1">{selectedFund}</p>
+                  <p className="text-2xl font-bold" style={{ color: fund.color }}>
                     {formatCurrency(100000 * (1 + fund.cumulative))}
                   </p>
-                  <p className={`text-sm ${fund.cumulative >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {fund.cumulative >= 0 ? '+' : ''}{(fund.cumulative * 100).toFixed(1)}%
-                  </p>
+                  <div className="flex items-center justify-center gap-2 mt-1">
+                    <span className={`text-sm font-medium ${fund.cumulative >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {fund.cumulative >= 0 ? '+' : ''}{(fund.cumulative * 100).toFixed(1)}%
+                    </span>
+                    <span className="text-slate-500">|</span>
+                    <span className="text-sm text-slate-300">
+                      {(fund.annualized * 100).toFixed(1)}% <span className="text-slate-500 text-xs">{language === 'es' ? 'anual' : 'annual'}</span>
+                    </span>
+                  </div>
                 </div>
                 <div className="text-center">
-                  <p className="text-slate-400">{fund.benchmark}</p>
-                  <p className="text-xl font-bold text-slate-300">
+                  <p className="text-slate-400 text-sm mb-1">{fund.benchmark}</p>
+                  <p className="text-2xl font-bold text-slate-300">
                     {formatCurrency(100000 * (1 + fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0)))}
                   </p>
-                  <p className={`text-sm ${fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) >= 0 ? '+' : ''}{(fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) * 100).toFixed(1)}%
-                  </p>
+                  {(() => {
+                    const benchCumulative = fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0);
+                    const benchAnnualized = Math.pow(1 + benchCumulative, 12 / fund.returns.length) - 1;
+                    return (
+                      <div className="flex items-center justify-center gap-2 mt-1">
+                        <span className={`text-sm font-medium ${benchCumulative >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {benchCumulative >= 0 ? '+' : ''}{(benchCumulative * 100).toFixed(1)}%
+                        </span>
+                        <span className="text-slate-500">|</span>
+                        <span className="text-sm text-slate-300">
+                          {(benchAnnualized * 100).toFixed(1)}% <span className="text-slate-500 text-xs">{language === 'es' ? 'anual' : 'annual'}</span>
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </div>
