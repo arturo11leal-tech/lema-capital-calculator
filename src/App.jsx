@@ -346,15 +346,17 @@ const fundsStats = {
   },
   "ALR Portfolio": {
     benchmark: "GBMF2",
+    benchmark2: "Mexico IPC",
     color: "#7030A0",
     description: "Estrategia conservadora de baja volatilidad",
     n_months: 15,
     last_month: -0.0074,
     last_3m: 0.0254,
     last_6m: 0.0400,
-    last_12m: 0.0755,
+    last_12m: 0.0807,
     cumulative: 0.0942,
     annualized: 0.0747,
+    ytd: 0.0755,
     std_annual: 0.0260,
     std_bench_annual: 0.1020,
     alpha: 0.0530,
@@ -371,6 +373,20 @@ const fundsStats = {
     downside_capture: -0.282,
     dividend_yield: 0.019,
     n_holdings: 34,
+    // Benchmark returns for comparison
+    bench_annualized: 0.0768,
+    bench_cumulative: 0.0969,
+    bench_last_month: 0.0054,
+    bench_last_3m: 0.0214,
+    bench_last_12m: 0.0819,
+    bench_ytd: 0.0742,
+    // IPC Mexico for second comparison
+    ipc_annualized: 0.1766,
+    ipc_cumulative: 0.2254,
+    ipc_last_month: 0.0112,
+    ipc_last_3m: 0.0955,
+    ipc_last_12m: 0.2910,
+    ipc_ytd: 0.2988,
     returns: [
       { date: "2024-10", month: "Oct 2024", fund: 0.0051, benchmark: 0.0071 },
       { date: "2024-11", month: "Nov 2024", fund: 0.0073, benchmark: 0.0067 },
@@ -731,50 +747,39 @@ export default function App() {
                       <th className="text-left py-3 px-4 text-slate-400">Periodo</th>
                       <th className="text-right py-3 px-4" style={{ color: fund.color }}>{selectedFund}</th>
                       <th className="text-right py-3 px-4 text-slate-400">{fund.benchmark}</th>
-                      <th className="text-right py-3 px-4 text-slate-400">Diferencia</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">Rendimiento Anualizado</td>
-                      <td className="text-right py-3 px-4 font-medium" style={{ color: fund.color }}>{formatPercentPlain(fund.annualized)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.annualized - fund.alpha)}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.alpha)}</td>
-                    </tr>
-                    <tr className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">Rendimiento Acumulado</td>
-                      <td className="text-right py-3 px-4 font-medium" style={{ color: fund.color }}>{formatPercentPlain(fund.cumulative)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.cumulative - fund.alpha * (fund.n_months / 12))}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.cumulative > (fund.cumulative - fund.alpha * (fund.n_months / 12)) ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.alpha * (fund.n_months / 12))}</td>
-                    </tr>
-                    <tr className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">Último Mes</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.last_month >= 0 ? '' : 'text-red-400'}`} style={fund.last_month >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fund.last_month)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.returns[fund.returns.length - 1]?.benchmark || 0)}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${(fund.last_month - (fund.returns[fund.returns.length - 1]?.benchmark || 0)) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.last_month - (fund.returns[fund.returns.length - 1]?.benchmark || 0))}</td>
-                    </tr>
-                    <tr className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">Últimos 3 Meses</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.last_3m >= 0 ? '' : 'text-red-400'}`} style={fund.last_3m >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fund.last_3m)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.returns.slice(-3).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${(fund.last_3m - fund.returns.slice(-3).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0)) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.last_3m - fund.returns.slice(-3).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                    </tr>
-                    <tr className="border-b border-slate-700/50 hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">Últimos 12 Meses (LTM)</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.last_12m >= 0 ? '' : 'text-red-400'}`} style={fund.last_12m >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fund.last_12m)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${(fund.last_12m - fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0)) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.last_12m - fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                    </tr>
-                    <tr className="hover:bg-slate-700/30">
-                      <td className="py-3 px-4 text-slate-300">YTD (Año a la Fecha)</td>
-                      <td className={`text-right py-3 px-4 font-medium ${fund.last_12m >= 0 ? '' : 'text-red-400'}`} style={fund.last_12m >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fund.last_12m)}</td>
-                      <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                      <td className={`text-right py-3 px-4 font-medium ${(fund.last_12m - fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0)) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{formatPercent(fund.last_12m - fund.returns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0))}</td>
-                    </tr>
+                    {(() => {
+                      // Calcular rendimientos del benchmark
+                      const benchReturns = fund.returns.map(r => r.benchmark);
+                      const bench_last_month = benchReturns[benchReturns.length - 1] || 0;
+                      const bench_last_3m = benchReturns.slice(-3).reduce((acc, r) => (1 + acc) * (1 + r) - 1, 0);
+                      const bench_last_12m = benchReturns.slice(-12).reduce((acc, r) => (1 + acc) * (1 + r) - 1, 0);
+                      const bench_cumulative = benchReturns.reduce((acc, r) => (1 + acc) * (1 + r) - 1, 0);
+                      const bench_annualized = Math.pow(1 + bench_cumulative, 12 / benchReturns.length) - 1;
+                      
+                      const rows = [
+                        ['Rendimiento Anualizado', fund.annualized, bench_annualized],
+                        ['Rendimiento Acumulado', fund.cumulative, bench_cumulative],
+                        ['Último Mes', fund.last_month, bench_last_month],
+                        ['LTM (Últimos 12 Meses)', fund.last_12m, bench_last_12m],
+                        ['Últimos 3 Meses', fund.last_3m, bench_last_3m],
+                        ['YTD (Año a la Fecha)', fund.ytd || fund.last_12m, fund.bench_ytd || bench_last_12m],
+                      ];
+                      
+                      return rows.map(([label, fundVal, benchVal], idx) => (
+                        <tr key={idx} className="border-b border-slate-700/50 hover:bg-slate-700/30">
+                          <td className="py-3 px-4 text-slate-300">{label}</td>
+                          <td className={`text-right py-3 px-4 font-medium ${fundVal >= 0 ? '' : 'text-red-400'}`} style={fundVal >= 0 ? { color: fund.color } : {}}>{formatPercentPlain(fundVal)}</td>
+                          <td className="text-right py-3 px-4 text-slate-400">{formatPercentPlain(benchVal)}</td>
+                        </tr>
+                      ));
+                    })()}
                   </tbody>
                 </table>
               </div>
-              <p className="text-xs text-slate-500 mt-4 text-center">Datos al cierre de Diciembre 2025 • Track Record: {fund.n_months} meses desde {fund.returns[0]?.month}</p>
+              <p className="text-xs text-slate-500 mt-4 text-center">Creación del Portafolio: {fund.returns[0]?.month} • Track Record: {fund.n_months} meses</p>
             </div>
           </>
         )}
