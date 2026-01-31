@@ -1607,6 +1607,83 @@ export default function App() {
         {/* ==================== PORTAFOLIO (Estadísticas + Composición) ==================== */}
         {activeTab === 'portfolio' && (
           <>
+            {/* Gráfica: Valor de inversión desde el inicio */}
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-lg md:text-xl font-semibold mb-2 text-center">
+                {language === 'es' 
+                  ? `💰 Valor de $100,000 invertidos desde el inicio` 
+                  : `💰 Value of $100,000 Invested Since Inception`}
+              </h2>
+              <p className="text-xs text-slate-500 text-center mb-4">
+                {language === 'es' 
+                  ? `${fund.n_months} meses de track record • Sin aportaciones adicionales` 
+                  : `${fund.n_months} months track record • No additional contributions`}
+              </p>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={(() => {
+                  const baseInvestment = 100000;
+                  let fundValue = baseInvestment;
+                  let benchValue = baseInvestment;
+                  const chartData = [{ 
+                    month: language === 'es' ? 'Inicio' : 'Start', 
+                    fund: baseInvestment, 
+                    benchmark: baseInvestment 
+                  }];
+                  fund.returns.forEach((r) => {
+                    fundValue = fundValue * (1 + r.fund);
+                    benchValue = benchValue * (1 + r.benchmark);
+                    chartData.push({ 
+                      month: translateMonth(r.month), 
+                      fund: Math.round(fundValue), 
+                      benchmark: Math.round(benchValue) 
+                    });
+                  });
+                  return chartData;
+                })()}>
+                  <defs>
+                    <linearGradient id="fundGradPortfolio" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={fund.color} stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor={fund.color} stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="month" stroke="#9CA3AF" fontSize={10} interval="preserveStartEnd" />
+                  <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : `$${(v/1000).toFixed(0)}K`} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} 
+                    formatter={(value, name) => {
+                      const label = name === 'fund' ? selectedFund : fund.benchmark;
+                      return [formatCurrency(value), label];
+                    }}
+                    labelFormatter={(label) => <span style={{fontWeight: 'bold', fontSize: '14px'}}>{label}</span>}
+                  />
+                  <Legend formatter={(value) => value === 'fund' ? selectedFund : fund.benchmark} />
+                  <Area type="monotone" dataKey="benchmark" name="benchmark" stroke="#94A3B8" fill="transparent" strokeWidth={2} />
+                  <Area type="monotone" dataKey="fund" name="fund" stroke={fund.color} fill="url(#fundGradPortfolio)" strokeWidth={3} />
+                </AreaChart>
+              </ResponsiveContainer>
+              <div className="flex justify-center gap-6 mt-4 text-sm">
+                <div className="text-center">
+                  <p className="text-slate-400">{selectedFund}</p>
+                  <p className="text-xl font-bold" style={{ color: fund.color }}>
+                    {formatCurrency(100000 * (1 + fund.cumulative))}
+                  </p>
+                  <p className={`text-sm ${fund.cumulative >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {fund.cumulative >= 0 ? '+' : ''}{(fund.cumulative * 100).toFixed(1)}%
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-slate-400">{fund.benchmark}</p>
+                  <p className="text-xl font-bold text-slate-300">
+                    {formatCurrency(100000 * (1 + fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0)))}
+                  </p>
+                  <p className={`text-sm ${fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) >= 0 ? '+' : ''}{(fund.returns.reduce((acc, r) => (1 + acc) * (1 + r.benchmark) - 1, 0) * 100).toFixed(1)}%
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Rendimientos */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
               <h2 className="text-xl font-semibold mb-2 text-center">📈 {t.returns}</h2>
