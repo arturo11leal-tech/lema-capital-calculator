@@ -207,6 +207,7 @@ const fundsStats = {
     benchmark: "IPC México",
     color: "#1F4E79",
     description: "Estrategia global diversificada",
+    descriptionEn: "Globally diversified strategy",
     n_months: 63,
     last_month: 0.0244,
     last_3m: 0.0886,
@@ -300,6 +301,7 @@ const fundsStats = {
     benchmark: "IPC México",
     color: "#2E75B6",
     description: "Estrategia de valor México y Latam",
+    descriptionEn: "Value strategy Mexico & Latam",
     n_months: 54,
     last_month: 0.0227,
     last_3m: 0.0847,
@@ -384,6 +386,7 @@ const fundsStats = {
     benchmark: "S&P 500",
     color: "#00B050",
     description: "Alto rendimiento en mercados desarrollados",
+    descriptionEn: "High returns in developed markets",
     n_months: 29,
     last_month: -0.0215,
     last_3m: 0.0351,
@@ -444,6 +447,7 @@ const fundsStats = {
     benchmark2: "Mexico IPC",
     color: "#7030A0",
     description: "Estrategia conservadora de baja volatilidad",
+    descriptionEn: "Conservative low volatility strategy",
     n_months: 15,
     last_month: -0.0074,
     last_3m: 0.0254,
@@ -1070,26 +1074,26 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
-      <div className="relative py-6 px-4">
-        {/* Language Selector */}
-        <div className="absolute top-4 right-4 flex items-center gap-2">
+      <div className="py-6 px-4">
+        <div className="text-center mb-4">
+          <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">{t.title}</h1>
+          <p className="text-slate-400 mt-1 text-sm md:text-base">{t.subtitle}</p>
+        </div>
+        
+        {/* Language Selector - debajo del título, centrado */}
+        <div className="flex justify-center gap-2 mb-2">
           <button 
             onClick={() => setLanguage('es')} 
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${language === 'es' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
+            className={`px-3 py-1 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-1 ${language === 'es' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
           >
             🇲🇽 ES
           </button>
           <button 
             onClick={() => setLanguage('en')} 
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${language === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
+            className={`px-3 py-1 rounded-lg text-xs md:text-sm font-medium transition-all flex items-center gap-1 ${language === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
           >
             🇺🇸 EN
           </button>
-        </div>
-        
-        <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">{t.title}</h1>
-          <p className="text-slate-400 mt-1">{t.subtitle}</p>
         </div>
       </div>
 
@@ -1104,16 +1108,16 @@ export default function App() {
         </div>
 
         {/* Fund Selector */}
-        <div className="flex justify-center gap-2 mb-4 flex-wrap">
+        <div className="flex justify-center gap-1 md:gap-2 mb-4 flex-wrap px-2">
           {Object.keys(fundsStats).map((fundName) => (
-            <button key={fundName} onClick={() => setSelectedFund(fundName)} className={`px-3 py-2 rounded-lg font-medium transition-all text-xs md:text-sm ${selectedFund === fundName ? 'text-white shadow-lg' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`} style={selectedFund === fundName ? { backgroundColor: fundsStats[fundName].color } : {}}>
+            <button key={fundName} onClick={() => setSelectedFund(fundName)} className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg font-medium transition-all text-[10px] md:text-sm whitespace-nowrap ${selectedFund === fundName ? 'text-white shadow-lg' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`} style={selectedFund === fundName ? { backgroundColor: fundsStats[fundName].color } : {}}>
               {fundName}
             </button>
           ))}
         </div>
 
         <div className="text-center mb-6">
-          <p className="text-slate-400 text-sm">{fund.description} • {fund.n_months} {t.monthsTrackRecord}</p>
+          <p className="text-slate-400 text-sm">{language === 'es' ? fund.description : fund.descriptionEn} • {fund.n_months} {t.monthsTrackRecord}</p>
         </div>
 
         {/* ==================== PERFIL DE RIESGO ==================== */}
@@ -1123,8 +1127,8 @@ export default function App() {
             <div className="mb-8">
               <div className="flex justify-between text-xs text-slate-400 mb-2">
                 <span className={riskStep >= 1 ? 'text-teal-400 font-medium' : ''}>1. Tu Objetivo</span>
-                <span className={riskStep >= 5 ? 'text-teal-400 font-medium' : ''}>2. Perfil de Riesgo</span>
-                <span className={riskStep >= 11 ? 'text-teal-400 font-medium' : ''}>3. Recomendación</span>
+                <span className={riskStep >= 5 ? 'text-teal-400 font-medium' : ''}>{language === 'es' ? '2. Perfil de Riesgo' : '2. Risk Profile'}</span>
+                <span className={riskStep >= 11 ? 'text-teal-400 font-medium' : ''}>{language === 'es' ? '3. Recomendación' : '3. Recommendation'}</span>
               </div>
               <div className="w-full bg-slate-700 rounded-full h-2">
                 <div className="h-2 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 transition-all duration-500" style={{ width: `${Math.min((riskStep / 11) * 100, 100)}%` }}></div>
@@ -1135,11 +1139,11 @@ export default function App() {
             {riskStep === 0 && (
               <div className="bg-slate-800/50 rounded-xl p-8 backdrop-blur-sm border border-slate-700 text-center">
                 <div className="text-6xl mb-4">🎯</div>
-                <h2 className="text-2xl font-bold mb-4">Descubre tu Perfil de Inversionista</h2>
-                <p className="text-slate-400 mb-6">Responde algunas preguntas para que podamos recomendarte la estrategia de inversión más adecuada para ti.</p>
-                <p className="text-sm text-slate-500 mb-8">⏱️ Tiempo estimado: 3-5 minutos</p>
+                <h2 className="text-2xl font-bold mb-4">{language === 'es' ? 'Descubre tu Perfil de Inversionista' : 'Discover Your Investor Profile'}</h2>
+                <p className="text-slate-400 mb-6">{language === 'es' ? 'Responde algunas preguntas para que podamos recomendarte la estrategia de inversión más adecuada para ti.' : 'Answer a few questions so we can recommend the most suitable investment strategy for you.'}</p>
+                <p className="text-sm text-slate-500 mb-8">{language === 'es' ? '⏱️ Tiempo estimado: 3-5 minutos' : '⏱️ Estimated time: 3-5 minutes'}</p>
                 <button onClick={() => setRiskStep(1)} className="px-8 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg font-medium hover:from-teal-600 hover:to-emerald-600 transition-all">
-                  Comenzar Evaluación
+                  {language === 'es' ? 'Comenzar Evaluación' : 'Start Evaluation'}
                 </button>
               </div>
             )}
@@ -1147,17 +1151,24 @@ export default function App() {
             {/* Step 1: Objetivo de inversión */}
             {riskStep === 1 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Cuál es tu objetivo principal de inversión?</h2>
-                <p className="text-slate-400 text-sm mb-6">Selecciona el objetivo que mejor describe tus metas financieras.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Cuál es tu objetivo principal de inversión?' : 'What is your main investment goal?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Selecciona el objetivo que mejor describe tus metas financieras.' : 'Select the goal that best describes your financial objectives.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'retirement', icon: '🏖️', title: 'Ahorrar para el retiro', desc: 'Planeo dejar crecer este dinero hasta mi jubilación.' },
                     { id: 'major-expense', icon: '🎓', title: 'Gasto importante próximo', desc: 'Planeo usar este dinero para un gasto mayor (educación, salud, etc.)' },
                     { id: 'special', icon: '🏠', title: 'Algo especial en el futuro', desc: 'Tengo un gasto grande planeado como casa, auto o boda.' },
                     { id: 'emergency', icon: '☔', title: 'Fondo de emergencia', desc: 'Este dinero es una red de seguridad para imprevistos.' },
                     { id: 'wealth', icon: '📈', title: 'Crecer mi patrimonio', desc: 'No tengo un plan específico, solo quiero invertir y crecer mi dinero.' },
                     { id: 'income', icon: '💰', title: 'Generar ingresos', desc: 'Planeo retirar dinero de esta cuenta regularmente.' }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'retirement', icon: '🏖️', title: 'Save for retirement', desc: 'I plan to let this money grow until retirement.' },
+                    { id: 'major-expense', icon: '🎓', title: 'Upcoming major expense', desc: 'I plan to use this money for a major expense (education, health, etc.)' },
+                    { id: 'special', icon: '🏠', title: 'Something special in the future', desc: 'I have a large expense planned like a house, car, or wedding.' },
+                    { id: 'emergency', icon: '☔', title: 'Emergency fund', desc: 'This money is a safety net for emergencies.' },
+                    { id: 'wealth', icon: '📈', title: 'Build my wealth', desc: 'I don\'t have a specific plan, I just want to invest and grow my money.' },
+                    { id: 'income', icon: '💰', title: 'Generate income', desc: 'I plan to withdraw money from this account regularly.' }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, goal: option.id}); setRiskStep(2); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.goal === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <div className="flex items-start gap-3">
                         <span className="text-2xl">{option.icon}</span>
@@ -1210,10 +1221,10 @@ export default function App() {
             {/* Step 4: Aportación mensual */}
             {riskStep === 4 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Cuánto deseas aportar mensualmente?</h2>
-                <p className="text-slate-400 text-sm mb-6">Las aportaciones regulares ayudan a hacer crecer tu inversión. (Opcional)</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Cuánto deseas aportar mensualmente?' : 'How much do you want to contribute monthly?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Las aportaciones regulares ayudan a hacer crecer tu inversión. (Opcional)' : 'Regular contributions help grow your investment. (Optional)'}</p>
                 <div className="mb-6">
-                  <label className="block text-slate-400 text-sm mb-2">Aportación mensual</label>
+                  <label className="block text-slate-400 text-sm mb-2">{language === 'es' ? 'Aportación mensual' : 'Monthly contribution'}</label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                     <input type="number" value={riskAnswers.monthlyContributionRisk} onChange={(e) => setRiskAnswers({...riskAnswers, monthlyContributionRisk: e.target.value})} placeholder="5,000" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:border-teal-500 focus:outline-none" />
@@ -1229,15 +1240,20 @@ export default function App() {
             {/* Step 5: Conocimiento de inversiones */}
             {riskStep === 5 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Cuál es tu conocimiento sobre acciones, bonos y ETFs?</h2>
-                <p className="text-slate-400 text-sm mb-6">Esto nos ayuda a personalizar las recomendaciones.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Cuál es tu conocimiento sobre acciones, bonos y ETFs?' : 'What is your knowledge about stocks, bonds, and ETFs?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Esto nos ayuda a personalizar las recomendaciones.' : 'This helps us personalize recommendations.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'none', label: 'Ninguno', desc: 'No tengo experiencia en inversiones' },
                     { id: 'some', label: 'Algo', desc: 'Conozco los conceptos básicos' },
                     { id: 'good', label: 'Bueno', desc: 'Tengo experiencia invirtiendo' },
                     { id: 'extensive', label: 'Extenso', desc: 'Soy un inversionista experimentado' }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'none', label: 'None', desc: 'I have no investment experience' },
+                    { id: 'some', label: 'Some', desc: 'I know the basics' },
+                    { id: 'good', label: 'Good', desc: 'I have investment experience' },
+                    { id: 'extensive', label: 'Extensive', desc: 'I am an experienced investor' }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, knowledgeLevel: option.id}); setRiskStep(6); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.knowledgeLevel === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <p className="font-medium">{option.label}</p>
                       <p className="text-sm text-slate-400">{option.desc}</p>
@@ -1251,15 +1267,20 @@ export default function App() {
             {/* Step 6: Percepción del riesgo */}
             {riskStep === 6 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">Cuando escuchas "riesgo" relacionado con tus finanzas, ¿qué es lo primero que piensas?</h2>
-                <p className="text-slate-400 text-sm mb-6">No hay respuesta correcta o incorrecta.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? 'Cuando escuchas "riesgo" relacionado con tus finanzas, ¿qué es lo primero que piensas?' : 'When you hear "risk" related to your finances, what\'s the first thing you think?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'No hay respuesta correcta o incorrecta.' : 'There is no right or wrong answer.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'worry', label: 'Me preocupa quedarme sin nada', score: 1 },
                     { id: 'understand', label: 'Entiendo que es parte inherente del proceso de inversión', score: 2 },
                     { id: 'opportunity', label: 'Veo oportunidad de grandes rendimientos', score: 3 },
                     { id: 'thrill', label: 'Pienso en la emoción de invertir', score: 4 }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'worry', label: 'I worry I could be left with nothing', score: 1 },
+                    { id: 'understand', label: 'I understand it\'s an inherent part of investing', score: 2 },
+                    { id: 'opportunity', label: 'I see opportunity for great returns', score: 3 },
+                    { id: 'thrill', label: 'I think of the thrill of investing', score: 4 }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, riskPerception: option.id}); setRiskStep(7); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.riskPerception === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <p className="font-medium">{option.label}</p>
                     </button>
@@ -1272,13 +1293,16 @@ export default function App() {
             {/* Step 7: Experiencia con pérdidas */}
             {riskStep === 7 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Has experimentado una caída del 20% o más en el valor de tus inversiones en un año?</h2>
-                <p className="text-slate-400 text-sm mb-6">Tu experiencia pasada nos ayuda a entender tu tolerancia al riesgo.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Has experimentado una caída del 20% o más en el valor de tus inversiones en un año?' : 'Have you experienced a 20% or more decline in your investments in one year?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Tu experiencia pasada nos ayuda a entender tu tolerancia al riesgo.' : 'Your past experience helps us understand your risk tolerance.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'yes', label: 'Sí' },
                     { id: 'no', label: 'No' }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'yes', label: 'Yes' },
+                    { id: 'no', label: 'No' }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, experiencedLoss: option.id}); setRiskStep(option.id === 'yes' ? 8 : 9); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.experiencedLoss === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <p className="font-medium">{option.label}</p>
                     </button>
@@ -1291,16 +1315,22 @@ export default function App() {
             {/* Step 8: Reacción a pérdidas (solo si respondió Sí) */}
             {riskStep === 8 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Qué hiciste cuando experimentaste esa caída del 20%?</h2>
-                <p className="text-slate-400 text-sm mb-6">Tu reacción pasada predice tu comportamiento futuro.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Qué hiciste cuando experimentaste esa caída del 20%?' : 'What did you do when you experienced that 20% decline?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Tu reacción pasada predice tu comportamiento futuro.' : 'Your past reaction predicts your future behavior.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'sold-all', label: 'Vendí todo', score: 1 },
                     { id: 'sold-some', label: 'Vendí algo', score: 2 },
                     { id: 'nothing', label: 'No hice nada', score: 3 },
                     { id: 'rebalanced', label: 'Rebalanceé mis inversiones', score: 4 },
                     { id: 'bought-more', label: 'Compré más', score: 5 }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'sold-all', label: 'I sold everything', score: 1 },
+                    { id: 'sold-some', label: 'I sold some', score: 2 },
+                    { id: 'nothing', label: 'I did nothing', score: 3 },
+                    { id: 'rebalanced', label: 'I rebalanced my investments', score: 4 },
+                    { id: 'bought-more', label: 'I bought more', score: 5 }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, lossReaction: option.id}); setRiskStep(9); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.lossReaction === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <p className="font-medium">{option.label}</p>
                     </button>
@@ -1313,10 +1343,10 @@ export default function App() {
             {/* Step 9: Tolerancia a la volatilidad */}
             {riskStep === 9 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Con cuánta fluctuación te sentirías cómodo en 1 año?</h2>
-                <p className="text-slate-400 text-sm mb-6">Asumiendo una inversión de $100,000</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Con cuánta fluctuación te sentirías cómodo en 1 año?' : 'How much fluctuation would you be comfortable with in 1 year?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Asumiendo una inversión de $100,000' : 'Assuming a $100,000 investment'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'very-low', label: '-10% a +15%', desc: 'Pérdida potencial: $10,000 | Ganancia potencial: $15,000', score: 1 },
                     { id: 'low', label: '-15% a +25%', desc: 'Pérdida potencial: $15,000 | Ganancia potencial: $25,000', score: 2 },
                     { id: 'moderate', label: '-25% a +35%', desc: 'Pérdida potencial: $25,000 | Ganancia potencial: $35,000', score: 3 },
@@ -1324,7 +1354,15 @@ export default function App() {
                     { id: 'very-high', label: '-35% a +50%', desc: 'Pérdida potencial: $35,000 | Ganancia potencial: $50,000', score: 5 },
                     { id: 'aggressive', label: '-40% a +55%', desc: 'Pérdida potencial: $40,000 | Ganancia potencial: $55,000', score: 6 },
                     { id: 'very-aggressive', label: '-45% a +60%', desc: 'Pérdida potencial: $45,000 | Ganancia potencial: $60,000', score: 7 }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'very-low', label: '-10% to +15%', desc: 'Potential loss: $10,000 | Potential gain: $15,000', score: 1 },
+                    { id: 'low', label: '-15% to +25%', desc: 'Potential loss: $15,000 | Potential gain: $25,000', score: 2 },
+                    { id: 'moderate', label: '-25% to +35%', desc: 'Potential loss: $25,000 | Potential gain: $35,000', score: 3 },
+                    { id: 'high', label: '-30% to +45%', desc: 'Potential loss: $30,000 | Potential gain: $45,000', score: 4 },
+                    { id: 'very-high', label: '-35% to +50%', desc: 'Potential loss: $35,000 | Potential gain: $50,000', score: 5 },
+                    { id: 'aggressive', label: '-40% to +55%', desc: 'Potential loss: $40,000 | Potential gain: $55,000', score: 6 },
+                    { id: 'very-aggressive', label: '-45% to +60%', desc: 'Potential loss: $45,000 | Potential gain: $60,000', score: 7 }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { setRiskAnswers({...riskAnswers, volatilityTolerance: option.id}); setRiskStep(10); }} className={`w-full p-4 rounded-lg border-2 text-left transition-all hover:border-teal-500 hover:bg-slate-700/50 ${riskAnswers.volatilityTolerance === option.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-600'}`}>
                       <p className="font-medium">{option.label}</p>
                       <p className="text-sm text-slate-400">{option.desc}</p>
@@ -1338,14 +1376,18 @@ export default function App() {
             {/* Step 10: Enfoque en decisiones */}
             {riskStep === 10 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Cómo describirías tu enfoque al tomar decisiones financieras importantes?</h2>
-                <p className="text-slate-400 text-sm mb-6">Última pregunta antes de ver tu resultado.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Cómo describirías tu enfoque al tomar decisiones financieras importantes?' : 'How would you describe your approach to making important financial decisions?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Última pregunta antes de ver tu resultado.' : 'Last question before seeing your result.'}</p>
                 <div className="space-y-3">
-                  {[
+                  {(language === 'es' ? [
                     { id: 'avoid', label: 'Trato de evitar tomar decisiones', score: 1 },
                     { id: 'reluctant', label: 'Las tomo con reluctancia', score: 2 },
                     { id: 'confident', label: 'Las tomo con confianza y no miro atrás', score: 3 }
-                  ].map((option) => (
+                  ] : [
+                    { id: 'avoid', label: 'I try to avoid making decisions', score: 1 },
+                    { id: 'reluctant', label: 'I make them reluctantly', score: 2 },
+                    { id: 'confident', label: 'I make them confidently and don\'t look back', score: 3 }
+                  ]).map((option) => (
                     <button key={option.id} onClick={() => { 
                       setRiskAnswers({...riskAnswers, decisionApproach: option.id}); 
                       // Calcular perfil de riesgo
@@ -1490,32 +1532,46 @@ export default function App() {
                   {/* Descripción de la estrategia */}
                   <div className="bg-slate-700/50 rounded-lg p-4 mb-6">
                     <p className="text-sm text-slate-300">
-                      {riskProfile === 'very-conservative' ? 
-                        '💡 Esta estrategia prioriza la protección del capital con 50% en renta fija y solo 20% en acciones. Ideal para horizontes cortos o quienes no toleran pérdidas.' :
-                       riskProfile === 'conservative' ? 
-                        '💡 Un balance entre seguridad y crecimiento moderado. La renta fija y variable se equilibran para reducir volatilidad mientras se busca algo de rendimiento.' :
-                       riskProfile === 'moderate' ? 
-                        '💡 La clásica cartera balanceada 50/50. Ofrece exposición al crecimiento de los mercados con colchón de renta fija para reducir volatilidad.' :
-                       riskProfile === 'growth' ? 
-                        '💡 Portafolio orientado al crecimiento con 70% en renta variable. Acepta mayor volatilidad a cambio de mayor potencial de rendimiento a largo plazo.' :
-                        '💡 Máxima exposición a renta variable (85%). Para inversionistas con horizontes largos que pueden tolerar caídas significativas buscando máximos rendimientos.'}
+                      {language === 'es' 
+                        ? (riskProfile === 'very-conservative' ? 
+                            '💡 Esta estrategia prioriza la protección del capital con 50% en renta fija y solo 20% en acciones. Ideal para horizontes cortos o quienes no toleran pérdidas.' :
+                           riskProfile === 'conservative' ? 
+                            '💡 Un balance entre seguridad y crecimiento moderado. La renta fija y variable se equilibran para reducir volatilidad mientras se busca algo de rendimiento.' :
+                           riskProfile === 'moderate' ? 
+                            '💡 La clásica cartera balanceada 50/50. Ofrece exposición al crecimiento de los mercados con colchón de renta fija para reducir volatilidad.' :
+                           riskProfile === 'growth' ? 
+                            '💡 Portafolio orientado al crecimiento con 70% en renta variable. Acepta mayor volatilidad a cambio de mayor potencial de rendimiento a largo plazo.' :
+                            '💡 Máxima exposición a renta variable (85%). Para inversionistas con horizontes largos que pueden tolerar caídas significativas buscando máximos rendimientos.')
+                        : (riskProfile === 'very-conservative' ? 
+                            '💡 This strategy prioritizes capital protection with 50% in bonds and only 20% in stocks. Ideal for short horizons or those who cannot tolerate losses.' :
+                           riskProfile === 'conservative' ? 
+                            '💡 A balance between security and moderate growth. Fixed income and equities are balanced to reduce volatility while seeking some returns.' :
+                           riskProfile === 'moderate' ? 
+                            '💡 The classic balanced 50/50 portfolio. Offers exposure to market growth with a fixed income cushion to reduce volatility.' :
+                           riskProfile === 'growth' ? 
+                            '💡 Growth-oriented portfolio with 70% in equities. Accepts higher volatility in exchange for greater long-term return potential.' :
+                            '💡 Maximum equity exposure (85%). For investors with long horizons who can tolerate significant declines seeking maximum returns.')}
                     </p>
                   </div>
 
                   {/* Resumen de respuestas */}
                   <div className="border-t border-slate-700 pt-4">
-                    <h4 className="font-medium mb-3">📋 Resumen de tu perfil</h4>
+                    <h4 className="font-medium mb-3">📋 {language === 'es' ? 'Resumen de tu perfil' : 'Your Profile Summary'}</h4>
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="text-slate-400">Objetivo:</div>
-                      <div>{riskAnswers.goal === 'retirement' ? 'Retiro' : riskAnswers.goal === 'wealth' ? 'Crecer patrimonio' : riskAnswers.goal === 'emergency' ? 'Fondo de emergencia' : riskAnswers.goal === 'income' ? 'Generar ingresos' : 'Gasto especial'}</div>
-                      <div className="text-slate-400">Inversión inicial:</div>
+                      <div className="text-slate-400">{language === 'es' ? 'Objetivo:' : 'Goal:'}</div>
+                      <div>{language === 'es' 
+                        ? (riskAnswers.goal === 'retirement' ? 'Retiro' : riskAnswers.goal === 'wealth' ? 'Crecer patrimonio' : riskAnswers.goal === 'emergency' ? 'Fondo de emergencia' : riskAnswers.goal === 'income' ? 'Generar ingresos' : 'Gasto especial')
+                        : (riskAnswers.goal === 'retirement' ? 'Retirement' : riskAnswers.goal === 'wealth' ? 'Build wealth' : riskAnswers.goal === 'emergency' ? 'Emergency fund' : riskAnswers.goal === 'income' ? 'Generate income' : 'Special expense')}</div>
+                      <div className="text-slate-400">{language === 'es' ? 'Inversión inicial:' : 'Initial investment:'}</div>
                       <div>${Number(riskAnswers.initialInvestmentRisk).toLocaleString()}</div>
-                      <div className="text-slate-400">Horizonte:</div>
-                      <div>{riskAnswers.timeHorizon} años</div>
-                      <div className="text-slate-400">Aportación mensual:</div>
+                      <div className="text-slate-400">{language === 'es' ? 'Horizonte:' : 'Horizon:'}</div>
+                      <div>{riskAnswers.timeHorizon} {language === 'es' ? 'años' : 'years'}</div>
+                      <div className="text-slate-400">{language === 'es' ? 'Aportación mensual:' : 'Monthly contribution:'}</div>
                       <div>${Number(riskAnswers.monthlyContributionRisk || 0).toLocaleString()}</div>
-                      <div className="text-slate-400">Tolerancia al riesgo:</div>
-                      <div className="capitalize">{riskProfile === 'very-conservative' ? 'Muy Baja' : riskProfile === 'conservative' ? 'Baja' : riskProfile === 'moderate' ? 'Moderada' : riskProfile === 'growth' ? 'Alta' : 'Muy Alta'}</div>
+                      <div className="text-slate-400">{language === 'es' ? 'Tolerancia al riesgo:' : 'Risk tolerance:'}</div>
+                      <div className="capitalize">{language === 'es' 
+                        ? (riskProfile === 'very-conservative' ? 'Muy Baja' : riskProfile === 'conservative' ? 'Baja' : riskProfile === 'moderate' ? 'Moderada' : riskProfile === 'growth' ? 'Alta' : 'Muy Alta')
+                        : (riskProfile === 'very-conservative' ? 'Very Low' : riskProfile === 'conservative' ? 'Low' : riskProfile === 'moderate' ? 'Moderate' : riskProfile === 'growth' ? 'High' : 'Very High')}</div>
                     </div>
                   </div>
                 </div>
@@ -1523,10 +1579,10 @@ export default function App() {
                 {/* Botones de acción */}
                 <div className="flex gap-4">
                   <button onClick={() => { setRiskStep(0); setRiskAnswers({ goal: null, initialInvestmentRisk: '', timeHorizon: '', monthlyContributionRisk: '', knowledgeLevel: null, riskPerception: null, experiencedLoss: null, lossReaction: null, volatilityTolerance: null, decisionApproach: null }); setRiskProfile(null); }} className="flex-1 px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-700 font-medium">
-                    🔄 Volver a Empezar
+                    🔄 {language === 'es' ? 'Volver a Empezar' : 'Start Over'}
                   </button>
                   <button onClick={() => { setInitialInvestment(Number(riskAnswers.initialInvestmentRisk) || 100000); setMonthlyContribution(Number(riskAnswers.monthlyContributionRisk) || 5000); setActiveTab('simulator'); }} className="flex-1 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg font-medium hover:from-teal-600 hover:to-emerald-600">
-                    📊 Ir al Simulador
+                    📊 {language === 'es' ? 'Ir al Simulador' : 'Go to Simulator'}
                   </button>
                 </div>
               </div>
@@ -1864,10 +1920,10 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">Años hasta retiro</p><p className="text-2xl font-bold text-blue-400">{retirementAge - currentAge}</p></div>
-              <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-700"><p className="text-slate-400 text-xs">Capital al retirarte</p><p className="text-2xl font-bold text-emerald-400">{formatCurrency(retirementProjection.balanceAtRetirement)}</p></div>
-              <div className="bg-slate-800/50 rounded-xl p-4 border border-amber-700"><p className="text-slate-400 text-xs">Retiro máximo sostenible</p><p className="text-2xl font-bold text-amber-400">{formatCurrency(retirementProjection.maxMonthlyWithdrawal)}</p><p className="text-xs text-slate-500">/mes</p></div>
-              <div className={`rounded-xl p-4 border ${retirementProjection.canSustain ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}><p className="text-slate-400 text-xs">Estado</p><p className={`text-2xl font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>{retirementProjection.canSustain ? '✓ Viable' : '⚠ Ajustar'}</p></div>
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">{language === 'es' ? 'Años hasta retiro' : 'Years to retirement'}</p><p className="text-2xl font-bold text-blue-400">{retirementAge - currentAge}</p></div>
+              <div className="bg-emerald-900/30 rounded-xl p-4 border border-emerald-700"><p className="text-slate-400 text-xs">{language === 'es' ? 'Capital al retirarte' : 'Capital at retirement'}</p><p className="text-2xl font-bold text-emerald-400">{formatCurrency(retirementProjection.balanceAtRetirement)}</p></div>
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-amber-700"><p className="text-slate-400 text-xs">{language === 'es' ? 'Retiro máximo sostenible' : 'Max sustainable withdrawal'}</p><p className="text-2xl font-bold text-amber-400">{formatCurrency(retirementProjection.maxMonthlyWithdrawal)}</p><p className="text-xs text-slate-500">/{language === 'es' ? 'mes' : 'mo'}</p></div>
+              <div className={`rounded-xl p-4 border ${retirementProjection.canSustain ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}><p className="text-slate-400 text-xs">{language === 'es' ? 'Estado' : 'Status'}</p><p className={`text-2xl font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>{retirementProjection.canSustain ? (language === 'es' ? '✓ Viable' : '✓ Viable') : (language === 'es' ? '⚠ Ajustar' : '⚠ Adjust')}</p></div>
             </div>
 
             <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
