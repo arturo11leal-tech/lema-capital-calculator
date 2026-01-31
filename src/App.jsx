@@ -1244,9 +1244,11 @@ export default function App() {
         {activeTab === 'home' && (
           <div className="max-w-4xl mx-auto">
             {/* Hero Section */}
-            <div className="text-center mb-12">
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                {t.homeTitle}
+            <div className="text-center mb-12 px-4">
+              <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent inline-block pb-2">
+                  {t.homeTitle}
+                </span>
               </h1>
               <p className="text-xl md:text-2xl text-slate-300 italic">
                 {t.homeSubtitle}
