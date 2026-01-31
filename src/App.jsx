@@ -1719,8 +1719,8 @@ export default function App() {
             {/* Holdings y Sectores */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               {/* Top 10 Holdings */}
-              <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">{t.topPositions.replace('{n}', composition.holdings.length)}</h2>
+              <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+                <h2 className="text-lg md:text-xl font-semibold mb-4">{t.topPositions.replace('{n}', composition.holdings.length)}</h2>
                 <p className="text-xs text-slate-500 mb-4">{t.positionHoverTip}</p>
                 <div className="space-y-3">
                   {composition.holdings.map((holding, idx) => {
@@ -1728,15 +1728,15 @@ export default function App() {
                     const isLastItems = idx >= composition.holdings.length - 3;
                     return (
                       <div key={idx} className="group relative">
-                        <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
-                          <span className="text-slate-500 w-6 text-sm">{holding.rank}.</span>
-                          <div className="flex-1">
-                            <div className="flex justify-between items-center mb-1">
-                              <span className="text-sm truncate pr-2 group-hover:text-white transition-colors">{holding.name}</span>
-                              <span className="font-medium text-sm" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
+                        <div className="flex items-center gap-2 md:gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
+                          <span className="text-slate-500 w-5 md:w-6 text-xs md:text-sm flex-shrink-0">{holding.rank}.</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-center mb-1 gap-2">
+                              <span className="text-xs md:text-sm truncate group-hover:text-white transition-colors">{holding.name}</span>
+                              <span className="font-medium text-xs md:text-sm flex-shrink-0" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
                             </div>
-                            <div className="w-full bg-slate-700 rounded-full h-2">
-                              <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
+                            <div className="w-full bg-slate-700 rounded-full h-1.5 md:h-2">
+                              <div className="h-1.5 md:h-2 rounded-full transition-all" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
                             </div>
                           </div>
                         </div>
@@ -1780,13 +1780,13 @@ export default function App() {
             </div>
 
             {/* Sector Bar Chart */}
-            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">{t.sectorsByWeight}</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} layout="vertical" margin={{ left: 100 }}>
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+              <h2 className="text-lg md:text-xl font-semibold mb-4">{t.sectorsByWeight}</h2>
+              <ResponsiveContainer width="100%" height={Math.max(composition.sectors.length * 45, 280)}>
+                <BarChart data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} layout="vertical" margin={{ left: 10, right: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `${v}%`} />
-                  <YAxis type="category" dataKey="sectorTranslated" stroke="#9CA3AF" fontSize={10} width={100} />
+                  <YAxis type="category" dataKey="sectorTranslated" stroke="#9CA3AF" fontSize={9} width={90} tick={{ fontSize: 9 }} />
                   <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
                   <Bar dataKey="weight" fill={fund.color} radius={[0, 4, 4, 0]} />
                 </BarChart>
