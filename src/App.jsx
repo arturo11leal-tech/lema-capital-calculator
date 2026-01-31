@@ -17,13 +17,13 @@ const portfolioComposition = {
       { rank: 10, name: "Cemex, SAB de CV", weight: 4.86 }
     ],
     sectors: [
-      { sector: "Financials", weight: 31.38 },
-      { sector: "Industrials", weight: 20.18 },
-      { sector: "Health Care", weight: 14.94 },
-      { sector: "Consumer Staples", weight: 14.46 },
-      { sector: "Basic Materials", weight: 13.00 },
-      { sector: "Real Estate", weight: 5.93 },
-      { sector: "Cash & Equivalents", weight: 0.13 }
+      { sector: "Financiero", weight: 31.38 },
+      { sector: "Industrial", weight: 20.18 },
+      { sector: "Salud", weight: 14.94 },
+      { sector: "Consumo Básico", weight: 14.46 },
+      { sector: "Materiales Básicos", weight: 13.00 },
+      { sector: "Bienes Raíces", weight: 5.93 },
+      { sector: "Efectivo", weight: 0.13 }
     ]
   },
   "HM Fund": {
@@ -40,13 +40,13 @@ const portfolioComposition = {
       { rank: 10, name: "Grupo Aeroportuario del Pacífico, S.A.B. de C.V.", weight: 4.39 }
     ],
     sectors: [
-      { sector: "Industrials", weight: 46.58 },
-      { sector: "Consumer Staples", weight: 16.74 },
-      { sector: "Health Care", weight: 16.04 },
-      { sector: "Real Estate", weight: 9.62 },
-      { sector: "Basic Materials", weight: 8.67 },
-      { sector: "Financials", weight: 2.25 },
-      { sector: "Cash & Equivalents", weight: 0.10 }
+      { sector: "Industrial", weight: 46.58 },
+      { sector: "Consumo Básico", weight: 16.74 },
+      { sector: "Salud", weight: 16.04 },
+      { sector: "Bienes Raíces", weight: 9.62 },
+      { sector: "Materiales Básicos", weight: 8.67 },
+      { sector: "Financiero", weight: 2.25 },
+      { sector: "Efectivo", weight: 0.10 }
     ]
   },
   "AL Composite": {
@@ -63,15 +63,15 @@ const portfolioComposition = {
       { rank: 10, name: "Enbridge Inc", weight: 3.06 }
     ],
     sectors: [
-      { sector: "Technology", weight: 22.53 },
-      { sector: "Financials", weight: 15.64 },
-      { sector: "Health Care", weight: 14.26 },
-      { sector: "Energy", weight: 12.36 },
-      { sector: "Industrials", weight: 9.94 },
-      { sector: "Precious Metals", weight: 8.78 },
-      { sector: "Cash & Crypto", weight: 6.81 },
-      { sector: "Hedges", weight: 3.50 },
-      { sector: "Consumer Discretionary", weight: 3.30 },
+      { sector: "Tecnología", weight: 22.53 },
+      { sector: "Financiero", weight: 15.64 },
+      { sector: "Salud", weight: 14.26 },
+      { sector: "Energía", weight: 12.36 },
+      { sector: "Industrial", weight: 9.94 },
+      { sector: "Metales Preciosos", weight: 8.78 },
+      { sector: "Efectivo & Cripto", weight: 6.81 },
+      { sector: "Coberturas", weight: 3.50 },
+      { sector: "Consumo Discrecional", weight: 3.30 },
       { sector: "ETFs", weight: 2.90 }
     ]
   },
