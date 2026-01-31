@@ -511,7 +511,30 @@ export default function App() {
     const finalBalance = Math.max(0, retirementBalance);
     const canSustain = finalBalance > 0;
     
-    return { accumulationData, withdrawalData, balanceAtRetirement: Math.round(balanceAtRetirement), finalBalance: Math.round(finalBalance), canSustain, yearsUntilDepleted: canSustain ? yearsInRetirement : Math.round(yearsUntilDepleted * 10) / 10, maxMonthlyWithdrawal: Math.round(maxMonthlyWithdrawal), totalContributed: currentSavings + (monthlySavings * monthsToRetirement), annualReturn };
+    // Calcular el ahorro mensual necesario para alcanzar el objetivo de retiro deseado
+    // Necesitamos encontrar el capital necesario para sostener monthlyRetirementExpense durante yearsInRetirement
+    let requiredBalanceAtRetirement;
+    if (monthlyReturn > 0 && monthsInRetirement > 0) {
+      const pvFactor = (1 - Math.pow(1 + monthlyReturn, -monthsInRetirement)) / monthlyReturn;
+      requiredBalanceAtRetirement = monthlyRetirementExpense * pvFactor;
+    } else {
+      requiredBalanceAtRetirement = monthlyRetirementExpense * monthsInRetirement;
+    }
+    
+    // Calcular cuánto se necesita ahorrar mensualmente para llegar a ese capital
+    // Fórmula de valor futuro de anualidad: FV = PMT * [((1+r)^n - 1) / r] + PV * (1+r)^n
+    // Despejamos PMT: PMT = (FV - PV * (1+r)^n) / [((1+r)^n - 1) / r]
+    let requiredMonthlySavings;
+    if (monthlyReturn > 0 && monthsToRetirement > 0) {
+      const fvFactor = (Math.pow(1 + monthlyReturn, monthsToRetirement) - 1) / monthlyReturn;
+      const pvGrowth = currentSavings * Math.pow(1 + monthlyReturn, monthsToRetirement);
+      requiredMonthlySavings = (requiredBalanceAtRetirement - pvGrowth) / fvFactor;
+    } else {
+      requiredMonthlySavings = (requiredBalanceAtRetirement - currentSavings) / monthsToRetirement;
+    }
+    requiredMonthlySavings = Math.max(0, requiredMonthlySavings); // No puede ser negativo
+    
+    return { accumulationData, withdrawalData, balanceAtRetirement: Math.round(balanceAtRetirement), finalBalance: Math.round(finalBalance), canSustain, yearsUntilDepleted: canSustain ? yearsInRetirement : Math.round(yearsUntilDepleted * 10) / 10, maxMonthlyWithdrawal: Math.round(maxMonthlyWithdrawal), totalContributed: currentSavings + (monthlySavings * monthsToRetirement), annualReturn, requiredMonthlySavings: Math.round(requiredMonthlySavings), requiredBalanceAtRetirement: Math.round(requiredBalanceAtRetirement) };
   }, [selectedFund, currentAge, retirementAge, currentSavings, monthlySavings, monthlyRetirementExpense, lifeExpectancy, fund.annualized]);
 
   const lastData = simulationData[simulationData.length - 1];
@@ -860,6 +883,11 @@ export default function App() {
                   <p className="text-red-400 font-medium">⚠️ Tu plan actual no es sostenible</p>
                   <p className="text-slate-400 text-sm mt-2">Con un retiro de {formatCurrency(monthlyRetirementExpense)} mensuales, tu capital se agotaría a los {retirementAge + Math.floor(retirementProjection.yearsUntilDepleted)} años.</p>
                   <p className="text-slate-400 text-sm mt-1"><strong>Opciones:</strong> Aumenta tu ahorro mensual, reduce el gasto en retiro a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.</p>
+                  <div className="mt-3 p-3 bg-amber-900/30 border border-amber-700 rounded-lg">
+                    <p className="text-amber-400 text-sm font-medium">💡 Para lograr tu objetivo de {formatCurrency(monthlyRetirementExpense)}/mes en retiro:</p>
+                    <p className="text-slate-300 text-sm mt-1">Necesitas aportar <strong className="text-amber-400">{formatCurrency(retirementProjection.requiredMonthlySavings)}</strong> mensuales (actualmente aportas {formatCurrency(monthlySavings)}).</p>
+                    <p className="text-slate-500 text-xs mt-1">Esto te permitiría acumular {formatCurrency(retirementProjection.requiredBalanceAtRetirement)} al momento del retiro, suficiente para sostener tu gasto deseado hasta los {lifeExpectancy} años.</p>
+                  </div>
                 </div>
               )}
             </div>
