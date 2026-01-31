@@ -533,7 +533,7 @@ const translations = {
   es: {
     // Header
     title: "LEMA CAPITAL",
-    subtitle: "Planificador Financiero",
+    subtitle: "Gestión de Activos",
     
     // Tabs
     riskProfile: "🎯 Perfil de Riesgo",
@@ -736,7 +736,7 @@ const translations = {
   en: {
     // Header
     title: "LEMA CAPITAL",
-    subtitle: "Financial Planner",
+    subtitle: "Asset Management",
     
     // Tabs
     riskProfile: "🎯 Risk Profile",
