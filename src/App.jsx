@@ -77,18 +77,22 @@ const portfolioComposition = {
   },
   "ALR Portfolio": {
     holdings: [
-      { rank: 1, name: "Actinver Casa de Bolsa - Deuda MX", weight: 35.0 },
-      { rank: 2, name: "CETES / Bonos Gubernamentales", weight: 25.0 },
-      { rank: 3, name: "Fibras Inmobiliarias", weight: 15.0 },
-      { rank: 4, name: "Deuda Corporativa AAA", weight: 12.0 },
-      { rank: 5, name: "ETFs de Renta Fija", weight: 8.0 },
-      { rank: 6, name: "Cash Equivalents", weight: 5.0 }
+      { rank: 1, name: "Estados Unidos (Acciones)", weight: 37.4 },
+      { rank: 2, name: "México (Acciones)", weight: 26.6 },
+      { rank: 3, name: "Efectivo & Equivalentes", weight: 12.9 },
+      { rank: 4, name: "Asia (Acciones)", weight: 8.3 },
+      { rank: 5, name: "Europa (Acciones)", weight: 6.8 },
+      { rank: 6, name: "Metales Preciosos", weight: 5.0 },
+      { rank: 7, name: "Activos Digitales (Crypto)", weight: 3.0 }
     ],
     sectors: [
-      { sector: "Government Bonds", weight: 60.0 },
-      { sector: "Corporate Debt", weight: 20.0 },
-      { sector: "Real Estate (Fibras)", weight: 15.0 },
-      { sector: "Cash", weight: 5.0 }
+      { sector: "Estados Unidos", weight: 37.4 },
+      { sector: "México", weight: 26.6 },
+      { sector: "Efectivo & Equivalentes", weight: 12.9 },
+      { sector: "Asia", weight: 8.3 },
+      { sector: "Europa", weight: 6.8 },
+      { sector: "Metales Preciosos", weight: 5.0 },
+      { sector: "Activos Digitales", weight: 3.0 }
     ]
   }
 };
@@ -121,6 +125,8 @@ const fundsStats = {
     positive_months: 37,
     negative_months: 26,
     win_rate: 0.587,
+    upside_capture: 0.8251,
+    downside_capture: 0.6029,
     n_holdings: 10,
     returns: [
       { date: "2020-10", month: "Oct 2020", fund: -0.0173, benchmark: -0.012569 },
@@ -211,6 +217,8 @@ const fundsStats = {
     positive_months: 30,
     negative_months: 24,
     win_rate: 0.556,
+    upside_capture: 1.0148,
+    downside_capture: 0.3464,
     n_holdings: 10,
     returns: [
       { date: "2021-07", month: "Jul 2021", fund: -0.0142, benchmark: 0.011505 },
@@ -292,6 +300,8 @@ const fundsStats = {
     positive_months: 19,
     negative_months: 10,
     win_rate: 0.655,
+    upside_capture: 1.0161,
+    downside_capture: 0.5605,
     n_holdings: 37,
     returns: [
       { date: "2023-08", month: "Aug 2023", fund: -0.0332, benchmark: -0.0159 },
@@ -331,24 +341,27 @@ const fundsStats = {
     description: "Estrategia conservadora de baja volatilidad",
     n_months: 15,
     last_month: -0.0074,
-    last_3m: -0.0010,
+    last_3m: 0.0254,
     last_6m: 0.0400,
     last_12m: 0.0755,
     cumulative: 0.0942,
     annualized: 0.0747,
-    std_annual: 0.0257,
-    std_bench_annual: 0.0027,
-    alpha: -0.0022,
-    sharpe: -0.21,
+    std_annual: 0.0260,
+    std_bench_annual: 0.1020,
+    alpha: 0.0530,
+    sharpe: 0.42,
     beta: 0.06,
-    correlation: 0.01,
+    correlation: 0.48,
     max_drawdown: -0.0074,
     best_month: 0.0264,
     worst_month: -0.0074,
     positive_months: 13,
     negative_months: 2,
     win_rate: 0.867,
-    n_holdings: 37,
+    upside_capture: 0.258,
+    downside_capture: -0.282,
+    dividend_yield: 0.019,
+    n_holdings: 34,
     returns: [
       { date: "2024-10", month: "Oct 2024", fund: 0.0051, benchmark: 0.0071 },
       { date: "2024-11", month: "Nov 2024", fund: 0.0073, benchmark: 0.0067 },
@@ -496,6 +509,7 @@ export default function App() {
           <button onClick={() => setActiveTab('stats')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'stats' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📈 Estadísticas</button>
           <button onClick={() => setActiveTab('composition')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'composition' ? 'bg-amber-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🏢 Composición</button>
           <button onClick={() => setActiveTab('retirement')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'retirement' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🏖️ Retiro</button>
+          <button onClick={() => setActiveTab('glossary')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'glossary' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📚 Glosario</button>
         </div>
 
         {/* Fund Selector */}
@@ -606,6 +620,44 @@ export default function App() {
                     <div key={idx} className="flex justify-between items-center"><span className="text-slate-400">{label}</span><span className={`font-medium ${cls || ''}`}>{value}</span></div>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            {/* Capture Ratios */}
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h3 className="text-lg font-semibold mb-4">📈 Captura de Mercado</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-center">
+                  <p className="text-slate-400 text-sm mb-2">Captura en Alzas (Upside)</p>
+                  <p className="text-3xl font-bold" style={{ color: fund.upside_capture >= 1 ? '#10B981' : fund.color }}>{formatPercentPlain(fund.upside_capture, 1)}</p>
+                  <p className="text-xs text-slate-500 mt-1">Cuando {fund.benchmark} sube, capturamos {formatPercentPlain(fund.upside_capture, 0)} del alza</p>
+                  <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
+                    <div className="h-3 rounded-full bg-emerald-500" style={{ width: `${Math.min(fund.upside_capture * 100, 100)}%` }}></div>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-slate-400 text-sm mb-2">Captura en Bajas (Downside)</p>
+                  <p className="text-3xl font-bold" style={{ color: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}>{formatPercentPlain(fund.downside_capture, 1)}</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {fund.downside_capture < 0 
+                      ? `Cuando ${fund.benchmark} baja, ¡el portafolio tiende a subir!` 
+                      : `Cuando ${fund.benchmark} baja, solo caemos ${formatPercentPlain(fund.downside_capture, 0)}`}
+                  </p>
+                  <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
+                    <div className="h-3 rounded-full" style={{ width: `${Math.min(Math.abs(fund.downside_capture) * 100, 100)}%`, backgroundColor: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}></div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 p-3 bg-slate-700/50 rounded-lg">
+                <p className="text-sm text-slate-400">
+                  💡 <strong>Interpretación:</strong> {fund.downside_capture < 0 
+                    ? '¡Excelente! El portafolio tiene correlación inversa al mercado en bajas - sube cuando el mercado cae.'
+                    : fund.upside_capture >= 1 && fund.downside_capture < 0.7 
+                    ? 'Excelente perfil: captura más ganancias y menos pérdidas que el mercado.' 
+                    : fund.downside_capture < 0.7 
+                    ? 'Buena protección a la baja: cuando el mercado cae, este portafolio cae menos.'
+                    : 'El portafolio tiende a seguir al mercado de cerca.'}
+                </p>
               </div>
             </div>
           </>
@@ -735,6 +787,132 @@ export default function App() {
                   <p className="text-slate-400 text-sm mt-1"><strong>Opciones:</strong> Aumenta tu ahorro mensual, reduce el gasto en retiro a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.</p>
                 </div>
               )}
+            </div>
+          </>
+        )}
+
+        {/* ==================== GLOSARIO ==================== */}
+        {activeTab === 'glossary' && (
+          <>
+            <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
+              <h2 className="text-2xl font-semibold mb-2 text-center">📚 Glosario de Términos</h2>
+              <p className="text-slate-400 text-center text-sm mb-6">Definiciones claras para entender mejor tu inversión</p>
+              
+              <div className="space-y-4">
+                {/* Rendimientos */}
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-blue-400 mb-3">📈 Rendimientos</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Rendimiento Acumulado</p>
+                      <p className="text-slate-400 text-sm mt-1">Ganancia o pérdida total desde el inicio del portafolio. Si es 91%, significa que $100,000 invertidos se convirtieron en $191,000.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Rendimiento Anualizado</p>
+                      <p className="text-slate-400 text-sm mt-1">Rendimiento promedio por año, considerando el interés compuesto. Permite comparar inversiones de diferentes periodos.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Últimos 3M / 6M / 12M</p>
+                      <p className="text-slate-400 text-sm mt-1">Rendimiento acumulado en los últimos 3, 6 o 12 meses. Muestra el desempeño reciente del portafolio.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Benchmark</p>
+                      <p className="text-slate-400 text-sm mt-1">Índice de referencia contra el cual se compara el portafolio (ej: IPC México, S&P 500). Sirve para evaluar si el gestor agrega valor.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Riesgo */}
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-purple-400 mb-3">⚠️ Métricas de Riesgo</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Volatilidad (Desv. Estándar)</p>
+                      <p className="text-slate-400 text-sm mt-1">Mide cuánto varían los rendimientos. Mayor volatilidad = más riesgo. Una volatilidad de 12% significa que los rendimientos suelen variar ±12% alrededor del promedio.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Max Drawdown</p>
+                      <p className="text-slate-400 text-sm mt-1">La máxima caída desde un punto alto hasta un punto bajo. Un drawdown de -10% significa que en el peor momento, el portafolio cayó 10% desde su máximo.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Beta</p>
+                      <p className="text-slate-400 text-sm mt-1">Sensibilidad al mercado. Beta = 1 significa que se mueve igual que el mercado. Beta = 0.6 significa que si el mercado sube 10%, el portafolio sube ~6%.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Correlación</p>
+                      <p className="text-slate-400 text-sm mt-1">Qué tan relacionados están los movimientos del portafolio con el mercado. Va de -1 a 1. Cerca de 1 = se mueven juntos. Cerca de 0 = movimientos independientes.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Captura de Mercado */}
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-emerald-400 mb-3">🎯 Captura de Mercado</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg border-l-4 border-emerald-500">
+                      <p className="font-medium text-white">Captura en Alzas (Upside Capture)</p>
+                      <p className="text-slate-400 text-sm mt-1">Qué porcentaje de las subidas del mercado captura el portafolio. <strong className="text-emerald-400">100% o más es excelente</strong> - significa que cuando el mercado sube, el portafolio sube igual o más.</p>
+                      <p className="text-xs text-slate-500 mt-2">Ejemplo: Upside 82% → Cuando el mercado sube 10%, el portafolio sube ~8.2%</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg border-l-4 border-amber-500">
+                      <p className="font-medium text-white">Captura en Bajas (Downside Capture)</p>
+                      <p className="text-slate-400 text-sm mt-1">Qué porcentaje de las caídas del mercado sufre el portafolio. <strong className="text-amber-400">Menos de 70% es excelente</strong> - significa protección cuando el mercado cae.</p>
+                      <p className="text-xs text-slate-500 mt-2">Ejemplo: Downside 60% → Cuando el mercado cae 10%, el portafolio solo cae ~6%</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 p-4 bg-emerald-900/20 border border-emerald-700 rounded-lg">
+                    <p className="text-sm text-emerald-400 font-medium">💡 El portafolio ideal tiene:</p>
+                    <p className="text-sm text-slate-400 mt-1">• Captura en Alzas ≥ 100% (captura todas las ganancias o más)</p>
+                    <p className="text-sm text-slate-400">• Captura en Bajas ≤ 70% (protección en caídas)</p>
+                  </div>
+                </div>
+
+                {/* Alpha y Rendimiento Ajustado */}
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-amber-400 mb-3">🏆 Rendimiento Ajustado por Riesgo</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Alpha</p>
+                      <p className="text-slate-400 text-sm mt-1">Rendimiento extra generado por el gestor vs. el benchmark. <strong className="text-emerald-400">Alpha positivo = el gestor agrega valor.</strong> Alpha de 2.3% significa 2.3% de rendimiento adicional por año.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Sharpe Ratio</p>
+                      <p className="text-slate-400 text-sm mt-1">Rendimiento obtenido por cada unidad de riesgo. <strong className="text-emerald-400">Mayor a 1 es excelente</strong>, 0.5-1 es bueno, menor a 0.5 es regular.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Win Rate</p>
+                      <p className="text-slate-400 text-sm mt-1">Porcentaje de meses con rendimiento positivo. Un win rate de 60% significa que 6 de cada 10 meses el portafolio ganó dinero.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Track Record</p>
+                      <p className="text-slate-400 text-sm mt-1">Historial de rendimientos del portafolio. Más meses = más confiable la estadística. Se recomienda mínimo 36 meses para conclusiones sólidas.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Simulador y Retiro */}
+                <div>
+                  <h3 className="text-lg font-semibold text-rose-400 mb-3">🧮 Simulador y Retiro</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Interés Compuesto</p>
+                      <p className="text-slate-400 text-sm mt-1">Las ganancias generan más ganancias. Es el efecto "bola de nieve" que hace crecer exponencialmente tu inversión con el tiempo.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Aportaciones Mensuales</p>
+                      <p className="text-slate-400 text-sm mt-1">Invertir una cantidad fija cada mes. Esta estrategia (DCA) reduce el riesgo de comprar todo en un mal momento.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Retiro Máximo Sostenible</p>
+                      <p className="text-slate-400 text-sm mt-1">La cantidad máxima que puedes retirar mensualmente sin agotar tu capital antes de tu expectativa de vida.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Regla del 4%</p>
+                      <p className="text-slate-400 text-sm mt-1">Regla general: puedes retirar ~4% anual de tu portafolio de retiro sin agotarlo en 30 años (asumiendo rendimientos históricos).</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}
