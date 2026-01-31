@@ -1175,18 +1175,18 @@ export default function App() {
             {/* Step 2: Inversión inicial */}
             {riskStep === 2 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿Cuánto te gustaría invertir inicialmente?</h2>
-                <p className="text-slate-400 text-sm mb-6">El monto de inversión nos ayuda a construir un portafolio adecuado a tus objetivos.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿Cuánto te gustaría invertir inicialmente?' : 'How much would you like to invest initially?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'El monto de inversión nos ayuda a construir un portafolio adecuado a tus objetivos.' : 'The investment amount helps us build a portfolio suited to your goals.'}</p>
                 <div className="mb-6">
-                  <label className="block text-slate-400 text-sm mb-2">Inversión inicial</label>
+                  <label className="block text-slate-400 text-sm mb-2">{language === 'es' ? 'Inversión inicial' : 'Initial investment'}</label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                     <input type="number" value={riskAnswers.initialInvestmentRisk} onChange={(e) => setRiskAnswers({...riskAnswers, initialInvestmentRisk: e.target.value})} placeholder="100,000" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:border-teal-500 focus:outline-none" />
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={() => setRiskStep(1)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
-                  <button onClick={() => riskAnswers.initialInvestmentRisk && setRiskStep(3)} disabled={!riskAnswers.initialInvestmentRisk} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">Continuar</button>
+                  <button onClick={() => setRiskStep(1)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
+                  <button onClick={() => riskAnswers.initialInvestmentRisk && setRiskStep(3)} disabled={!riskAnswers.initialInvestmentRisk} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">{language === 'es' ? 'Continuar' : 'Continue'}</button>
                 </div>
               </div>
             )}
@@ -1194,15 +1194,15 @@ export default function App() {
             {/* Step 3: Horizonte de tiempo */}
             {riskStep === 3 && (
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-2">¿En cuántos años necesitarás retirar este dinero?</h2>
-                <p className="text-slate-400 text-sm mb-6">Tu horizonte de tiempo afecta cuánto riesgo puede manejar tu portafolio.</p>
+                <h2 className="text-xl font-semibold mb-2">{language === 'es' ? '¿En cuántos años necesitarás retirar este dinero?' : 'In how many years will you need to withdraw this money?'}</h2>
+                <p className="text-slate-400 text-sm mb-6">{language === 'es' ? 'Tu horizonte de tiempo afecta cuánto riesgo puede manejar tu portafolio.' : 'Your time horizon affects how much risk your portfolio can handle.'}</p>
                 <div className="mb-6">
-                  <label className="block text-slate-400 text-sm mb-2">Años hasta retirar fondos</label>
+                  <label className="block text-slate-400 text-sm mb-2">{language === 'es' ? 'Años hasta retirar fondos' : 'Years until withdrawal'}</label>
                   <input type="number" value={riskAnswers.timeHorizon} onChange={(e) => setRiskAnswers({...riskAnswers, timeHorizon: e.target.value})} placeholder="10" min="1" max="50" className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-4 text-white focus:border-teal-500 focus:outline-none" />
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={() => setRiskStep(2)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
-                  <button onClick={() => riskAnswers.timeHorizon && setRiskStep(4)} disabled={!riskAnswers.timeHorizon} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">Continuar</button>
+                  <button onClick={() => setRiskStep(2)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
+                  <button onClick={() => riskAnswers.timeHorizon && setRiskStep(4)} disabled={!riskAnswers.timeHorizon} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed">{language === 'es' ? 'Continuar' : 'Continue'}</button>
                 </div>
               </div>
             )}
@@ -1220,8 +1220,8 @@ export default function App() {
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={() => setRiskStep(3)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
-                  <button onClick={() => setRiskStep(5)} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700">Continuar</button>
+                  <button onClick={() => setRiskStep(3)} className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
+                  <button onClick={() => setRiskStep(5)} className="flex-1 px-6 py-2 bg-teal-600 rounded-lg font-medium hover:bg-teal-700">{language === 'es' ? 'Continuar' : 'Continue'}</button>
                 </div>
               </div>
             )}
@@ -1244,7 +1244,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(4)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(4)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1265,7 +1265,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(5)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(5)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1284,7 +1284,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(6)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(6)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1306,7 +1306,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1331,7 +1331,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(riskAnswers.experiencedLoss === 'yes' ? 8 : 7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(riskAnswers.experiencedLoss === 'yes' ? 8 : 7)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1377,7 +1377,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setRiskStep(9)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">Atrás</button>
+                <button onClick={() => setRiskStep(9)} className="mt-4 px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700">{language === 'es' ? 'Atrás' : 'Back'}</button>
               </div>
             )}
 
@@ -1389,22 +1389,30 @@ export default function App() {
                   <div className="text-5xl mb-4">
                     {riskProfile === 'very-conservative' ? '🛡️' : riskProfile === 'conservative' ? '🏦' : riskProfile === 'moderate' ? '⚖️' : riskProfile === 'growth' ? '📈' : '🚀'}
                   </div>
-                  <h2 className="text-2xl font-bold mb-2">Tu Perfil de Inversionista</h2>
+                  <h2 className="text-2xl font-bold mb-2">{language === 'es' ? 'Tu Perfil de Inversionista' : 'Your Investor Profile'}</h2>
                   <p className="text-3xl font-bold mb-4" style={{ color: riskProfile === 'very-conservative' ? '#60A5FA' : riskProfile === 'conservative' ? '#34D399' : riskProfile === 'moderate' ? '#FBBF24' : riskProfile === 'growth' ? '#F97316' : '#EF4444' }}>
-                    {riskProfile === 'very-conservative' ? 'Muy Conservador' : riskProfile === 'conservative' ? 'Conservador' : riskProfile === 'moderate' ? 'Moderado' : riskProfile === 'growth' ? 'Crecimiento' : 'Agresivo'}
+                    {language === 'es' 
+                      ? (riskProfile === 'very-conservative' ? 'Muy Conservador' : riskProfile === 'conservative' ? 'Conservador' : riskProfile === 'moderate' ? 'Moderado' : riskProfile === 'growth' ? 'Crecimiento' : 'Agresivo')
+                      : (riskProfile === 'very-conservative' ? 'Very Conservative' : riskProfile === 'conservative' ? 'Conservative' : riskProfile === 'moderate' ? 'Moderate' : riskProfile === 'growth' ? 'Growth' : 'Aggressive')}
                   </p>
                   <p className="text-slate-400">
-                    {riskProfile === 'very-conservative' ? 'Priorizas la preservación del capital sobre todo. Prefieres rendimientos estables aunque sean menores.' :
-                     riskProfile === 'conservative' ? 'Buscas estabilidad con algo de crecimiento. Aceptas volatilidad limitada para obtener mejores rendimientos.' :
-                     riskProfile === 'moderate' ? 'Buscas un balance entre crecimiento y estabilidad. Aceptas fluctuaciones a cambio de mejores rendimientos a largo plazo.' :
-                     riskProfile === 'growth' ? 'Te enfocas en el crecimiento de tu patrimonio. Aceptas mayor volatilidad por mayores rendimientos potenciales.' :
-                     'Buscas máximos rendimientos y estás cómodo con alta volatilidad. Entiendes que puedes tener pérdidas significativas.'}
+                    {language === 'es' 
+                      ? (riskProfile === 'very-conservative' ? 'Priorizas la preservación del capital sobre todo. Prefieres rendimientos estables aunque sean menores.' :
+                         riskProfile === 'conservative' ? 'Buscas estabilidad con algo de crecimiento. Aceptas volatilidad limitada para obtener mejores rendimientos.' :
+                         riskProfile === 'moderate' ? 'Buscas un balance entre crecimiento y estabilidad. Aceptas fluctuaciones a cambio de mejores rendimientos a largo plazo.' :
+                         riskProfile === 'growth' ? 'Te enfocas en el crecimiento de tu patrimonio. Aceptas mayor volatilidad por mayores rendimientos potenciales.' :
+                         'Buscas máximos rendimientos y estás cómodo con alta volatilidad. Entiendes que puedes tener pérdidas significativas.')
+                      : (riskProfile === 'very-conservative' ? 'You prioritize capital preservation above all. You prefer stable returns even if lower.' :
+                         riskProfile === 'conservative' ? 'You seek stability with some growth. You accept limited volatility for better returns.' :
+                         riskProfile === 'moderate' ? 'You seek balance between growth and stability. You accept fluctuations for better long-term returns.' :
+                         riskProfile === 'growth' ? 'You focus on growing your wealth. You accept higher volatility for greater potential returns.' :
+                         'You seek maximum returns and are comfortable with high volatility. You understand you may have significant losses.')}
                   </p>
                 </div>
 
                 {/* Asignación recomendada */}
                 <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                  <h3 className="text-xl font-semibold mb-4">📊 Asignación de Activos Recomendada</h3>
+                  <h3 className="text-xl font-semibold mb-4">📊 {language === 'es' ? 'Asignación de Activos Recomendada' : 'Recommended Asset Allocation'}</h3>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                     {(() => {
                       // Asignaciones basadas en:
@@ -1735,10 +1743,10 @@ export default function App() {
         {activeTab === 'simulator' && (
           <>
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-lg font-semibold mb-4 text-center">Configura tu Simulación</h2>
+              <h2 className="text-lg font-semibold mb-4 text-center">{t.configureSimulation}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-slate-400 mb-2 text-sm">Inversión Inicial</label>
+                  <label className="block text-slate-400 mb-2 text-sm">{t.initialInvestment}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                     <input type="number" value={initialInvestment} onChange={(e) => setInitialInvestment(Number(e.target.value) || 0)} className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:outline-none focus:border-blue-500" />
@@ -1746,25 +1754,25 @@ export default function App() {
                   <div className="flex gap-2 mt-2">{[50000, 100000, 500000, 1000000].map((amt) => (<button key={amt} onClick={() => setInitialInvestment(amt)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{amt >= 1000000 ? `${amt/1000000}M` : `${amt/1000}K`}</button>))}</div>
                 </div>
                 <div>
-                  <label className="block text-slate-400 mb-2 text-sm">Aportación Mensual</label>
+                  <label className="block text-slate-400 mb-2 text-sm">{t.monthlyContribution}</label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">$</span>
                     <input type="number" value={monthlyContribution} onChange={(e) => setMonthlyContribution(Number(e.target.value) || 0)} className="w-full bg-slate-700 border border-slate-600 rounded-lg py-3 px-8 text-white focus:outline-none focus:border-blue-500" />
                   </div>
-                  <div className="flex gap-2 mt-2">{[0, 5000, 10000, 25000].map((amt) => (<button key={amt} onClick={() => setMonthlyContribution(amt)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{amt === 0 ? 'Sin aport.' : `${amt/1000}K`}</button>))}</div>
+                  <div className="flex gap-2 mt-2">{[0, 5000, 10000, 25000].map((amt) => (<button key={amt} onClick={() => setMonthlyContribution(amt)} className="px-2 py-1 text-xs bg-slate-700 hover:bg-slate-600 rounded">{amt === 0 ? (language === 'es' ? 'Sin aport.' : 'No contr.') : `${amt/1000}K`}</button>))}</div>
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">Total Aportado</p><p className="text-xl font-bold text-slate-300">{formatCurrency(lastData.totalContributed)}</p></div>
-              <div className="bg-slate-800/50 rounded-xl p-4 border-2" style={{ borderColor: fund.color }}><p className="text-slate-400 text-xs">Con {selectedFund.split(' ')[0]}</p><p className="text-xl font-bold" style={{ color: fund.color }}>{formatCurrency(lastData.fundValue)}</p><p className="text-xs text-emerald-400">{formatPercent(percentGainFund)}</p></div>
-              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">Con {fund.benchmark}</p><p className="text-xl font-bold text-slate-400">{formatCurrency(lastData.benchmarkValue)}</p></div>
-              <div className={`rounded-xl p-4 border ${difference >= 0 ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}><p className="text-slate-400 text-xs">Diferencia</p><p className={`text-xl font-bold ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{difference >= 0 ? '+' : ''}{formatCurrency(difference)}</p></div>
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">{language === 'es' ? 'Total Aportado' : 'Total Contributed'}</p><p className="text-xl font-bold text-slate-300">{formatCurrency(lastData.totalContributed)}</p></div>
+              <div className="bg-slate-800/50 rounded-xl p-4 border-2" style={{ borderColor: fund.color }}><p className="text-slate-400 text-xs">{language === 'es' ? 'Con' : 'With'} {selectedFund.split(' ')[0]}</p><p className="text-xl font-bold" style={{ color: fund.color }}>{formatCurrency(lastData.fundValue)}</p><p className="text-xs text-emerald-400">{formatPercent(percentGainFund)}</p></div>
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700"><p className="text-slate-400 text-xs">{language === 'es' ? 'Con' : 'With'} {fund.benchmark}</p><p className="text-xl font-bold text-slate-400">{formatCurrency(lastData.benchmarkValue)}</p></div>
+              <div className={`rounded-xl p-4 border ${difference >= 0 ? 'bg-emerald-900/30 border-emerald-700' : 'bg-red-900/30 border-red-700'}`}><p className="text-slate-400 text-xs">{language === 'es' ? 'Diferencia' : 'Difference'}</p><p className={`text-xl font-bold ${difference >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>{difference >= 0 ? '+' : ''}{formatCurrency(difference)}</p></div>
             </div>
 
             <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-lg font-semibold mb-4">Evolución de tu Inversión</h2>
+              <h2 className="text-lg font-semibold mb-4">{language === 'es' ? 'Evolución de tu Inversión' : 'Investment Growth'}</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={simulationData}>
                   <defs><linearGradient id="fundGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={fund.color} stopOpacity={0.3}/><stop offset="95%" stopColor={fund.color} stopOpacity={0}/></linearGradient></defs>
@@ -1773,7 +1781,7 @@ export default function App() {
                   <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `$${formatNumber(v/1000)}K`} />
                   <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} formatter={(v) => [formatCurrency(v), '']} />
                   <Legend />
-                  <Area type="monotone" dataKey="totalContributed" name="Aportado" stroke="#475569" fill="transparent" strokeDasharray="5 5" />
+                  <Area type="monotone" dataKey="totalContributed" name={language === 'es' ? 'Aportado' : 'Contributed'} stroke="#475569" fill="transparent" strokeDasharray="5 5" />
                   <Area type="monotone" dataKey="benchmarkValue" name={fund.benchmark} stroke="#94A3B8" fill="transparent" strokeWidth={2} />
                   <Area type="monotone" dataKey="fundValue" name={selectedFund} stroke={fund.color} fill="url(#fundGrad)" strokeWidth={3} />
                 </AreaChart>
@@ -1782,15 +1790,15 @@ export default function App() {
 
             {/* Tabla de Rendimientos Comparativa */}
             <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
-              <h2 className="text-lg font-semibold mb-4">📊 Rentabilidad por Periodo</h2>
+              <h2 className="text-lg font-semibold mb-4">📊 {language === 'es' ? 'Rentabilidad por Periodo' : 'Returns by Period'}</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-600">
-                      <th className="text-left py-3 px-4 text-slate-400">Periodo</th>
+                      <th className="text-left py-3 px-4 text-slate-400">{language === 'es' ? 'Periodo' : 'Period'}</th>
                       <th className="text-right py-3 px-4" style={{ color: fund.color }}>{selectedFund}</th>
                       <th className="text-right py-3 px-4 text-slate-400">{fund.benchmark}</th>
-                      <th className="text-right py-3 px-4 text-slate-400">Diferencia</th>
+                      <th className="text-right py-3 px-4 text-slate-400">{language === 'es' ? 'Diferencia' : 'Difference'}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1803,13 +1811,20 @@ export default function App() {
                       const bench_cumulative = benchReturns.reduce((acc, r) => (1 + acc) * (1 + r) - 1, 0);
                       const bench_annualized = Math.pow(1 + bench_cumulative, 12 / benchReturns.length) - 1;
                       
-                      const rows = [
+                      const rows = language === 'es' ? [
                         ['Rendimiento Anualizado', fund.annualized, bench_annualized],
                         ['Rendimiento Acumulado', fund.cumulative, bench_cumulative],
                         ['Último Mes', fund.last_month, bench_last_month],
                         ['LTM (Últimos 12 Meses)', fund.last_12m, bench_last_12m],
                         ['Últimos 3 Meses', fund.last_3m, bench_last_3m],
                         ['YTD (Año a la Fecha)', fund.ytd || fund.last_12m, fund.bench_ytd || bench_last_12m],
+                      ] : [
+                        ['Annualized Return', fund.annualized, bench_annualized],
+                        ['Cumulative Return', fund.cumulative, bench_cumulative],
+                        ['Last Month', fund.last_month, bench_last_month],
+                        ['LTM (Last 12 Months)', fund.last_12m, bench_last_12m],
+                        ['Last 3 Months', fund.last_3m, bench_last_3m],
+                        ['YTD (Year to Date)', fund.ytd || fund.last_12m, fund.bench_ytd || bench_last_12m],
                       ];
                       
                       return rows.map(([label, fundVal, benchVal], idx) => {
@@ -1827,7 +1842,7 @@ export default function App() {
                   </tbody>
                 </table>
               </div>
-              <p className="text-xs text-slate-500 mt-4 text-center">Creación del Portafolio: {fund.returns[0]?.month} • Track Record: {fund.n_months} meses</p>
+              <p className="text-xs text-slate-500 mt-4 text-center">{language === 'es' ? 'Creación del Portafolio' : 'Portfolio Inception'}: {fund.returns[0]?.month} • Track Record: {fund.n_months} {language === 'es' ? 'meses' : 'months'}</p>
             </div>
           </>
         )}
@@ -1836,10 +1851,10 @@ export default function App() {
         {activeTab === 'retirement' && (
           <>
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-lg font-semibold mb-4 text-center">🏖️ Configura tu Plan de Retiro</h2>
-              <p className="text-center text-slate-400 text-sm mb-4">Usando rendimiento anualizado de {formatPercentPlain(fund.annualized)} ({selectedFund})</p>
+              <h2 className="text-lg font-semibold mb-4 text-center">🏖️ {language === 'es' ? 'Configura tu Plan de Retiro' : 'Configure Your Retirement Plan'}</h2>
+              <p className="text-center text-slate-400 text-sm mb-4">{language === 'es' ? 'Usando rendimiento anualizado de' : 'Using annualized return of'} {formatPercentPlain(fund.annualized)} ({selectedFund})</p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {[['Tu edad actual', currentAge, setCurrentAge], ['Edad de retiro', retirementAge, setRetirementAge], ['Expectativa de vida', lifeExpectancy, setLifeExpectancy], ['Ahorro actual', currentSavings, setCurrentSavings], ['Ahorro mensual', monthlySavings, setMonthlySavings], ['Gasto mensual en retiro', monthlyRetirementExpense, setMonthlyRetirementExpense]].map(([label, value, setter], idx) => (
+                {(language === 'es' ? [['Tu edad actual', currentAge, setCurrentAge], ['Edad de retiro', retirementAge, setRetirementAge], ['Expectativa de vida', lifeExpectancy, setLifeExpectancy], ['Ahorro actual', currentSavings, setCurrentSavings], ['Ahorro mensual', monthlySavings, setMonthlySavings], ['Gasto mensual en retiro', monthlyRetirementExpense, setMonthlyRetirementExpense]] : [['Current age', currentAge, setCurrentAge], ['Retirement age', retirementAge, setRetirementAge], ['Life expectancy', lifeExpectancy, setLifeExpectancy], ['Current savings', currentSavings, setCurrentSavings], ['Monthly savings', monthlySavings, setMonthlySavings], ['Monthly expense in retirement', monthlyRetirementExpense, setMonthlyRetirementExpense]]).map(([label, value, setter], idx) => (
                   <div key={idx}>
                     <label className="block text-slate-400 mb-1 text-sm">{label}</label>
                     <input type="number" value={value} onChange={(e) => setter(Number(e.target.value) || 0)} className="w-full bg-slate-700 border border-slate-600 rounded-lg py-2 px-3 text-white" />
@@ -1856,14 +1871,14 @@ export default function App() {
             </div>
 
             <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-lg font-semibold mb-4">Proyección de Patrimonio</h2>
+              <h2 className="text-lg font-semibold mb-4">{language === 'es' ? 'Proyección de Patrimonio' : 'Wealth Projection'}</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={fullRetirementData}>
                   <defs><linearGradient id="retGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/><stop offset="95%" stopColor="#10B981" stopOpacity={0}/></linearGradient></defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis dataKey="year" stroke="#9CA3AF" fontSize={10} />
                   <YAxis stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => v >= 1000000 ? `$${(v/1000000).toFixed(1)}M` : `$${formatNumber(v/1000)}K`} />
-                  <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} formatter={(v) => [formatCurrency(v), 'Patrimonio']} labelFormatter={(l) => `Edad: ${l}`} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} formatter={(v) => [formatCurrency(v), language === 'es' ? 'Patrimonio' : 'Wealth']} labelFormatter={(l) => `${language === 'es' ? 'Edad' : 'Age'}: ${l}`} />
                   <ReferenceLine x={retirementAge} stroke="#F59E0B" strokeDasharray="5 5" />
                   <Area type="monotone" dataKey="balance" stroke="#10B981" fill="url(#retGrad)" strokeWidth={3} />
                 </AreaChart>
@@ -1872,41 +1887,41 @@ export default function App() {
 
             {/* Resumen detallado del Plan de Retiro */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-xl font-semibold mb-4">📋 Resumen de tu Plan de Retiro</h2>
+              <h2 className="text-xl font-semibold mb-4">📋 {language === 'es' ? 'Resumen de tu Plan de Retiro' : 'Your Retirement Plan Summary'}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-medium text-emerald-400 mb-3">Fase de Acumulación</h3>
+                  <h3 className="text-lg font-medium text-emerald-400 mb-3">{language === 'es' ? 'Fase de Acumulación' : 'Accumulation Phase'}</h3>
                   <div className="space-y-2 text-sm">
-                    {[['Ahorro inicial:', formatCurrency(currentSavings)], ['Aportación mensual:', formatCurrency(monthlySavings)], ['Años de ahorro:', `${retirementAge - currentAge} años`], ['Total aportado:', formatCurrency(retirementProjection.totalContributed)], ['Rendimiento anual usado:', formatPercentPlain(fund.annualized), 'text-emerald-400']].map(([label, value, cls], idx) => (
+                    {(language === 'es' ? [['Ahorro inicial:', formatCurrency(currentSavings)], ['Aportación mensual:', formatCurrency(monthlySavings)], ['Años de ahorro:', `${retirementAge - currentAge} años`], ['Total aportado:', formatCurrency(retirementProjection.totalContributed)], ['Rendimiento anual usado:', formatPercentPlain(fund.annualized), 'text-emerald-400']] : [['Initial savings:', formatCurrency(currentSavings)], ['Monthly contribution:', formatCurrency(monthlySavings)], ['Years saving:', `${retirementAge - currentAge} years`], ['Total contributed:', formatCurrency(retirementProjection.totalContributed)], ['Annual return used:', formatPercentPlain(fund.annualized), 'text-emerald-400']]).map(([label, value, cls], idx) => (
                       <div key={idx} className="flex justify-between"><span className="text-slate-400">{label}</span><span className={cls || ''}>{value}</span></div>
                     ))}
-                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2"><span className="text-slate-300 font-medium">Capital al retiro:</span><span className="text-emerald-400 font-bold">{formatCurrency(retirementProjection.balanceAtRetirement)}</span></div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2"><span className="text-slate-300 font-medium">{language === 'es' ? 'Capital al retiro:' : 'Capital at retirement:'}</span><span className="text-emerald-400 font-bold">{formatCurrency(retirementProjection.balanceAtRetirement)}</span></div>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-amber-400 mb-3">Fase de Retiro</h3>
+                  <h3 className="text-lg font-medium text-amber-400 mb-3">{language === 'es' ? 'Fase de Retiro' : 'Retirement Phase'}</h3>
                   <div className="space-y-2 text-sm">
-                    {[['Edad de retiro:', `${retirementAge} años`], ['Retiro mensual deseado:', formatCurrency(monthlyRetirementExpense)], ['Años en retiro:', `${lifeExpectancy - retirementAge} años`], ['Retiro máximo sostenible:', `${formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mes`, 'text-amber-400'], ['Duración del capital:', retirementProjection.canSustain ? `Hasta los ${lifeExpectancy} años ✓` : `${retirementProjection.yearsUntilDepleted} años`, retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400']].map(([label, value, cls], idx) => (
+                    {(language === 'es' ? [['Edad de retiro:', `${retirementAge} años`], ['Retiro mensual deseado:', formatCurrency(monthlyRetirementExpense)], ['Años en retiro:', `${lifeExpectancy - retirementAge} años`], ['Retiro máximo sostenible:', `${formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mes`, 'text-amber-400'], ['Duración del capital:', retirementProjection.canSustain ? `Hasta los ${lifeExpectancy} años ✓` : `${retirementProjection.yearsUntilDepleted} años`, retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400']] : [['Retirement age:', `${retirementAge} years`], ['Desired monthly withdrawal:', formatCurrency(monthlyRetirementExpense)], ['Years in retirement:', `${lifeExpectancy - retirementAge} years`], ['Max sustainable withdrawal:', `${formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mo`, 'text-amber-400'], ['Capital duration:', retirementProjection.canSustain ? `Until age ${lifeExpectancy} ✓` : `${retirementProjection.yearsUntilDepleted} years`, retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400']]).map(([label, value, cls], idx) => (
                       <div key={idx} className="flex justify-between"><span className="text-slate-400">{label}</span><span className={cls || ''}>{value}</span></div>
                     ))}
-                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2"><span className="text-slate-300 font-medium">Capital al final ({lifeExpectancy} años):</span><span className={`font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(retirementProjection.finalBalance)}</span></div>
+                    <div className="flex justify-between border-t border-slate-600 pt-2 mt-2"><span className="text-slate-300 font-medium">{language === 'es' ? `Capital al final (${lifeExpectancy} años):` : `Capital at end (age ${lifeExpectancy}):`}</span><span className={`font-bold ${retirementProjection.canSustain ? 'text-emerald-400' : 'text-red-400'}`}>{formatCurrency(retirementProjection.finalBalance)}</span></div>
                   </div>
                 </div>
               </div>
               {retirementProjection.canSustain ? (
                 <div className="mt-6 p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
-                  <p className="text-emerald-400 font-medium">✓ Tu plan es viable</p>
-                  <p className="text-slate-400 text-sm mt-2">Podrás retirarte a los {retirementAge} años con un gasto mensual de {formatCurrency(monthlyRetirementExpense)} y aún te quedarán {formatCurrency(retirementProjection.finalBalance)} a los {lifeExpectancy} años.</p>
+                  <p className="text-emerald-400 font-medium">✓ {language === 'es' ? 'Tu plan es viable' : 'Your plan is viable'}</p>
+                  <p className="text-slate-400 text-sm mt-2">{language === 'es' ? `Podrás retirarte a los ${retirementAge} años con un gasto mensual de ${formatCurrency(monthlyRetirementExpense)} y aún te quedarán ${formatCurrency(retirementProjection.finalBalance)} a los ${lifeExpectancy} años.` : `You can retire at age ${retirementAge} with monthly expenses of ${formatCurrency(monthlyRetirementExpense)} and still have ${formatCurrency(retirementProjection.finalBalance)} left at age ${lifeExpectancy}.`}</p>
                 </div>
               ) : (
                 <div className="mt-6 p-4 bg-red-900/30 border border-red-700 rounded-lg">
-                  <p className="text-red-400 font-medium">⚠️ Tu plan actual no es sostenible</p>
-                  <p className="text-slate-400 text-sm mt-2">Con un retiro de {formatCurrency(monthlyRetirementExpense)} mensuales, tu capital se agotaría a los {retirementAge + Math.floor(retirementProjection.yearsUntilDepleted)} años.</p>
-                  <p className="text-slate-400 text-sm mt-1"><strong>Opciones:</strong> Aumenta tu ahorro mensual, reduce el gasto en retiro a {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.</p>
+                  <p className="text-red-400 font-medium">⚠️ {language === 'es' ? 'Tu plan actual no es sostenible' : 'Your current plan is not sustainable'}</p>
+                  <p className="text-slate-400 text-sm mt-2">{language === 'es' ? `Con un retiro de ${formatCurrency(monthlyRetirementExpense)} mensuales, tu capital se agotaría a los ${retirementAge + Math.floor(retirementProjection.yearsUntilDepleted)} años.` : `With a withdrawal of ${formatCurrency(monthlyRetirementExpense)} monthly, your capital would be depleted by age ${retirementAge + Math.floor(retirementProjection.yearsUntilDepleted)}.`}</p>
+                  <p className="text-slate-400 text-sm mt-1"><strong>{language === 'es' ? 'Opciones:' : 'Options:'}</strong> {language === 'es' ? `Aumenta tu ahorro mensual, reduce el gasto en retiro a ${formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, o retrasa tu edad de retiro.` : `Increase monthly savings, reduce retirement expense to ${formatCurrency(retirementProjection.maxMonthlyWithdrawal)}, or delay retirement age.`}</p>
                   <div className="mt-3 p-3 bg-amber-900/30 border border-amber-700 rounded-lg">
-                    <p className="text-amber-400 text-sm font-medium">💡 Para lograr tu objetivo de {formatCurrency(monthlyRetirementExpense)}/mes en retiro:</p>
-                    <p className="text-slate-300 text-sm mt-1">Necesitas aportar <strong className="text-amber-400">{formatCurrency(retirementProjection.requiredMonthlySavings)}</strong> mensuales (actualmente aportas {formatCurrency(monthlySavings)}).</p>
-                    <p className="text-slate-500 text-xs mt-1">Esto te permitiría acumular {formatCurrency(retirementProjection.requiredBalanceAtRetirement)} al momento del retiro, suficiente para sostener tu gasto deseado hasta los {lifeExpectancy} años.</p>
+                    <p className="text-amber-400 text-sm font-medium">💡 {language === 'es' ? `Para lograr tu objetivo de ${formatCurrency(monthlyRetirementExpense)}/mes en retiro:` : `To achieve your goal of ${formatCurrency(monthlyRetirementExpense)}/month in retirement:`}</p>
+                    <p className="text-slate-300 text-sm mt-1">{language === 'es' ? `Necesitas aportar` : `You need to contribute`} <strong className="text-amber-400">{formatCurrency(retirementProjection.requiredMonthlySavings)}</strong> {language === 'es' ? `mensuales (actualmente aportas ${formatCurrency(monthlySavings)}).` : `monthly (currently contributing ${formatCurrency(monthlySavings)}).`}</p>
+                    <p className="text-slate-500 text-xs mt-1">{language === 'es' ? `Esto te permitiría acumular ${formatCurrency(retirementProjection.requiredBalanceAtRetirement)} al momento del retiro, suficiente para sostener tu gasto deseado hasta los ${lifeExpectancy} años.` : `This would allow you to accumulate ${formatCurrency(retirementProjection.requiredBalanceAtRetirement)} at retirement, enough to sustain your desired expense until age ${lifeExpectancy}.`}</p>
                   </div>
                 </div>
               )}
@@ -1918,9 +1933,10 @@ export default function App() {
         {activeTab === 'glossary' && (
           <>
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-2xl font-semibold mb-2 text-center">📚 Glosario de Términos</h2>
-              <p className="text-slate-400 text-center text-sm mb-6">Definiciones claras para entender mejor tu inversión</p>
+              <h2 className="text-2xl font-semibold mb-2 text-center">📚 {language === 'es' ? 'Glosario de Términos' : 'Glossary of Terms'}</h2>
+              <p className="text-slate-400 text-center text-sm mb-6">{language === 'es' ? 'Definiciones claras para entender mejor tu inversión' : 'Clear definitions to better understand your investment'}</p>
               
+              {language === 'es' ? (
               <div className="space-y-4">
                 {/* Rendimientos */}
                 <div className="border-b border-slate-700 pb-4">
@@ -2036,13 +2052,115 @@ export default function App() {
                   </div>
                 </div>
               </div>
+              ) : (
+              /* ENGLISH GLOSSARY */
+              <div className="space-y-4">
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-blue-400 mb-3">📈 Returns</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Cumulative Return</p>
+                      <p className="text-slate-400 text-sm mt-1">Total gain or loss since portfolio inception. If it's 91%, it means $100,000 invested became $191,000.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Annualized Return</p>
+                      <p className="text-slate-400 text-sm mt-1">Average return per year, considering compound interest. Allows comparison of investments with different time periods.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Last 3M / 6M / 12M</p>
+                      <p className="text-slate-400 text-sm mt-1">Cumulative return in the last 3, 6, or 12 months. Shows recent portfolio performance.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Benchmark</p>
+                      <p className="text-slate-400 text-sm mt-1">Reference index against which the portfolio is compared (e.g., IPC Mexico, S&P 500). Used to evaluate if the manager adds value.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-purple-400 mb-3">⚠️ Risk Metrics</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Volatility (Std. Deviation)</p>
+                      <p className="text-slate-400 text-sm mt-1">Measures how much returns vary. Higher volatility = more risk. 12% volatility means returns typically vary ±12% around the average.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Max Drawdown</p>
+                      <p className="text-slate-400 text-sm mt-1">Maximum decline from peak to trough. A -10% drawdown means at the worst moment, the portfolio fell 10% from its high.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Beta</p>
+                      <p className="text-slate-400 text-sm mt-1">Market sensitivity. Beta = 1 means it moves like the market. Beta = 0.6 means if market rises 10%, portfolio rises ~6%.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Correlation</p>
+                      <p className="text-slate-400 text-sm mt-1">How related portfolio movements are to the market. Ranges from -1 to 1. Near 1 = move together. Near 0 = independent movements.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-emerald-400 mb-3">🎯 Market Capture</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg border-l-4 border-emerald-500">
+                      <p className="font-medium text-white">Upside Capture</p>
+                      <p className="text-slate-400 text-sm mt-1">What percentage of market gains the portfolio captures. <strong className="text-emerald-400">100% or more is excellent</strong> - means when market rises, portfolio rises equal or more.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg border-l-4 border-amber-500">
+                      <p className="font-medium text-white">Downside Capture</p>
+                      <p className="text-slate-400 text-sm mt-1">What percentage of market declines the portfolio suffers. <strong className="text-amber-400">Less than 70% is excellent</strong> - means protection when market falls.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-b border-slate-700 pb-4">
+                  <h3 className="text-lg font-semibold text-amber-400 mb-3">🏆 Risk-Adjusted Returns</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Alpha</p>
+                      <p className="text-slate-400 text-sm mt-1">Extra return generated by the manager vs. benchmark. <strong className="text-emerald-400">Positive alpha = manager adds value.</strong></p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Sharpe Ratio</p>
+                      <p className="text-slate-400 text-sm mt-1">Return obtained per unit of risk. <strong className="text-emerald-400">Above 1 is excellent</strong>, 0.5-1 is good, below 0.5 is average.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Win Rate</p>
+                      <p className="text-slate-400 text-sm mt-1">Percentage of months with positive returns. 60% win rate means 6 out of 10 months the portfolio made money.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Track Record</p>
+                      <p className="text-slate-400 text-sm mt-1">Portfolio return history. More months = more reliable statistics. Minimum 36 months recommended for solid conclusions.</p>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-rose-400 mb-3">🧮 Simulator & Retirement</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Compound Interest</p>
+                      <p className="text-slate-400 text-sm mt-1">Gains generate more gains. The "snowball effect" that makes your investment grow exponentially over time.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Monthly Contributions</p>
+                      <p className="text-slate-400 text-sm mt-1">Investing a fixed amount each month. This strategy (DCA) reduces the risk of buying everything at a bad time.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">Max Sustainable Withdrawal</p>
+                      <p className="text-slate-400 text-sm mt-1">Maximum amount you can withdraw monthly without depleting your capital before your life expectancy.</p>
+                    </div>
+                    <div className="bg-slate-700/30 p-4 rounded-lg">
+                      <p className="font-medium text-white">4% Rule</p>
+                      <p className="text-slate-400 text-sm mt-1">General rule: you can withdraw ~4% annually from your retirement portfolio without depleting it in 30 years (assuming historical returns).</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              )}
             </div>
           </>
         )}
 
         {/* Footer */}
         <div className="text-center mt-8 text-slate-500 text-xs">
-          <p>⚠️ Los rendimientos pasados no garantizan rendimientos futuros. Esta simulación es solo ilustrativa.</p>
+          <p>⚠️ {language === 'es' ? 'Los rendimientos pasados no garantizan rendimientos futuros. Esta simulación es solo ilustrativa.' : 'Past performance does not guarantee future returns. This simulation is for illustrative purposes only.'}</p>
           <p className="mt-2">© 2025 LEMA Capital Asset Management</p>
         </div>
       </div>
