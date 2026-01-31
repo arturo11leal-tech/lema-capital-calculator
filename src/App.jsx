@@ -118,7 +118,8 @@ const companyDescriptions = {
   "Grupo Bimbo, SAB de CV": "La panificadora más grande del mundo. Produce y distribuye pan, pastelitos y snacks en más de 30 países.",
   "Industrias Peñoles, S.A.B. de C.V.": "Grupo minero mexicano, segundo productor mundial de plata refinada. También produce oro, zinc y plomo.",
   "Grupo Financiero Banorte, SAB de CV": "Uno de los grupos financieros más grandes de México. Ofrece servicios bancarios, seguros y pensiones.",
-  "Grupo Aeroportuario del Centro del Norte, SAB de CV": "Opera 13 aeropuertos en el centro y norte de México, incluyendo Monterrey y Acapulco.",
+  "Grupo Aeroportuario del Centro del Norte, SAB de CV": "OMA - Opera 13 aeropuertos internacionales en México incluyendo Monterrey, Acapulco, Mazatlán y Ciudad Juárez. También opera hoteles, estacionamientos y servicios de carga.",
+  "Grupo Aeroportuario del Centro Norte, SAB de CV": "OMA - Opera 13 aeropuertos internacionales en México incluyendo Monterrey, Acapulco, Mazatlán y Ciudad Juárez. También opera hoteles, estacionamientos y servicios de carga.",
   "PrologisProperty Mexico SA de CV": "FIBRA especializada en propiedades industriales y logísticas en México. Líder en centros de distribución.",
   "Fomento Economico Mexicano, SAB de CV": "FEMSA - Conglomerado mexicano dueño de OXXO, embotellador de Coca-Cola más grande del mundo y participación en Heineken.",
   "Cemex, SAB de CV": "Empresa global de materiales de construcción. Uno de los mayores productores de cemento del mundo.",
@@ -157,6 +158,46 @@ const companyDescriptions = {
   
   // Valores por defecto para holdings no listados
   "default": "Información de la compañía no disponible."
+};
+
+// Descripciones de métricas financieras para tooltips
+const metricDescriptions = {
+  // Rendimientos
+  "Último Mes": "Rendimiento del portafolio en el mes más reciente. Muestra el desempeño a muy corto plazo.",
+  "Últimos 3M": "Rendimiento acumulado de los últimos 3 meses. Útil para ver tendencias recientes.",
+  "Últimos 6M": "Rendimiento acumulado del último semestre. Captura movimientos de mediano plazo.",
+  "Últimos 12M": "Rendimiento de los últimos 12 meses (LTM). Estándar para comparar inversiones.",
+  "LTM (Últimos 12 Meses)": "Last Twelve Months - Rendimiento acumulado del último año completo.",
+  "Acumulado": "Ganancia o pérdida total desde el inicio del portafolio. Si es 91%, $100K se convirtieron en $191K.",
+  "Rendimiento Acumulado": "Ganancia o pérdida total desde el inicio del portafolio.",
+  "Anualizado": "Rendimiento promedio por año considerando interés compuesto. Permite comparar inversiones de diferentes periodos.",
+  "Rendimiento Anualizado": "Rendimiento promedio anual. Es la métrica estándar para comparar inversiones.",
+  "YTD (Año a la Fecha)": "Year-To-Date: Rendimiento desde el 1 de enero del año actual hasta hoy.",
+  
+  // Riesgo
+  "Volatilidad (Anual)": "Qué tanto varían los rendimientos. Mayor volatilidad = mayor riesgo pero también mayor potencial de ganancia.",
+  "Volatilidad": "Desviación estándar anualizada. Mide cuánto fluctúa el valor del portafolio.",
+  "Max Drawdown": "La caída máxima desde un punto alto hasta un punto bajo. Indica el peor escenario histórico que ha enfrentado el portafolio.",
+  "Sharpe Ratio": "Rendimiento obtenido por cada unidad de riesgo tomado. Menor a 0.5 es bajo, >1 es bueno, >2 es excelente.",
+  "Beta": "Sensibilidad al mercado. Beta=1 se mueve igual que el mercado. Beta<1 es menos volátil que el mercado.",
+  "Correlación": "Qué tan relacionados están los movimientos del portafolio con el benchmark. 1=perfectamente correlacionado, 0=sin relación.",
+  
+  // Alpha y consistencia
+  "Alpha": "Rendimiento extra generado sobre el benchmark. Alpha positivo significa que el gestor agrega valor vs invertir pasivamente.",
+  "Mejor Mes": "El mes con mayor rendimiento en toda la historia del portafolio.",
+  "Peor Mes": "El mes con peor rendimiento. Muestra el riesgo de pérdida en un mal momento del mercado.",
+  "Meses Positivos": "Cantidad de meses con rendimiento positivo vs el total de meses de operación.",
+  "Win Rate": "Porcentaje de meses con rendimiento positivo. >50% es deseable, >60% es bueno, >70% es excelente.",
+  "# Posiciones": "Número de inversiones diferentes en el portafolio. Más posiciones generalmente significa mayor diversificación.",
+  
+  // Capture ratios
+  "Captura en Alzas (Upside)": "Qué porcentaje de las subidas del mercado captura el portafolio. >100% significa que sube más que el mercado cuando hay alzas.",
+  "Captura en Bajas (Downside)": "Qué porcentaje de las caídas del mercado sufre el portafolio. <100% significa mejor protección. Valor negativo = el portafolio sube cuando el mercado baja.",
+  "Upside Capture": "Captura en alzas: cuánto participa el portafolio cuando el mercado sube.",
+  "Downside Capture": "Captura en bajas: cuánto cae el portafolio cuando el mercado baja. Menor es mejor.",
+  
+  // Tabla de rentabilidad
+  "Diferencia": "La ventaja o desventaja del portafolio vs el benchmark. Verde = supera al mercado, Rojo = por debajo del mercado.",
 };
 
 // Estadísticas calculadas de los datos reales (Actualizado Enero 2026)
@@ -711,12 +752,17 @@ export default function App() {
         {activeTab === 'stats' && (
           <>
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-xl font-semibold mb-4 text-center">📈 Rendimientos</h2>
+              <h2 className="text-xl font-semibold mb-2 text-center">📈 Rendimientos</h2>
+              <p className="text-xs text-slate-500 text-center mb-4">💡 Pasa el mouse sobre cualquier métrica para ver su explicación</p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {[['Último Mes', fund.last_month], ['Últimos 3M', fund.last_3m], ['Últimos 6M', fund.last_6m], ['Últimos 12M', fund.last_12m], ['Acumulado', fund.cumulative], ['Anualizado', fund.annualized]].map(([label, value], idx) => (
-                  <div key={idx} className={`bg-slate-700/50 rounded-lg p-4 text-center ${idx === 5 ? 'border-2' : ''}`} style={idx === 5 ? { borderColor: fund.color } : {}}>
-                    <p className="text-slate-400 text-xs mb-1">{label}</p>
+                  <div key={idx} className={`group relative bg-slate-700/50 rounded-lg p-4 text-center cursor-help ${idx === 5 ? 'border-2' : ''}`} style={idx === 5 ? { borderColor: fund.color } : {}}>
+                    <p className="text-slate-400 text-xs mb-1 flex items-center justify-center gap-1">{label} <span className="text-slate-600">ⓘ</span></p>
                     <p className={`text-xl font-bold ${value >= 0 ? 'text-emerald-400' : 'text-red-400'}`} style={idx === 5 ? { color: fund.color } : {}}>{formatPercent(value)}</p>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 w-52 text-left">
+                      <p className="text-xs text-slate-300 leading-relaxed">{metricDescriptions[label]}</p>
+                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -726,17 +772,56 @@ export default function App() {
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
                 <h3 className="text-lg font-semibold mb-4">📊 Métricas de Riesgo</h3>
                 <div className="space-y-3">
-                  {[['Volatilidad (Anual)', formatPercentPlain(fund.std_annual)], ['Vol. ' + fund.benchmark, formatPercentPlain(fund.std_bench_annual), 'text-slate-500'], ['Max Drawdown', formatPercentPlain(fund.max_drawdown), 'text-red-400'], ['Sharpe Ratio', fund.sharpe.toFixed(2), fund.sharpe >= 1 ? 'text-emerald-400' : fund.sharpe >= 0.5 ? 'text-amber-400' : ''], ['Beta vs ' + fund.benchmark, fund.beta.toFixed(2)], ['Correlación', fund.correlation.toFixed(2)]].map(([label, value, cls], idx) => (
-                    <div key={idx} className="flex justify-between items-center"><span className="text-slate-400">{label}</span><span className={`font-medium ${cls || ''}`}>{value}</span></div>
-                  ))}
+                  {[
+                    ['Volatilidad (Anual)', formatPercentPlain(fund.std_annual), ''],
+                    ['Vol. ' + fund.benchmark, formatPercentPlain(fund.std_bench_annual), 'text-slate-500'],
+                    ['Max Drawdown', formatPercentPlain(fund.max_drawdown), 'text-red-400'],
+                    ['Sharpe Ratio', fund.sharpe.toFixed(2), fund.sharpe >= 1 ? 'text-emerald-400' : fund.sharpe >= 0.5 ? 'text-amber-400' : ''],
+                    ['Beta', fund.beta.toFixed(2), ''],
+                    ['Correlación', fund.correlation.toFixed(2), '']
+                  ].map(([label, value, cls], idx) => {
+                    const baseLabel = label.includes('Vol.') ? 'Volatilidad' : label.includes('Beta') ? 'Beta' : label;
+                    const desc = metricDescriptions[baseLabel];
+                    return (
+                      <div key={idx} className="group relative flex justify-between items-center cursor-help hover:bg-slate-700/30 rounded px-2 py-1 -mx-2">
+                        <span className="text-slate-400 flex items-center gap-1">{label} {desc && <span className="text-slate-600 text-xs">ⓘ</span>}</span>
+                        <span className={`font-medium ${cls || ''}`}>{value}</span>
+                        {desc && (
+                          <div className="absolute left-0 right-0 bottom-full mb-2 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <p className="text-xs text-slate-300 leading-relaxed">{desc}</p>
+                            <div className="absolute -bottom-2 left-6 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
                 <h3 className="text-lg font-semibold mb-4">🎯 Alpha y Consistencia</h3>
                 <div className="space-y-3">
-                  {[['Alpha vs ' + fund.benchmark, formatPercent(fund.alpha), fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'], ['Mejor Mes', formatPercent(fund.best_month), 'text-emerald-400'], ['Peor Mes', formatPercent(fund.worst_month), 'text-red-400'], ['Meses Positivos', `${fund.positive_months} de ${fund.n_months}`], ['Win Rate', formatPercentPlain(fund.win_rate, 1), fund.win_rate >= 0.6 ? 'text-emerald-400' : 'text-amber-400'], ['# Posiciones', fund.n_holdings || 'N/A']].map(([label, value, cls], idx) => (
-                    <div key={idx} className="flex justify-between items-center"><span className="text-slate-400">{label}</span><span className={`font-medium ${cls || ''}`}>{value}</span></div>
-                  ))}
+                  {[
+                    ['Alpha', formatPercent(fund.alpha), fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'],
+                    ['Mejor Mes', formatPercent(fund.best_month), 'text-emerald-400'],
+                    ['Peor Mes', formatPercent(fund.worst_month), 'text-red-400'],
+                    ['Meses Positivos', `${fund.positive_months} de ${fund.n_months}`, ''],
+                    ['Win Rate', formatPercentPlain(fund.win_rate, 1), fund.win_rate >= 0.6 ? 'text-emerald-400' : 'text-amber-400'],
+                    ['# Posiciones', fund.n_holdings || 'N/A', '']
+                  ].map(([label, value, cls], idx) => {
+                    const desc = metricDescriptions[label];
+                    return (
+                      <div key={idx} className="group relative flex justify-between items-center cursor-help hover:bg-slate-700/30 rounded px-2 py-1 -mx-2">
+                        <span className="text-slate-400 flex items-center gap-1">{label} {desc && <span className="text-slate-600 text-xs">ⓘ</span>}</span>
+                        <span className={`font-medium ${cls || ''}`}>{value}</span>
+                        {desc && (
+                          <div className="absolute left-0 right-0 bottom-full mb-2 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <p className="text-xs text-slate-300 leading-relaxed">{desc}</p>
+                            <div className="absolute -bottom-2 left-6 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -745,16 +830,20 @@ export default function App() {
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
               <h3 className="text-lg font-semibold mb-4">📈 Captura de Mercado</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="text-center">
-                  <p className="text-slate-400 text-sm mb-2">Captura en Alzas (Upside)</p>
+                <div className="group relative text-center cursor-help">
+                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">Captura en Alzas (Upside) <span className="text-slate-600">ⓘ</span></p>
                   <p className="text-3xl font-bold" style={{ color: fund.upside_capture >= 1 ? '#10B981' : fund.color }}>{formatPercentPlain(fund.upside_capture, 1)}</p>
                   <p className="text-xs text-slate-500 mt-1">Cuando {fund.benchmark} sube, capturamos {formatPercentPlain(fund.upside_capture, 0)} del alza</p>
                   <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
                     <div className="h-3 rounded-full bg-emerald-500" style={{ width: `${Math.min(fund.upside_capture * 100, 100)}%` }}></div>
                   </div>
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 w-64 text-left">
+                    <p className="text-xs text-slate-300 leading-relaxed">{metricDescriptions["Captura en Alzas (Upside)"]}</p>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-slate-400 text-sm mb-2">Captura en Bajas (Downside)</p>
+                <div className="group relative text-center cursor-help">
+                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">Captura en Bajas (Downside) <span className="text-slate-600">ⓘ</span></p>
                   <p className="text-3xl font-bold" style={{ color: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}>{formatPercentPlain(fund.downside_capture, 1)}</p>
                   <p className="text-xs text-slate-500 mt-1">
                     {fund.downside_capture < 0 
@@ -763,6 +852,10 @@ export default function App() {
                   </p>
                   <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
                     <div className="h-3 rounded-full" style={{ width: `${Math.min(Math.abs(fund.downside_capture) * 100, 100)}%`, backgroundColor: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}></div>
+                  </div>
+                  <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 w-64 text-left">
+                    <p className="text-xs text-slate-300 leading-relaxed">{metricDescriptions["Captura en Bajas (Downside)"]}</p>
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
                   </div>
                 </div>
               </div>
