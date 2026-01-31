@@ -532,15 +532,45 @@ const formatPercentPlain = (value, decimals = 2) => {
 const translations = {
   es: {
     // Header
-    title: "LEMA CAPITAL",
-    subtitle: "Gestión de Activos",
+    title: "InverCo",
+    subtitle: "Asset Management",
     
     // Tabs
+    home: "🏠 Inicio",
     riskProfile: "🎯 Perfil de Riesgo",
     portfolio: "📊 Portafolio",
     simulator: "💹 Simulador",
     retirement: "🏖️ Retiro",
     glossary: "📚 Glosario",
+    
+    // Home Page
+    homeTitle: "Construyendo Patrimonio con Visión de Largo Plazo",
+    homeSubtitle: "En Inverco, no especulamos. Invertimos.",
+    homePhilosophyTitle: "Nuestra Filosofía",
+    homePhilosophyText1: "Invertir no es apostar.",
+    homePhilosophyText2: "Mientras el especulador persigue ganancias rápidas basadas en movimientos de precios, el inversionista construye patrimonio adquiriendo participaciones en negocios sólidos a precios razonables.",
+    homePhilosophyText3: "En Inverco entendemos que la verdadera riqueza se construye con tiempo, paciencia y disciplina — no con predicciones de mercado.",
+    homeComparisonTitle: "Inversión vs. Especulación",
+    homeComparisonHeaders: ["", "Especulación", "Inversión"],
+    homeComparisonRows: [
+      ["Horizonte", "Días, semanas, meses", "Años, décadas"],
+      ["Enfoque", "Movimientos de precio", "Valor del negocio"],
+      ["Base de decisión", "Tendencias, noticias, emociones", "Análisis fundamental"],
+      ["Objetivo", "Ganancia rápida", "Crecimiento patrimonial"],
+      ["Riesgo", "Alto e impredecible", "Gestionado y medido"]
+    ],
+    homePrinciplesTitle: "Nuestros Principios",
+    homePrinciple1Title: "Paciencia",
+    homePrinciple1Text: "Los mercados fluctúan, los negocios sólidos perduran. El tiempo es el mejor aliado del inversionista disciplinado.",
+    homePrinciple2Title: "Análisis Riguroso",
+    homePrinciple2Text: "Cada inversión está respaldada por investigación profunda. Buscamos negocios con ventajas competitivas duraderas.",
+    homePrinciple3Title: "Margen de Seguridad",
+    homePrinciple3Text: "Compramos calidad a precios razonables. Protegemos el capital antes de buscar rendimientos.",
+    homeQuote: "\"El mercado de valores es un mecanismo para transferir dinero del impaciente al paciente.\"",
+    homeQuoteAuthor: "— Warren Buffett",
+    homeCTA1: "Descubre tu Perfil de Inversionista",
+    homeCTA2: "Explora Nuestros Portafolios",
+    homeCTA3: "Simula tu Inversión",
     
     // Sectores
     sectors: {
@@ -735,15 +765,45 @@ const translations = {
   },
   en: {
     // Header
-    title: "LEMA CAPITAL",
+    title: "InverCo",
     subtitle: "Asset Management",
     
     // Tabs
+    home: "🏠 Home",
     riskProfile: "🎯 Risk Profile",
     portfolio: "📊 Portfolio",
     simulator: "💹 Simulator",
     retirement: "🏖️ Retirement",
     glossary: "📚 Glossary",
+    
+    // Home Page
+    homeTitle: "Building Wealth with a Long-Term Vision",
+    homeSubtitle: "At Inverco, we don't speculate. We invest.",
+    homePhilosophyTitle: "Our Philosophy",
+    homePhilosophyText1: "Investing is not gambling.",
+    homePhilosophyText2: "While speculators chase quick gains based on price movements, investors build wealth by acquiring stakes in solid businesses at reasonable prices.",
+    homePhilosophyText3: "At Inverco, we understand that true wealth is built with time, patience, and discipline — not with market predictions.",
+    homeComparisonTitle: "Investment vs. Speculation",
+    homeComparisonHeaders: ["", "Speculation", "Investment"],
+    homeComparisonRows: [
+      ["Time Horizon", "Days, weeks, months", "Years, decades"],
+      ["Focus", "Price movements", "Business value"],
+      ["Decision Basis", "Trends, news, emotions", "Fundamental analysis"],
+      ["Objective", "Quick profit", "Wealth growth"],
+      ["Risk", "High and unpredictable", "Managed and measured"]
+    ],
+    homePrinciplesTitle: "Our Principles",
+    homePrinciple1Title: "Patience",
+    homePrinciple1Text: "Markets fluctuate, solid businesses endure. Time is the disciplined investor's best ally.",
+    homePrinciple2Title: "Rigorous Analysis",
+    homePrinciple2Text: "Every investment is backed by deep research. We seek businesses with lasting competitive advantages.",
+    homePrinciple3Title: "Margin of Safety",
+    homePrinciple3Text: "We buy quality at reasonable prices. We protect capital before seeking returns.",
+    homeQuote: "\"The stock market is a device for transferring money from the impatient to the patient.\"",
+    homeQuoteAuthor: "— Warren Buffett",
+    homeCTA1: "Discover Your Investor Profile",
+    homeCTA2: "Explore Our Portfolios",
+    homeCTA3: "Simulate Your Investment",
     
     // Sectores
     sectors: {
@@ -942,7 +1002,7 @@ export default function App() {
   const [selectedFund, setSelectedFund] = useState('LEMA Global Fund');
   const [initialInvestment, setInitialInvestment] = useState(100000);
   const [monthlyContribution, setMonthlyContribution] = useState(5000);
-  const [activeTab, setActiveTab] = useState('simulator');
+  const [activeTab, setActiveTab] = useState('home');
   const [language, setLanguage] = useState('es'); // Estado para idioma
   
   // Estados para Análisis de Retiro
@@ -1093,11 +1153,17 @@ export default function App() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Logo y Título */}
             <div className="flex items-center gap-3 justify-center md:justify-start">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center shadow-lg">
-                <span className="text-xl md:text-2xl font-bold text-white">L</span>
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-500 flex items-center justify-center shadow-lg overflow-hidden">
+                <svg viewBox="0 0 40 40" className="w-8 h-8 md:w-10 md:h-10">
+                  {/* Barras ascendentes - representa crecimiento patrimonial */}
+                  <rect x="6" y="24" width="6" height="12" rx="1" fill="white" opacity="0.5"/>
+                  <rect x="14" y="18" width="6" height="18" rx="1" fill="white" opacity="0.7"/>
+                  <rect x="22" y="11" width="6" height="25" rx="1" fill="white" opacity="0.85"/>
+                  <rect x="30" y="4" width="6" height="32" rx="1" fill="white"/>
+                </svg>
               </div>
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight">LEMA Capital</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-white tracking-tight">InverCo</h1>
                 <p className="text-slate-400 text-xs md:text-sm">{t.subtitle}</p>
               </div>
             </div>
@@ -1124,6 +1190,7 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Tab Navigation */}
         <div className="flex justify-center gap-2 mb-6 flex-wrap">
+          <button onClick={() => setActiveTab('home')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'home' ? 'bg-slate-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.home}</button>
           <button onClick={() => setActiveTab('risk-profile')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'risk-profile' ? 'bg-teal-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.riskProfile}</button>
           <button onClick={() => setActiveTab('portfolio')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'portfolio' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.portfolio}</button>
           <button onClick={() => setActiveTab('simulator')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'simulator' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.simulator}</button>
@@ -1146,6 +1213,109 @@ export default function App() {
               <p className="text-slate-400 text-sm">{language === 'es' ? fund.description : fund.descriptionEn} • {fund.n_months} {t.monthsTrackRecord}</p>
             </div>
           </>
+        )}
+
+        {/* ==================== HOME ==================== */}
+        {activeTab === 'home' && (
+          <div className="max-w-4xl mx-auto">
+            {/* Hero Section */}
+            <div className="text-center mb-12">
+              <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                {t.homeTitle}
+              </h1>
+              <p className="text-xl md:text-2xl text-slate-300 italic">
+                {t.homeSubtitle}
+              </p>
+            </div>
+
+            {/* Philosophy Section */}
+            <div className="bg-slate-800/50 rounded-xl p-6 md:p-8 backdrop-blur-sm border border-slate-700 mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">🎯</span>
+                <h2 className="text-xl md:text-2xl font-semibold">{t.homePhilosophyTitle}</h2>
+              </div>
+              <div className="space-y-4 text-slate-300">
+                <p className="text-lg font-semibold text-white">{t.homePhilosophyText1}</p>
+                <p>{t.homePhilosophyText2}</p>
+                <p className="border-l-4 border-emerald-500 pl-4 italic">{t.homePhilosophyText3}</p>
+              </div>
+            </div>
+
+            {/* Comparison Table */}
+            <div className="bg-slate-800/50 rounded-xl p-6 md:p-8 backdrop-blur-sm border border-slate-700 mb-8">
+              <h2 className="text-xl md:text-2xl font-semibold mb-6 text-center">{t.homeComparisonTitle}</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-600">
+                      <th className="text-left py-3 px-4 text-slate-400 font-medium"></th>
+                      <th className="text-center py-3 px-4 text-red-400 font-semibold">❌ {t.homeComparisonHeaders[1]}</th>
+                      <th className="text-center py-3 px-4 text-emerald-400 font-semibold">✓ {t.homeComparisonHeaders[2]}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {t.homeComparisonRows.map((row, idx) => (
+                      <tr key={idx} className="border-b border-slate-700/50">
+                        <td className="py-3 px-4 text-slate-300 font-medium">{row[0]}</td>
+                        <td className="py-3 px-4 text-center text-slate-400">{row[1]}</td>
+                        <td className="py-3 px-4 text-center text-slate-200">{row[2]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Principles */}
+            <div className="mb-8">
+              <h2 className="text-xl md:text-2xl font-semibold mb-6 text-center">{t.homePrinciplesTitle}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 text-center">
+                  <span className="text-4xl mb-4 block">⏳</span>
+                  <h3 className="text-lg font-semibold mb-2 text-emerald-400">{t.homePrinciple1Title}</h3>
+                  <p className="text-slate-400 text-sm">{t.homePrinciple1Text}</p>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 text-center">
+                  <span className="text-4xl mb-4 block">🔍</span>
+                  <h3 className="text-lg font-semibold mb-2 text-blue-400">{t.homePrinciple2Title}</h3>
+                  <p className="text-slate-400 text-sm">{t.homePrinciple2Text}</p>
+                </div>
+                <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 text-center">
+                  <span className="text-4xl mb-4 block">🛡️</span>
+                  <h3 className="text-lg font-semibold mb-2 text-purple-400">{t.homePrinciple3Title}</h3>
+                  <p className="text-slate-400 text-sm">{t.homePrinciple3Text}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quote */}
+            <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-xl p-8 mb-8 text-center border border-slate-600">
+              <p className="text-xl md:text-2xl italic text-slate-200 mb-4">{t.homeQuote}</p>
+              <p className="text-slate-400 font-medium">{t.homeQuoteAuthor}</p>
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-col md:flex-row gap-4 justify-center">
+              <button 
+                onClick={() => setActiveTab('risk-profile')} 
+                className="px-8 py-4 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-xl font-semibold text-lg hover:from-teal-600 hover:to-emerald-600 transition-all shadow-lg"
+              >
+                🎯 {t.homeCTA1}
+              </button>
+              <button 
+                onClick={() => setActiveTab('portfolio')} 
+                className="px-8 py-4 bg-slate-700 rounded-xl font-semibold text-lg hover:bg-slate-600 transition-all border border-slate-600"
+              >
+                📊 {t.homeCTA2}
+              </button>
+              <button 
+                onClick={() => setActiveTab('simulator')} 
+                className="px-8 py-4 bg-slate-700 rounded-xl font-semibold text-lg hover:bg-slate-600 transition-all border border-slate-600"
+              >
+                💹 {t.homeCTA3}
+              </button>
+            </div>
+          </div>
         )}
 
         {/* ==================== PERFIL DE RIESGO ==================== */}
@@ -2398,7 +2568,7 @@ export default function App() {
         {/* Footer */}
         <div className="text-center mt-8 text-slate-500 text-xs">
           <p>⚠️ {language === 'es' ? 'Los rendimientos pasados no garantizan rendimientos futuros. Esta simulación es solo ilustrativa.' : 'Past performance does not guarantee future returns. This simulation is for illustrative purposes only.'}</p>
-          <p className="mt-2">© 2025 LEMA Capital Asset Management</p>
+          <p className="mt-2">© 2025 Inverco Asset Management</p>
         </div>
       </div>
     </div>
