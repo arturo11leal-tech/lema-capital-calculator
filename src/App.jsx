@@ -686,7 +686,7 @@ export default function App() {
               </div>
             </div>
 
-            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700 mb-6">
               <h2 className="text-lg font-semibold mb-4">Evolución de tu Inversión</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <AreaChart data={simulationData}>
@@ -706,6 +706,101 @@ export default function App() {
                   <Area type="monotone" dataKey="fundValue" name={selectedFund} stroke={fund.color} fill="url(#fundGrad)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+
+            {/* Estadísticas del Portafolio en Simulador */}
+            <div className="bg-slate-800/50 rounded-xl p-4 md:p-6 backdrop-blur-sm border border-slate-700">
+              <h2 className="text-lg font-semibold mb-4">📈 Estadísticas de {selectedFund}</h2>
+              
+              {/* Rendimientos */}
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                  <p className="text-slate-400 text-xs mb-1">Último Mes</p>
+                  <p className={`text-lg font-bold ${fund.last_month >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatPercent(fund.last_month)}
+                  </p>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                  <p className="text-slate-400 text-xs mb-1">3 Meses</p>
+                  <p className={`text-lg font-bold ${fund.last_3m >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatPercent(fund.last_3m)}
+                  </p>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                  <p className="text-slate-400 text-xs mb-1">6 Meses</p>
+                  <p className={`text-lg font-bold ${fund.last_6m >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatPercent(fund.last_6m)}
+                  </p>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                  <p className="text-slate-400 text-xs mb-1">12 Meses</p>
+                  <p className={`text-lg font-bold ${fund.last_12m >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatPercent(fund.last_12m)}
+                  </p>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center">
+                  <p className="text-slate-400 text-xs mb-1">Acumulado</p>
+                  <p className={`text-lg font-bold ${fund.cumulative >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    {formatPercent(fund.cumulative)}
+                  </p>
+                </div>
+                <div className="bg-slate-700/50 rounded-lg p-3 text-center border" style={{ borderColor: fund.color }}>
+                  <p className="text-slate-400 text-xs mb-1">Anualizado</p>
+                  <p className="text-lg font-bold" style={{ color: fund.color }}>
+                    {formatPercent(fund.annualized)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Métricas de Riesgo y Alpha */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Volatilidad:</span>
+                    <span>{formatPercentPlain(fund.std_annual)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Max Drawdown:</span>
+                    <span className="text-red-400">{formatPercentPlain(fund.max_drawdown)}</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Sharpe Ratio:</span>
+                    <span className={fund.sharpe >= 1 ? 'text-emerald-400' : ''}>{fund.sharpe.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Beta:</span>
+                    <span>{fund.beta.toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Alpha:</span>
+                    <span className={fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'}>{formatPercent(fund.alpha)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Correlación:</span>
+                    <span>{fund.correlation.toFixed(2)}</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Mejor Mes:</span>
+                    <span className="text-emerald-400">{formatPercent(fund.best_month)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Peor Mes:</span>
+                    <span className="text-red-400">{formatPercent(fund.worst_month)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-slate-700 flex justify-between text-sm">
+                <span className="text-slate-400">Track Record: <span className="text-white">{fund.n_months} meses</span></span>
+                <span className="text-slate-400">Win Rate: <span className={fund.win_rate >= 0.6 ? 'text-emerald-400' : 'text-amber-400'}>{formatPercentPlain(fund.win_rate, 1)}</span></span>
+                <span className="text-slate-400">Benchmark: <span className="text-white">{fund.benchmark}</span></span>
+              </div>
             </div>
           </>
         )}
@@ -867,9 +962,20 @@ export default function App() {
               {retirementProjection.canSustain ? (
                 <div className="mt-6 p-4 bg-emerald-900/30 border border-emerald-700 rounded-lg">
                   <p className="text-emerald-400 font-medium">✓ Tu plan es viable</p>
-                  <p className="text-slate-400 text-sm mt-2">
-                    Podrás retirarte a los {retirementAge} años con un gasto mensual de {formatCurrency(monthlyRetirementExpense)} y aún te quedarán {formatCurrency(retirementProjection.finalBalance)} a los {lifeExpectancy} años.
-                  </p>
+                  {retirementProjection.finalBalance > retirementProjection.balanceAtRetirement ? (
+                    <p className="text-slate-400 text-sm mt-2">
+                      🎉 <strong>Excelente noticia:</strong> Tu retiro mensual de {formatCurrency(monthlyRetirementExpense)} es menor que los rendimientos generados, por lo que tu capital seguirá creciendo durante el retiro. A los {lifeExpectancy} años tendrías {formatCurrency(retirementProjection.finalBalance)}.
+                    </p>
+                  ) : (
+                    <p className="text-slate-400 text-sm mt-2">
+                      Podrás retirarte a los {retirementAge} años con un gasto mensual de {formatCurrency(monthlyRetirementExpense)} y aún te quedarán {formatCurrency(retirementProjection.finalBalance)} a los {lifeExpectancy} años.
+                    </p>
+                  )}
+                  {monthlyRetirementExpense < retirementProjection.maxMonthlyWithdrawal && (
+                    <p className="text-slate-500 text-xs mt-2">
+                      💡 Podrías retirar hasta {formatCurrency(retirementProjection.maxMonthlyWithdrawal)}/mes para que el capital dure exactamente hasta los {lifeExpectancy} años.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="mt-6 p-4 bg-red-900/30 border border-red-700 rounded-lg">
