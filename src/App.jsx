@@ -86,13 +86,19 @@ const portfolioComposition = {
       { rank: 7, name: "Activos Digitales (Crypto)", weight: 3.0 }
     ],
     sectors: [
-      { sector: "Estados Unidos", weight: 37.4 },
-      { sector: "México", weight: 26.6 },
+      { sector: "Industrial", weight: 25.2 },
+      { sector: "Salud", weight: 13.4 },
       { sector: "Efectivo & Equivalentes", weight: 12.9 },
-      { sector: "Asia", weight: 8.3 },
-      { sector: "Europa", weight: 6.8 },
+      { sector: "Financiero", weight: 11.1 },
+      { sector: "Tecnología", weight: 9.0 },
+      { sector: "Energía", weight: 5.3 },
+      { sector: "Consumo Defensivo", weight: 5.1 },
       { sector: "Metales Preciosos", weight: 5.0 },
-      { sector: "Activos Digitales", weight: 3.0 }
+      { sector: "ETFs", weight: 3.7 },
+      { sector: "FIBRA/Bienes Raíces", weight: 3.7 },
+      { sector: "Activos Digitales", weight: 3.0 },
+      { sector: "Servicios Públicos", weight: 1.7 },
+      { sector: "Cobertura", weight: 0.8 }
     ]
   }
 };
