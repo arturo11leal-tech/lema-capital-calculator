@@ -524,11 +524,422 @@ const formatPercentPlain = (value, decimals = 2) => {
   return `${(value * 100).toFixed(decimals)}%`;
 };
 
+// Traducciones
+const translations = {
+  es: {
+    // Header
+    title: "LEMA CAPITAL",
+    subtitle: "Planificador Financiero",
+    
+    // Tabs
+    riskProfile: "🎯 Perfil de Riesgo",
+    portfolio: "📊 Portafolio",
+    simulator: "💹 Simulador",
+    retirement: "🏖️ Retiro",
+    glossary: "📚 Glosario",
+    
+    // Sectores
+    sectors: {
+      "Financiero": "Financiero",
+      "Industrial": "Industrial",
+      "Salud": "Salud",
+      "Consumo Básico": "Consumo Básico",
+      "Materiales Básicos": "Materiales Básicos",
+      "Bienes Raíces": "Bienes Raíces",
+      "Efectivo": "Efectivo",
+      "Tecnología": "Tecnología",
+      "Energía": "Energía",
+      "Metales Preciosos": "Metales Preciosos",
+      "Efectivo & Cripto": "Efectivo & Cripto",
+      "Coberturas": "Coberturas",
+      "Consumo Discrecional": "Consumo Discrecional",
+      "ETFs": "ETFs",
+      "Efectivo & Equivalentes": "Efectivo & Equivalentes",
+      "Consumo Defensivo": "Consumo Defensivo",
+      "FIBRA/Bienes Raíces": "FIBRA/Bienes Raíces",
+      "Activos Digitales": "Activos Digitales",
+      "Servicios Públicos": "Servicios Públicos",
+      "Cobertura": "Cobertura"
+    },
+    
+    // Portfolio section
+    returns: "Rendimientos",
+    hoverTip: "💡 Pasa el mouse sobre cualquier métrica para ver su explicación",
+    lastMonth: "Último Mes",
+    last3m: "Últimos 3M",
+    last6m: "Últimos 6M",
+    last12m: "Últimos 12M",
+    cumulative: "Acumulado",
+    annualized: "Anualizado",
+    riskMetrics: "📊 Métricas de Riesgo",
+    volatilityAnnual: "Volatilidad (Anual)",
+    maxDrawdown: "Max Drawdown",
+    sharpeRatio: "Sharpe Ratio",
+    beta: "Beta",
+    correlation: "Correlación",
+    alphaConsistency: "🎯 Alpha y Consistencia",
+    alpha: "Alpha",
+    bestMonth: "Mejor Mes",
+    worstMonth: "Peor Mes",
+    positiveMonths: "Meses Positivos",
+    winRate: "Win Rate",
+    positions: "# Posiciones",
+    marketCapture: "📈 Captura de Mercado",
+    upsideCapture: "Captura en Alzas (Upside)",
+    downsideCapture: "Captura en Bajas (Downside)",
+    whenUp: "Cuando {benchmark} sube, capturamos {value} del alza",
+    whenDown: "Cuando {benchmark} baja, solo caemos {value}",
+    whenDownInverse: "Cuando {benchmark} baja, ¡el portafolio tiende a subir!",
+    interpretation: "Interpretación",
+    topPositions: "🏆 Top {n} Posiciones",
+    positionHoverTip: "💡 Pasa el mouse sobre una posición para ver más información",
+    sectorDistribution: "📊 Distribución por Sector",
+    sectorsByWeight: "📈 Sectores por Peso",
+    
+    // Simulator
+    configureSimulation: "Configura tu Simulación",
+    initialInvestment: "Inversión Inicial",
+    monthlyContribution: "Aportación Mensual",
+    simulationResults: "Resultado de la Simulación",
+    withFund: "Con {fund}",
+    withBenchmark: "Con {benchmark}",
+    difference: "Diferencia",
+    inYourFavor: "a tu favor",
+    historicalGrowth: "📈 Crecimiento Histórico",
+    periodReturns: "📊 Rentabilidad por Periodo",
+    period: "Periodo",
+    fund: "Fondo",
+    benchmark: "Benchmark",
+    diff: "Diferencia",
+    
+    // Retirement
+    retirementAnalysis: "🏖️ Análisis de Retiro",
+    yearsUntilRetirement: "años hasta el retiro",
+    currentAge: "Edad Actual",
+    retirementAge: "Edad de Retiro",
+    currentSavings: "Ahorro Actual",
+    monthlySavings: "Ahorro Mensual",
+    monthlyExpense: "Gasto Mensual en Retiro",
+    lifeExpectancy: "Expectativa de Vida",
+    projectedCapital: "Capital Proyectado al Retiro",
+    yearsInRetirement: "años de retiro",
+    maxSustainableWithdrawal: "Retiro Máximo Sostenible",
+    monthly: "mensuales",
+    requiredMonthlySavings: "Ahorro Mensual Necesario",
+    toReach: "Para alcanzar",
+    atRetirement: "al retiro",
+    retirementProjection: "📈 Proyección de Retiro",
+    
+    // Risk Profile
+    discoverProfile: "Descubre tu Perfil de Inversionista",
+    discoverProfileDesc: "Responde algunas preguntas para que podamos recomendarte la estrategia de inversión más adecuada para ti.",
+    estimatedTime: "⏱️ Tiempo estimado: 3-5 minutos",
+    startEvaluation: "Comenzar Evaluación",
+    yourGoal: "1. Tu Objetivo",
+    riskProfileStep: "2. Perfil de Riesgo",
+    recommendation: "3. Recomendación",
+    investmentGoal: "¿Cuál es tu objetivo principal de inversión?",
+    selectGoalDesc: "Selecciona el objetivo que mejor describe tus metas financieras.",
+    saveForRetirement: "Ahorrar para el retiro",
+    saveForRetirementDesc: "Planeo dejar crecer este dinero hasta mi jubilación.",
+    majorExpense: "Gasto importante próximo",
+    majorExpenseDesc: "Planeo usar este dinero para un gasto mayor (educación, salud, etc.)",
+    somethingSpecial: "Algo especial en el futuro",
+    somethingSpecialDesc: "Tengo un gasto grande planeado como casa, auto o boda.",
+    emergencyFund: "Fondo de emergencia",
+    emergencyFundDesc: "Este dinero es una red de seguridad para imprevistos.",
+    buildWealth: "Crecer mi patrimonio",
+    buildWealthDesc: "No tengo un plan específico, solo quiero invertir y crecer mi dinero.",
+    generateIncome: "Generar ingresos",
+    generateIncomeDesc: "Planeo retirar dinero de esta cuenta regularmente.",
+    howMuchInvest: "¿Cuánto te gustaría invertir inicialmente?",
+    howMuchInvestDesc: "El monto de inversión nos ayuda a construir un portafolio adecuado a tus objetivos.",
+    yearsToWithdraw: "¿En cuántos años necesitarás retirar este dinero?",
+    yearsToWithdrawDesc: "Tu horizonte de tiempo afecta cuánto riesgo puede manejar tu portafolio.",
+    yearsUntilWithdraw: "Años hasta retirar fondos",
+    monthlyContributionQ: "¿Cuánto deseas aportar mensualmente?",
+    monthlyContributionQDesc: "Las aportaciones regulares ayudan a hacer crecer tu inversión. (Opcional)",
+    knowledgeLevel: "¿Cuál es tu conocimiento sobre acciones, bonos y ETFs?",
+    knowledgeLevelDesc: "Esto nos ayuda a personalizar las recomendaciones.",
+    none: "Ninguno",
+    noneDesc: "No tengo experiencia en inversiones",
+    some: "Algo",
+    someDesc: "Conozco los conceptos básicos",
+    good: "Bueno",
+    goodDesc: "Tengo experiencia invirtiendo",
+    extensive: "Extenso",
+    extensiveDesc: "Soy un inversionista experimentado",
+    riskPerception: "Cuando escuchas \"riesgo\" relacionado con tus finanzas, ¿qué es lo primero que piensas?",
+    riskPerceptionDesc: "No hay respuesta correcta o incorrecta.",
+    worry: "Me preocupa quedarme sin nada",
+    understand: "Entiendo que es parte inherente del proceso de inversión",
+    opportunity: "Veo oportunidad de grandes rendimientos",
+    thrill: "Pienso en la emoción de invertir",
+    experiencedLoss: "¿Has experimentado una caída del 20% o más en el valor de tus inversiones en un año?",
+    experiencedLossDesc: "Tu experiencia pasada nos ayuda a entender tu tolerancia al riesgo.",
+    yes: "Sí",
+    no: "No",
+    lossReaction: "¿Qué hiciste cuando experimentaste esa caída del 20%?",
+    lossReactionDesc: "Tu reacción pasada predice tu comportamiento futuro.",
+    soldAll: "Vendí todo",
+    soldSome: "Vendí algo",
+    didNothing: "No hice nada",
+    rebalanced: "Rebalanceé mis inversiones",
+    boughtMore: "Compré más",
+    volatilityTolerance: "¿Con cuánta fluctuación te sentirías cómodo en 1 año?",
+    volatilityToleranceDesc: "Asumiendo una inversión de $100,000",
+    potentialLoss: "Pérdida potencial",
+    potentialGain: "Ganancia potencial",
+    decisionApproach: "¿Cómo describirías tu enfoque al tomar decisiones financieras importantes?",
+    decisionApproachDesc: "Última pregunta antes de ver tu resultado.",
+    avoidDecisions: "Trato de evitar tomar decisiones",
+    reluctant: "Las tomo con reluctancia",
+    confident: "Las tomo con confianza y no miro atrás",
+    yourInvestorProfile: "Tu Perfil de Inversionista",
+    veryConservative: "Muy Conservador",
+    conservative: "Conservador",
+    moderate: "Moderado",
+    growth: "Crecimiento",
+    aggressive: "Agresivo",
+    recommendedAllocation: "📊 Asignación de Activos Recomendada",
+    stocks: "Renta Variable",
+    bonds: "Renta Fija",
+    realEstate: "Bienes Raíces",
+    metals: "Metales",
+    cash: "Efectivo",
+    profileSummary: "📋 Resumen de tu perfil",
+    goal: "Objetivo",
+    horizon: "Horizonte",
+    years: "años",
+    riskTolerance: "Tolerancia al riesgo",
+    veryLow: "Muy Baja",
+    low: "Baja",
+    high: "Alta",
+    veryHigh: "Muy Alta",
+    startOver: "🔄 Volver a Empezar",
+    goToSimulator: "📊 Ir al Simulador",
+    back: "Atrás",
+    continue: "Continuar",
+    
+    // Glossary
+    glossaryTitle: "📚 Glosario de Términos Financieros",
+    glossaryDesc: "Definiciones de las métricas utilizadas en el análisis de portafolios",
+    
+    // Common
+    of: "de",
+    monthsTrackRecord: "meses de track record"
+  },
+  en: {
+    // Header
+    title: "LEMA CAPITAL",
+    subtitle: "Financial Planner",
+    
+    // Tabs
+    riskProfile: "🎯 Risk Profile",
+    portfolio: "📊 Portfolio",
+    simulator: "💹 Simulator",
+    retirement: "🏖️ Retirement",
+    glossary: "📚 Glossary",
+    
+    // Sectores
+    sectors: {
+      "Financiero": "Financials",
+      "Industrial": "Industrials",
+      "Salud": "Health Care",
+      "Consumo Básico": "Consumer Staples",
+      "Materiales Básicos": "Basic Materials",
+      "Bienes Raíces": "Real Estate",
+      "Efectivo": "Cash",
+      "Tecnología": "Technology",
+      "Energía": "Energy",
+      "Metales Preciosos": "Precious Metals",
+      "Efectivo & Cripto": "Cash & Crypto",
+      "Coberturas": "Hedges",
+      "Consumo Discrecional": "Consumer Discretionary",
+      "ETFs": "ETFs",
+      "Efectivo & Equivalentes": "Cash & Equivalents",
+      "Consumo Defensivo": "Consumer Defensive",
+      "FIBRA/Bienes Raíces": "REITs/Real Estate",
+      "Activos Digitales": "Digital Assets",
+      "Servicios Públicos": "Utilities",
+      "Cobertura": "Hedge"
+    },
+    
+    // Portfolio section
+    returns: "Returns",
+    hoverTip: "💡 Hover over any metric to see its explanation",
+    lastMonth: "Last Month",
+    last3m: "Last 3M",
+    last6m: "Last 6M",
+    last12m: "Last 12M",
+    cumulative: "Cumulative",
+    annualized: "Annualized",
+    riskMetrics: "📊 Risk Metrics",
+    volatilityAnnual: "Volatility (Annual)",
+    maxDrawdown: "Max Drawdown",
+    sharpeRatio: "Sharpe Ratio",
+    beta: "Beta",
+    correlation: "Correlation",
+    alphaConsistency: "🎯 Alpha & Consistency",
+    alpha: "Alpha",
+    bestMonth: "Best Month",
+    worstMonth: "Worst Month",
+    positiveMonths: "Positive Months",
+    winRate: "Win Rate",
+    positions: "# Holdings",
+    marketCapture: "📈 Market Capture",
+    upsideCapture: "Upside Capture",
+    downsideCapture: "Downside Capture",
+    whenUp: "When {benchmark} rises, we capture {value} of the gain",
+    whenDown: "When {benchmark} falls, we only drop {value}",
+    whenDownInverse: "When {benchmark} falls, the portfolio tends to rise!",
+    interpretation: "Interpretation",
+    topPositions: "🏆 Top {n} Holdings",
+    positionHoverTip: "💡 Hover over a position to see more information",
+    sectorDistribution: "📊 Sector Distribution",
+    sectorsByWeight: "📈 Sectors by Weight",
+    
+    // Simulator
+    configureSimulation: "Configure Your Simulation",
+    initialInvestment: "Initial Investment",
+    monthlyContribution: "Monthly Contribution",
+    simulationResults: "Simulation Results",
+    withFund: "With {fund}",
+    withBenchmark: "With {benchmark}",
+    difference: "Difference",
+    inYourFavor: "in your favor",
+    historicalGrowth: "📈 Historical Growth",
+    periodReturns: "📊 Returns by Period",
+    period: "Period",
+    fund: "Fund",
+    benchmark: "Benchmark",
+    diff: "Difference",
+    
+    // Retirement
+    retirementAnalysis: "🏖️ Retirement Analysis",
+    yearsUntilRetirement: "years until retirement",
+    currentAge: "Current Age",
+    retirementAge: "Retirement Age",
+    currentSavings: "Current Savings",
+    monthlySavings: "Monthly Savings",
+    monthlyExpense: "Monthly Expense in Retirement",
+    lifeExpectancy: "Life Expectancy",
+    projectedCapital: "Projected Capital at Retirement",
+    yearsInRetirement: "years in retirement",
+    maxSustainableWithdrawal: "Max Sustainable Withdrawal",
+    monthly: "monthly",
+    requiredMonthlySavings: "Required Monthly Savings",
+    toReach: "To reach",
+    atRetirement: "at retirement",
+    retirementProjection: "📈 Retirement Projection",
+    
+    // Risk Profile
+    discoverProfile: "Discover Your Investor Profile",
+    discoverProfileDesc: "Answer a few questions so we can recommend the most suitable investment strategy for you.",
+    estimatedTime: "⏱️ Estimated time: 3-5 minutes",
+    startEvaluation: "Start Evaluation",
+    yourGoal: "1. Your Goal",
+    riskProfileStep: "2. Risk Profile",
+    recommendation: "3. Recommendation",
+    investmentGoal: "What is your main investment goal?",
+    selectGoalDesc: "Select the goal that best describes your financial objectives.",
+    saveForRetirement: "Save for retirement",
+    saveForRetirementDesc: "I plan to let this money grow until retirement.",
+    majorExpense: "Upcoming major expense",
+    majorExpenseDesc: "I plan to use this money for a major expense (education, health, etc.)",
+    somethingSpecial: "Something special in the future",
+    somethingSpecialDesc: "I have a large expense planned like a house, car, or wedding.",
+    emergencyFund: "Emergency fund",
+    emergencyFundDesc: "This money is a safety net for emergencies.",
+    buildWealth: "Build long-term wealth",
+    buildWealthDesc: "I don't have a specific plan, I just want to invest and grow my money.",
+    generateIncome: "Generate income",
+    generateIncomeDesc: "I plan to withdraw money from this account regularly.",
+    howMuchInvest: "How much would you like to invest initially?",
+    howMuchInvestDesc: "The investment amount helps us build a portfolio suited to your goals.",
+    yearsToWithdraw: "In how many years will you need to withdraw this money?",
+    yearsToWithdrawDesc: "Your time horizon affects how much risk your portfolio can handle.",
+    yearsUntilWithdraw: "Years until withdrawal",
+    monthlyContributionQ: "How much do you want to contribute monthly?",
+    monthlyContributionQDesc: "Regular contributions help grow your investment. (Optional)",
+    knowledgeLevel: "What is your understanding of stocks, bonds, and ETFs?",
+    knowledgeLevelDesc: "This helps us personalize recommendations.",
+    none: "None",
+    noneDesc: "I have no investment experience",
+    some: "Some",
+    someDesc: "I know the basics",
+    good: "Good",
+    goodDesc: "I have investment experience",
+    extensive: "Extensive",
+    extensiveDesc: "I am an experienced investor",
+    riskPerception: "When you hear \"risk\" related to your finances, what's the first thing that comes to mind?",
+    riskPerceptionDesc: "There is no right or wrong answer.",
+    worry: "I worry I could be left with nothing",
+    understand: "I understand it's an inherent part of investing",
+    opportunity: "I see opportunity for great returns",
+    thrill: "I think of the thrill of investing",
+    experiencedLoss: "Have you experienced a 20% or more decline in your investments in one year?",
+    experiencedLossDesc: "Your past experience helps us understand your risk tolerance.",
+    yes: "Yes",
+    no: "No",
+    lossReaction: "What did you do when you experienced that 20% decline?",
+    lossReactionDesc: "Your past reaction predicts your future behavior.",
+    soldAll: "Sold everything",
+    soldSome: "Sold some",
+    didNothing: "Did nothing",
+    rebalanced: "Rebalanced investments",
+    boughtMore: "Bought more",
+    volatilityTolerance: "How much investment fluctuation would you be comfortable with in 1 year?",
+    volatilityToleranceDesc: "Assuming a $100,000 investment",
+    potentialLoss: "Potential loss",
+    potentialGain: "Potential gain",
+    decisionApproach: "How would you describe your approach to making important financial decisions?",
+    decisionApproachDesc: "Last question before seeing your result.",
+    avoidDecisions: "I try to avoid making decisions",
+    reluctant: "I reluctantly make decisions",
+    confident: "I confidently make decisions and don't look back",
+    yourInvestorProfile: "Your Investor Profile",
+    veryConservative: "Very Conservative",
+    conservative: "Conservative",
+    moderate: "Moderate",
+    growth: "Growth",
+    aggressive: "Aggressive",
+    recommendedAllocation: "📊 Recommended Asset Allocation",
+    stocks: "Stocks",
+    bonds: "Bonds",
+    realEstate: "Real Estate",
+    metals: "Metals",
+    cash: "Cash",
+    profileSummary: "📋 Profile Summary",
+    goal: "Goal",
+    horizon: "Horizon",
+    years: "years",
+    riskTolerance: "Risk tolerance",
+    veryLow: "Very Low",
+    low: "Low",
+    high: "High",
+    veryHigh: "Very High",
+    startOver: "🔄 Start Over",
+    goToSimulator: "📊 Go to Simulator",
+    back: "Back",
+    continue: "Continue",
+    
+    // Glossary
+    glossaryTitle: "📚 Financial Terms Glossary",
+    glossaryDesc: "Definitions of metrics used in portfolio analysis",
+    
+    // Common
+    of: "of",
+    monthsTrackRecord: "months track record"
+  }
+};
+
 export default function App() {
   const [selectedFund, setSelectedFund] = useState('LEMA Global Fund');
   const [initialInvestment, setInitialInvestment] = useState(100000);
   const [monthlyContribution, setMonthlyContribution] = useState(5000);
   const [activeTab, setActiveTab] = useState('simulator');
+  const [language, setLanguage] = useState('es'); // Estado para idioma
   
   // Estados para Análisis de Retiro
   const [currentAge, setCurrentAge] = useState(35);
@@ -539,7 +950,7 @@ export default function App() {
   const [lifeExpectancy, setLifeExpectancy] = useState(90);
 
   // Estados para Cuestionario de Perfil de Riesgo
-  const [riskStep, setRiskStep] = useState(0); // 0 = inicio, 1-4 = objetivo, 5-10 = riesgo, 11 = resultado
+  const [riskStep, setRiskStep] = useState(0);
   const [riskAnswers, setRiskAnswers] = useState({
     goal: null,
     initialInvestmentRisk: '',
@@ -553,6 +964,9 @@ export default function App() {
     decisionApproach: null
   });
   const [riskProfile, setRiskProfile] = useState(null);
+
+  // Traducciones activas
+  const t = translations[language];
 
   const fund = fundsStats[selectedFund];
   const composition = portfolioComposition[selectedFund];
@@ -656,19 +1070,37 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
-      <div className="text-center py-6 px-4">
-        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">LEMA CAPITAL</h1>
-        <p className="text-slate-400 mt-1">Planificador Financiero</p>
+      <div className="relative py-6 px-4">
+        {/* Language Selector */}
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          <button 
+            onClick={() => setLanguage('es')} 
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${language === 'es' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
+          >
+            🇲🇽 ES
+          </button>
+          <button 
+            onClick={() => setLanguage('en')} 
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${language === 'en' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}
+          >
+            🇺🇸 EN
+          </button>
+        </div>
+        
+        <div className="text-center">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">{t.title}</h1>
+          <p className="text-slate-400 mt-1">{t.subtitle}</p>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Tab Navigation */}
         <div className="flex justify-center gap-2 mb-6 flex-wrap">
-          <button onClick={() => setActiveTab('risk-profile')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'risk-profile' ? 'bg-teal-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🎯 Perfil de Riesgo</button>
-          <button onClick={() => setActiveTab('portfolio')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'portfolio' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📊 Portafolio</button>
-          <button onClick={() => setActiveTab('simulator')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'simulator' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>💹 Simulador</button>
-          <button onClick={() => setActiveTab('retirement')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'retirement' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>🏖️ Retiro</button>
-          <button onClick={() => setActiveTab('glossary')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'glossary' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>📚 Glosario</button>
+          <button onClick={() => setActiveTab('risk-profile')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'risk-profile' ? 'bg-teal-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.riskProfile}</button>
+          <button onClick={() => setActiveTab('portfolio')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'portfolio' ? 'bg-purple-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.portfolio}</button>
+          <button onClick={() => setActiveTab('simulator')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'simulator' ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.simulator}</button>
+          <button onClick={() => setActiveTab('retirement')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'retirement' ? 'bg-emerald-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.retirement}</button>
+          <button onClick={() => setActiveTab('glossary')} className={`px-4 py-2 rounded-lg font-medium transition-all text-sm ${activeTab === 'glossary' ? 'bg-rose-600 text-white' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>{t.glossary}</button>
         </div>
 
         {/* Fund Selector */}
@@ -681,7 +1113,7 @@ export default function App() {
         </div>
 
         <div className="text-center mb-6">
-          <p className="text-slate-400 text-sm">{fund.description} • {fund.n_months} meses de track record</p>
+          <p className="text-slate-400 text-sm">{fund.description} • {fund.n_months} {t.monthsTrackRecord}</p>
         </div>
 
         {/* ==================== PERFIL DE RIESGO ==================== */}
@@ -1091,10 +1523,10 @@ export default function App() {
           <>
             {/* Rendimientos */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h2 className="text-xl font-semibold mb-2 text-center">📈 Rendimientos</h2>
-              <p className="text-xs text-slate-500 text-center mb-4">💡 Pasa el mouse sobre cualquier métrica para ver su explicación</p>
+              <h2 className="text-xl font-semibold mb-2 text-center">📈 {t.returns}</h2>
+              <p className="text-xs text-slate-500 text-center mb-4">{t.hoverTip}</p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {[['Último Mes', fund.last_month], ['Últimos 3M', fund.last_3m], ['Últimos 6M', fund.last_6m], ['Últimos 12M', fund.last_12m], ['Acumulado', fund.cumulative], ['Anualizado', fund.annualized]].map(([label, value], idx) => (
+                {[[t.lastMonth, fund.last_month], [t.last3m, fund.last_3m], [t.last6m, fund.last_6m], [t.last12m, fund.last_12m], [t.cumulative, fund.cumulative], [t.annualized, fund.annualized]].map(([label, value], idx) => (
                   <div key={idx} className={`group relative bg-slate-700/50 rounded-lg p-4 text-center cursor-help ${idx === 5 ? 'border-2' : ''}`} style={idx === 5 ? { borderColor: fund.color } : {}}>
                     <p className="text-slate-400 text-xs mb-1 flex items-center justify-center gap-1">{label} <span className="text-slate-600">ⓘ</span></p>
                     <p className={`text-xl font-bold ${value >= 0 ? 'text-emerald-400' : 'text-red-400'}`} style={idx === 5 ? { color: fund.color } : {}}>{formatPercent(value)}</p>
@@ -1110,15 +1542,15 @@ export default function App() {
             {/* Métricas de Riesgo y Alpha */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h3 className="text-lg font-semibold mb-4">📊 Métricas de Riesgo</h3>
+                <h3 className="text-lg font-semibold mb-4">{t.riskMetrics}</h3>
                 <div className="space-y-3">
                   {[
-                    ['Volatilidad (Anual)', formatPercentPlain(fund.std_annual), ''],
+                    [t.volatilityAnnual, formatPercentPlain(fund.std_annual), ''],
                     ['Vol. ' + fund.benchmark, formatPercentPlain(fund.std_bench_annual), 'text-slate-500'],
-                    ['Max Drawdown', formatPercentPlain(fund.max_drawdown), 'text-red-400'],
-                    ['Sharpe Ratio', fund.sharpe.toFixed(2), fund.sharpe >= 1 ? 'text-emerald-400' : fund.sharpe >= 0.5 ? 'text-amber-400' : ''],
-                    ['Beta', fund.beta.toFixed(2), ''],
-                    ['Correlación', fund.correlation.toFixed(2), '']
+                    [t.maxDrawdown, formatPercentPlain(fund.max_drawdown), 'text-red-400'],
+                    [t.sharpeRatio, fund.sharpe.toFixed(2), fund.sharpe >= 1 ? 'text-emerald-400' : fund.sharpe >= 0.5 ? 'text-amber-400' : ''],
+                    [t.beta, fund.beta.toFixed(2), ''],
+                    [t.correlation, fund.correlation.toFixed(2), '']
                   ].map(([label, value, cls], idx) => {
                     const baseLabel = label.includes('Vol.') ? 'Volatilidad' : label.includes('Beta') ? 'Beta' : label;
                     const desc = metricDescriptions[baseLabel];
@@ -1138,15 +1570,15 @@ export default function App() {
                 </div>
               </div>
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h3 className="text-lg font-semibold mb-4">🎯 Alpha y Consistencia</h3>
+                <h3 className="text-lg font-semibold mb-4">{t.alphaConsistency}</h3>
                 <div className="space-y-3">
                   {[
-                    ['Alpha', formatPercent(fund.alpha), fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'],
-                    ['Mejor Mes', formatPercent(fund.best_month), 'text-emerald-400'],
-                    ['Peor Mes', formatPercent(fund.worst_month), 'text-red-400'],
-                    ['Meses Positivos', `${fund.positive_months} de ${fund.n_months}`, ''],
-                    ['Win Rate', formatPercentPlain(fund.win_rate, 1), fund.win_rate >= 0.6 ? 'text-emerald-400' : 'text-amber-400'],
-                    ['# Posiciones', fund.n_holdings || 'N/A', '']
+                    [t.alpha, formatPercent(fund.alpha), fund.alpha >= 0 ? 'text-emerald-400' : 'text-red-400'],
+                    [t.bestMonth, formatPercent(fund.best_month), 'text-emerald-400'],
+                    [t.worstMonth, formatPercent(fund.worst_month), 'text-red-400'],
+                    [t.positiveMonths, `${fund.positive_months} ${t.of} ${fund.n_months}`, ''],
+                    [t.winRate, formatPercentPlain(fund.win_rate, 1), fund.win_rate >= 0.6 ? 'text-emerald-400' : 'text-amber-400'],
+                    [t.positions, fund.n_holdings || 'N/A', '']
                   ].map(([label, value, cls], idx) => {
                     const desc = metricDescriptions[label];
                     return (
@@ -1168,12 +1600,12 @@ export default function App() {
 
             {/* Capture Ratios */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700 mb-6">
-              <h3 className="text-lg font-semibold mb-4">📈 Captura de Mercado</h3>
+              <h3 className="text-lg font-semibold mb-4">{t.marketCapture}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="group relative text-center cursor-help">
-                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">Captura en Alzas (Upside) <span className="text-slate-600">ⓘ</span></p>
+                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">{t.upsideCapture} <span className="text-slate-600">ⓘ</span></p>
                   <p className="text-3xl font-bold" style={{ color: fund.upside_capture >= 1 ? '#10B981' : fund.color }}>{formatPercentPlain(fund.upside_capture, 1)}</p>
-                  <p className="text-xs text-slate-500 mt-1">Cuando {fund.benchmark} sube, capturamos {formatPercentPlain(fund.upside_capture, 0)} del alza</p>
+                  <p className="text-xs text-slate-500 mt-1">{t.whenUp.replace('{benchmark}', fund.benchmark).replace('{value}', formatPercentPlain(fund.upside_capture, 0))}</p>
                   <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
                     <div className="h-3 rounded-full bg-emerald-500" style={{ width: `${Math.min(fund.upside_capture * 100, 100)}%` }}></div>
                   </div>
@@ -1183,12 +1615,12 @@ export default function App() {
                   </div>
                 </div>
                 <div className="group relative text-center cursor-help">
-                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">Captura en Bajas (Downside) <span className="text-slate-600">ⓘ</span></p>
+                  <p className="text-slate-400 text-sm mb-2 flex items-center justify-center gap-1">{t.downsideCapture} <span className="text-slate-600">ⓘ</span></p>
                   <p className="text-3xl font-bold" style={{ color: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}>{formatPercentPlain(fund.downside_capture, 1)}</p>
                   <p className="text-xs text-slate-500 mt-1">
                     {fund.downside_capture < 0 
-                      ? `Cuando ${fund.benchmark} baja, ¡el portafolio tiende a subir!` 
-                      : `Cuando ${fund.benchmark} baja, solo caemos ${formatPercentPlain(fund.downside_capture, 0)}`}
+                      ? t.whenDownInverse.replace('{benchmark}', fund.benchmark)
+                      : t.whenDown.replace('{benchmark}', fund.benchmark).replace('{value}', formatPercentPlain(fund.downside_capture, 0))}
                   </p>
                   <div className="w-full bg-slate-700 rounded-full h-3 mt-2">
                     <div className="h-3 rounded-full" style={{ width: `${Math.min(Math.abs(fund.downside_capture) * 100, 100)}%`, backgroundColor: fund.downside_capture <= 0.5 ? '#10B981' : '#EF4444' }}></div>
@@ -1201,13 +1633,13 @@ export default function App() {
               </div>
               <div className="mt-4 p-3 bg-slate-700/50 rounded-lg">
                 <p className="text-sm text-slate-400">
-                  💡 <strong>Interpretación:</strong> {fund.downside_capture < 0 
-                    ? '¡Excelente! El portafolio tiene correlación inversa al mercado en bajas - sube cuando el mercado cae.'
+                  💡 <strong>{t.interpretation}:</strong> {fund.downside_capture < 0 
+                    ? (language === 'es' ? '¡Excelente! El portafolio tiene correlación inversa al mercado en bajas - sube cuando el mercado cae.' : 'Excellent! The portfolio has inverse correlation to the market in downturns - it rises when the market falls.')
                     : fund.upside_capture >= 1 && fund.downside_capture < 0.7 
-                    ? 'Excelente perfil: captura más ganancias y menos pérdidas que el mercado.' 
+                    ? (language === 'es' ? 'Excelente perfil: captura más ganancias y menos pérdidas que el mercado.' : 'Excellent profile: captures more gains and fewer losses than the market.')
                     : fund.downside_capture < 0.7 
-                    ? 'Buena protección a la baja: cuando el mercado cae, este portafolio cae menos.'
-                    : 'El portafolio tiende a seguir al mercado de cerca.'}
+                    ? (language === 'es' ? 'Buena protección a la baja: cuando el mercado cae, este portafolio cae menos.' : 'Good downside protection: when the market falls, this portfolio falls less.')
+                    : (language === 'es' ? 'El portafolio tiende a seguir al mercado de cerca.' : 'The portfolio tends to follow the market closely.')}
                 </p>
               </div>
             </div>
@@ -1216,8 +1648,8 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               {/* Top 10 Holdings */}
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">🏆 Top {composition.holdings.length} Posiciones</h2>
-                <p className="text-xs text-slate-500 mb-4">💡 Pasa el mouse sobre una posición para ver más información</p>
+                <h2 className="text-xl font-semibold mb-4">{t.topPositions.replace('{n}', composition.holdings.length)}</h2>
+                <p className="text-xs text-slate-500 mb-4">{t.positionHoverTip}</p>
                 <div className="space-y-3">
                   {composition.holdings.map((holding, idx) => {
                     const description = companyDescriptions[holding.name] || companyDescriptions["default"];
@@ -1254,10 +1686,10 @@ export default function App() {
 
               {/* Sector Allocation */}
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">📊 Distribución por Sector</h2>
+                <h2 className="text-xl font-semibold mb-4">{t.sectorDistribution}</h2>
                 <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
-                    <Pie data={composition.sectors} dataKey="weight" nameKey="sector" cx="50%" cy="50%" outerRadius={80} label={({ sector, weight }) => `${weight.toFixed(1)}%`} labelLine={false}>
+                    <Pie data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} dataKey="weight" nameKey="sectorTranslated" cx="50%" cy="50%" outerRadius={80} label={({ weight }) => `${weight.toFixed(1)}%`} labelLine={false}>
                       {composition.sectors.map((entry, index) => (<Cell key={`cell-${index}`} fill={SECTOR_COLORS[index % SECTOR_COLORS.length]} />))}
                     </Pie>
                     <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
@@ -1267,7 +1699,7 @@ export default function App() {
                   {composition.sectors.map((s, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs">
                       <div className="w-3 h-3 rounded" style={{ backgroundColor: SECTOR_COLORS[idx % SECTOR_COLORS.length] }}></div>
-                      <span className="text-slate-400 truncate">{s.sector}</span>
+                      <span className="text-slate-400 truncate">{t.sectors[s.sector] || s.sector}</span>
                       <span className="ml-auto font-medium">{s.weight.toFixed(1)}%</span>
                     </div>
                   ))}
@@ -1277,12 +1709,12 @@ export default function App() {
 
             {/* Sector Bar Chart */}
             <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">📈 Sectores por Peso</h2>
+              <h2 className="text-xl font-semibold mb-4">{t.sectorsByWeight}</h2>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={composition.sectors} layout="vertical" margin={{ left: 100 }}>
+                <BarChart data={composition.sectors.map(s => ({...s, sectorTranslated: t.sectors[s.sector] || s.sector}))} layout="vertical" margin={{ left: 100 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                   <XAxis type="number" stroke="#9CA3AF" fontSize={10} tickFormatter={(v) => `${v}%`} />
-                  <YAxis type="category" dataKey="sector" stroke="#9CA3AF" fontSize={10} width={100} />
+                  <YAxis type="category" dataKey="sectorTranslated" stroke="#9CA3AF" fontSize={10} width={100} />
                   <Tooltip formatter={(value) => `${value.toFixed(2)}%`} contentStyle={{ backgroundColor: '#1E293B', border: '1px solid #475569', borderRadius: '8px' }} />
                   <Bar dataKey="weight" fill={fund.color} radius={[0, 4, 4, 0]} />
                 </BarChart>
