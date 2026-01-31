@@ -109,6 +109,56 @@ const portfolioComposition = {
 // Colores para gráficos de pie/sectores
 const SECTOR_COLORS = ['#1F4E79', '#2E75B6', '#00B050', '#7030A0', '#FFC000', '#C00000', '#00B0F0', '#92D050', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4'];
 
+// Descripciones de compañías para tooltips
+const companyDescriptions = {
+  // LEMA Global Fund
+  "Berkshire Hathaway Inc.": "Conglomerado multinacional fundado por Warren Buffett. Posee empresas de seguros, energía, manufactura y retail. Una de las empresas más valiosas del mundo.",
+  "Medica Sur, SAB de CV": "Grupo hospitalario mexicano líder en servicios de salud privados. Opera hospitales de alta especialidad en México.",
+  "Grupo Traxión, S.A.B. de C.V.": "Empresa mexicana líder en logística y transporte terrestre. Ofrece servicios de carga, paquetería y soluciones logísticas integrales.",
+  "Grupo Bimbo, SAB de CV": "La panificadora más grande del mundo. Produce y distribuye pan, pastelitos y snacks en más de 30 países.",
+  "Industrias Peñoles, S.A.B. de C.V.": "Grupo minero mexicano, segundo productor mundial de plata refinada. También produce oro, zinc y plomo.",
+  "Grupo Financiero Banorte, SAB de CV": "Uno de los grupos financieros más grandes de México. Ofrece servicios bancarios, seguros y pensiones.",
+  "Grupo Aeroportuario del Centro del Norte, SAB de CV": "Opera 13 aeropuertos en el centro y norte de México, incluyendo Monterrey y Acapulco.",
+  "PrologisProperty Mexico SA de CV": "FIBRA especializada en propiedades industriales y logísticas en México. Líder en centros de distribución.",
+  "Fomento Economico Mexicano, SAB de CV": "FEMSA - Conglomerado mexicano dueño de OXXO, embotellador de Coca-Cola más grande del mundo y participación en Heineken.",
+  "Cemex, SAB de CV": "Empresa global de materiales de construcción. Uno de los mayores productores de cemento del mundo.",
+  
+  // HM Fund
+  "Promotora y Operadora de Infraestructura, S.A.B. de C.V.": "PINFRA - Empresa mexicana de infraestructura. Opera autopistas de cuota, plantas de concreto y otros activos.",
+  "Grupo Aeroportuario del Pacífico, SAB de CV": "Opera 12 aeropuertos en el Pacífico mexicano, incluyendo Guadalajara, Tijuana y Los Cabos.",
+  "Fibra Mty, S.A.P.I. de C.V.": "FIBRA enfocada en propiedades industriales y de oficinas en el norte de México.",
+  "Qualitas Controladora, SAB de CV": "Aseguradora mexicana líder en seguros de automóviles. La más grande de México en su segmento.",
+  "Corp. Inmobiliaria Vesta, S.A.B. de C.V.": "Desarrollador y operador de parques industriales en México. Enfocado en nearshoring y manufactura.",
+  "Gruma, SAB de CV": "Productor líder mundial de harina de maíz y tortillas. Dueño de la marca Mission.",
+  "Arca Continental, SAB de CV": "Segundo embotellador de Coca-Cola más grande de América Latina. Opera en México, EE.UU. y Sudamérica.",
+  
+  // AL Composite
+  "Cash USD": "Efectivo en dólares americanos mantenido para liquidez y oportunidades de inversión.",
+  "Occidental Petroleum Corporation": "Empresa estadounidense de exploración y producción de petróleo y gas. Fuerte presencia en la Cuenca Permian.",
+  "VanEck Pharmaceutical ETF": "ETF que invierte en empresas farmacéuticas globales. Exposición diversificada al sector salud.",
+  "JD.com, Inc.": "Segunda plataforma de e-commerce más grande de China. Competidor directo de Alibaba con logística propia.",
+  "Leverage Shares 2X Long UNH Daily ETF": "ETF apalancado que busca 2x el rendimiento diario de UnitedHealth Group.",
+  "Fairfax Financial Holdings Ltd.": "Holding canadiense de seguros y reaseguros. Estilo de inversión tipo Berkshire Hathaway.",
+  "Oscar Health, Inc.": "Compañía de seguros de salud enfocada en tecnología. Busca modernizar la experiencia de seguros médicos en EE.UU.",
+  "Alphabet Inc.": "Empresa matriz de Google. Líder en búsqueda, publicidad digital, YouTube, Android y servicios en la nube.",
+  "Enbridge Inc": "Empresa canadiense de infraestructura energética. Opera el sistema de oleoductos más grande de Norteamérica.",
+  
+  // ALR Portfolio
+  "Grupo Traxion SAB de CV": "Empresa mexicana líder en logística y transporte terrestre. Ofrece servicios de carga, paquetería y soluciones logísticas integrales.",
+  "Mexican Pesos (MXN)": "Efectivo en pesos mexicanos para liquidez y oportunidades de inversión local.",
+  "Berkshire Hathaway Inc": "Conglomerado multinacional de Warren Buffett. Posee empresas de seguros, energía, manufactura y retail.",
+  "UnitedHealth Group Inc": "La aseguradora de salud más grande de EE.UU. También opera Optum, empresa de servicios de salud y tecnología.",
+  "Occidental Petroleum Corp": "Empresa estadounidense de exploración y producción de petróleo y gas. Fuerte presencia en la Cuenca Permian.",
+  "Novo Nordisk AS": "Farmacéutica danesa líder mundial en tratamiento de diabetes. Fabricante de Ozempic y Wegovy.",
+  "JD.com Inc": "Segunda plataforma de e-commerce más grande de China. Competidor directo de Alibaba con logística propia.",
+  "Fomento Economico Mexicano SAB de CV": "FEMSA - Dueño de OXXO, embotellador de Coca-Cola más grande del mundo y participación en Heineken.",
+  "Generac Holdings Inc": "Fabricante líder de generadores eléctricos y soluciones de almacenamiento de energía en EE.UU.",
+  "Oscar Health Inc": "Compañía de seguros de salud enfocada en tecnología. Moderniza la experiencia de seguros médicos.",
+  
+  // Valores por defecto para holdings no listados
+  "default": "Información de la compañía no disponible."
+};
+
 // Estadísticas calculadas de los datos reales (Actualizado Enero 2026)
 const fundsStats = {
   "LEMA Global Fund": {
@@ -583,21 +633,38 @@ export default function App() {
               {/* Top 10 Holdings */}
               <div className="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
                 <h2 className="text-xl font-semibold mb-4">🏆 Top {composition.holdings.length} Posiciones</h2>
+                <p className="text-xs text-slate-500 mb-4">💡 Pasa el mouse sobre una posición para ver más información</p>
                 <div className="space-y-3">
-                  {composition.holdings.map((holding, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <span className="text-slate-500 w-6 text-sm">{holding.rank}.</span>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-sm truncate pr-2">{holding.name}</span>
-                          <span className="font-medium text-sm" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
+                  {composition.holdings.map((holding, idx) => {
+                    const description = companyDescriptions[holding.name] || companyDescriptions["default"];
+                    return (
+                      <div key={idx} className="group relative">
+                        <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-700/50 rounded-lg p-2 -m-2 transition-all">
+                          <span className="text-slate-500 w-6 text-sm">{holding.rank}.</span>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-center mb-1">
+                              <span className="text-sm truncate pr-2 group-hover:text-white transition-colors">{holding.name}</span>
+                              <span className="font-medium text-sm" style={{ color: fund.color }}>{holding.weight.toFixed(2)}%</span>
+                            </div>
+                            <div className="w-full bg-slate-700 rounded-full h-2">
+                              <div className="h-2 rounded-full transition-all" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="w-full bg-slate-700 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{ width: `${Math.min(holding.weight * 3, 100)}%`, backgroundColor: fund.color, opacity: 1 - (idx * 0.07) }}></div>
+                        {/* Tooltip */}
+                        <div className="absolute left-0 right-0 top-full mt-1 p-3 bg-slate-900 border border-slate-600 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                          <div className="flex items-start gap-2">
+                            <span className="text-lg">ℹ️</span>
+                            <div>
+                              <p className="font-medium text-sm text-white mb-1">{holding.name}</p>
+                              <p className="text-xs text-slate-400 leading-relaxed">{description}</p>
+                            </div>
+                          </div>
+                          <div className="absolute -top-2 left-6 w-3 h-3 bg-slate-900 border-l border-t border-slate-600 transform rotate-45"></div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
